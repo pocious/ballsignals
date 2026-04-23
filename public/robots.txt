@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /login
+Disallow: /logout
+
+# Update this URL to your production domain before launching
+Sitemap: https://ballsignals.com/sitemap.xml
