@@ -78,6 +78,18 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.3.0",
+            "ext-ctype": "8.3.0",
+            "ext-fileinfo": "8.3.0",
+            "ext-json": "8.3.0",
+            "ext-mbstring": "8.3.0",
+            "ext-openssl": "8.3.0",
+            "ext-pdo": "8.3.0",
+            "ext-tokenizer": "8.3.0",
+            "ext-xml": "8.3.0",
+            "ext-curl": "8.3.0"
         }
     },
     "minimum-stability": "stable",
