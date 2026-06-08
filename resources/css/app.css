@@ -18,7 +18,7 @@
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Tip card — light/dark aware */
-.tip-card-wrap  { background-color:#fff !important; border-color:rgba(0,0,0,0.07) !important; }
+.tip-card-wrap  { background-color:#fff !important; border-color:rgba(128,128,128,0.15) !important; }
 .tip-card-row   { background-color:#fff; }
 .tip-card-row:hover { background-color:#f9fafb; }
 .tip-card-divider { border-color:rgba(0,0,0,0.05); }
@@ -28,7 +28,7 @@
 .tip-card-star-off { color:#d1d5db; }
 .tip-card-chevron  { color:#22c55e; }
 
-.dark .tip-card-wrap  { background-color:#111827 !important; border-color:rgba(255,255,255,0.07) !important; }
+.dark .tip-card-wrap  { background-color:#111827 !important; border-color:rgba(128,128,128,0.15) !important; }
 .dark .tip-card-row   { background-color:#111827; }
 .dark .tip-card-row:hover { background-color:#1f2937; }
 .dark .tip-card-divider { border-color:rgba(255,255,255,0.05); }
@@ -49,6 +49,14 @@
 .dark .tip-card-wrap .tip-tab-vip      { background-color:#111827 !important; }
 .dark .tip-card-wrap .tip-tab-share    { background-color:#111827 !important; }
 .dark .tip-card-wrap .tip-tab-border   { border-color:rgba(255,255,255,0.07) !important; }
+
+/* Premium CTA banner */
+.premium-cta            { background-color:#f3f4f6; }
+.dark .premium-cta      { background-color:#111827 !important; }
+
+/* Pending badge */
+.tip-badge-pending                { background-color:#fefce8; color:#ca8a04; border:1px solid #fde68a; }
+.dark .tip-card-wrap .tip-badge-pending { background-color:rgba(250,204,21,0.15) !important; color:#fbbf24 !important; border-color:rgba(250,204,21,0.5) !important; }
 
 /* Horizontal bouncing chevron */
 @keyframes bounce-x {
