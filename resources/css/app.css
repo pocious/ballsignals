@@ -38,9 +38,15 @@
 .dark .tip-card-star-off { color:#374151; }
 .dark .tip-card-chevron  { color:#22c55e; }
 
-/* Tab bar inside tip card — fully dark, no tints */
-.dark .tip-card-wrap .tip-tab-analysis,
-.dark .tip-card-wrap .tip-tab-vip,
+/* Tab bar — light backgrounds */
+.tip-tab-analysis { background-color:#f0fdf4; }
+.tip-tab-vip      { background-color:#fefce8; }
+.tip-tab-share    { background-color:#f9fafb; }
+.tip-tab-border   { border-color:#f3f4f6; }
+
+/* Tab bar — dark backgrounds (fully opaque, no tints) */
+.dark .tip-card-wrap .tip-tab-analysis { background-color:#111827 !important; }
+.dark .tip-card-wrap .tip-tab-vip      { background-color:#111827 !important; }
 .dark .tip-card-wrap .tip-tab-share    { background-color:#111827 !important; }
 .dark .tip-card-wrap .tip-tab-border   { border-color:#1f2937 !important; }
 
