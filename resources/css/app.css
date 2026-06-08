@@ -42,13 +42,13 @@
 .tip-tab-analysis { background-color:#f0fdf4; }
 .tip-tab-vip      { background-color:#fefce8; }
 .tip-tab-share    { background-color:#f9fafb; }
-.tip-tab-border   { border-color:rgba(0,0,0,0.06); }
+.tip-tab-border   { border-color:rgba(0,0,0,0.07); }
 
 /* Tab bar — dark backgrounds (fully opaque, no tints) */
 .dark .tip-card-wrap .tip-tab-analysis { background-color:#111827 !important; }
 .dark .tip-card-wrap .tip-tab-vip      { background-color:#111827 !important; }
 .dark .tip-card-wrap .tip-tab-share    { background-color:#111827 !important; }
-.dark .tip-card-wrap .tip-tab-border   { border-color:rgba(255,255,255,0.06) !important; }
+.dark .tip-card-wrap .tip-tab-border   { border-color:rgba(255,255,255,0.07) !important; }
 
 /* Horizontal bouncing chevron */
 @keyframes bounce-x {
