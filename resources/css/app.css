@@ -54,9 +54,9 @@
 .premium-cta            { background-color:#f3f4f6; }
 .dark .premium-cta      { background-color:#111827 !important; }
 
-/* Pending badge */
-.tip-badge-pending                { background-color:#fefce8; color:#ca8a04; border:1px solid #fde68a; }
-.dark .tip-card-wrap .tip-badge-pending { background-color:rgba(250,204,21,0.15) !important; color:#fbbf24 !important; border-color:rgba(250,204,21,0.5) !important; }
+/* Pending badge — solid amber pill, same style as prediction badges */
+.tip-badge-pending { background-color:#f59e0b; color:#fff; border:none; }
+.dark .tip-card-wrap .tip-badge-pending { background-color:#d97706 !important; color:#fff !important; border:none !important; }
 
 /* Horizontal bouncing chevron */
 @keyframes bounce-x {
