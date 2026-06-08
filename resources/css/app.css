@@ -18,20 +18,20 @@
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Tip card — light/dark aware */
-.tip-card-wrap  { background-color:#fff !important; border-color:#e5e7eb !important; }
+.tip-card-wrap  { background-color:#fff !important; border-color:rgba(0,0,0,0.07) !important; }
 .tip-card-row   { background-color:#fff; }
 .tip-card-row:hover { background-color:#f9fafb; }
-.tip-card-divider { border-color:#f3f4f6; }
+.tip-card-divider { border-color:rgba(0,0,0,0.05); }
 .tip-card-team  { color:#111827; }
 .tip-card-vs    { color:#9ca3af; }
 .tip-card-sub   { color:#6b7280; }
 .tip-card-star-off { color:#d1d5db; }
 .tip-card-chevron  { color:#22c55e; }
 
-.dark .tip-card-wrap  { background-color:#111827 !important; border-color:#374151 !important; }
+.dark .tip-card-wrap  { background-color:#111827 !important; border-color:rgba(255,255,255,0.07) !important; }
 .dark .tip-card-row   { background-color:#111827; }
 .dark .tip-card-row:hover { background-color:#1f2937; }
-.dark .tip-card-divider { border-color:#1f2937; }
+.dark .tip-card-divider { border-color:rgba(255,255,255,0.05); }
 .dark .tip-card-team  { color:#f9fafb; }
 .dark .tip-card-vs    { color:#6b7280; }
 .dark .tip-card-sub   { color:#9ca3af; }
@@ -42,13 +42,13 @@
 .tip-tab-analysis { background-color:#f0fdf4; }
 .tip-tab-vip      { background-color:#fefce8; }
 .tip-tab-share    { background-color:#f9fafb; }
-.tip-tab-border   { border-color:#f3f4f6; }
+.tip-tab-border   { border-color:rgba(0,0,0,0.06); }
 
 /* Tab bar — dark backgrounds (fully opaque, no tints) */
 .dark .tip-card-wrap .tip-tab-analysis { background-color:#111827 !important; }
 .dark .tip-card-wrap .tip-tab-vip      { background-color:#111827 !important; }
 .dark .tip-card-wrap .tip-tab-share    { background-color:#111827 !important; }
-.dark .tip-card-wrap .tip-tab-border   { border-color:#1f2937 !important; }
+.dark .tip-card-wrap .tip-tab-border   { border-color:rgba(255,255,255,0.06) !important; }
 
 /* Horizontal bouncing chevron */
 @keyframes bounce-x {
