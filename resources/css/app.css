@@ -6,7 +6,7 @@
 @source '../**/*.js';
 
 /* Enable class-based dark mode */
-@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark *));
 
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
@@ -16,3 +16,33 @@
 /* Hide scrollbar on filter bar while keeping scroll */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Tip card — light/dark aware */
+.tip-card-wrap  { background-color:#fff !important; border-color:#e5e7eb !important; }
+.tip-card-row   { background-color:#fff; }
+.tip-card-row:hover { background-color:#f9fafb; }
+.tip-card-divider { border-color:#f3f4f6; }
+.tip-card-team  { color:#111827; }
+.tip-card-vs    { color:#9ca3af; }
+.tip-card-sub   { color:#6b7280; }
+.tip-card-star-off { color:#d1d5db; }
+.tip-card-chevron  { color:#22c55e; }
+
+.dark .tip-card-wrap  { background-color:#111827 !important; border-color:#374151 !important; }
+.dark .tip-card-row   { background-color:#111827; }
+.dark .tip-card-row:hover { background-color:#1f2937; }
+.dark .tip-card-divider { border-color:#1f2937; }
+.dark .tip-card-team  { color:#f9fafb; }
+.dark .tip-card-vs    { color:#6b7280; }
+.dark .tip-card-sub   { color:#9ca3af; }
+.dark .tip-card-star-off { color:#374151; }
+.dark .tip-card-chevron  { color:#22c55e; }
+
+/* Horizontal bouncing chevron */
+@keyframes bounce-x {
+    0%, 100% { transform: translateX(0); }
+    50%       { transform: translateX(4px); }
+}
+.animate-bounce-x {
+    animation: bounce-x 1s ease-in-out infinite;
+}

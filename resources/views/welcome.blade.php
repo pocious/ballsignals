@@ -18,22 +18,22 @@ $__siteSchema = json_encode([
 @section('content')
 
 {{-- ── Hero Welcome Banner ── --}}
-<div class="bg-[#0a0f1a] border-b border-white/5">
+<div class="bg-gray-100 dark:bg-[#0a0f1a] border-b border-gray-200 dark:border-white/5">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 text-center">
 
         {{-- Live badge --}}
-        <div class="inline-flex items-center gap-1.5 bg-green-500/10 border border-green-500/25 text-green-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
-            <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+        <div class="inline-flex items-center gap-1.5 bg-green-500/10 border border-green-500/25 text-green-600 dark:text-green-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse"></span>
             Live Tips Updated Daily
         </div>
 
         {{-- Headline --}}
-        <h1 class="text-2xl sm:text-3xl font-black text-white leading-tight mb-2">
-            Welcome to <span class="text-green-400">BallSignals</span>
+        <h1 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white leading-tight mb-2">
+            Welcome to <span class="text-green-500 dark:text-green-400">BallSignals</span>
         </h1>
-        <p class="text-gray-400 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed mb-4">
+        <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed mb-4">
             Expert football predictions daily — our analysts do the work so you get
-            <span class="text-white font-semibold">high-confidence tips</span> fresh every day, completely free.
+            <span class="text-gray-900 dark:text-white font-semibold">high-confidence tips</span> fresh every day, completely free.
         </p>
 
 {{-- Quick trust pills --}}
@@ -48,7 +48,7 @@ $__siteSchema = json_encode([
             ];
             @endphp
             @foreach($trustPills as [$label])
-            <span class="inline-flex items-center text-[10px] font-semibold text-gray-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full">
+            <span class="inline-flex items-center text-[10px] font-semibold text-gray-600 dark:text-gray-400 bg-gray-200 dark:bg-white/5 border border-gray-300 dark:border-white/10 px-2 py-0.5 rounded-full">
                 {{ $label }}
             </span>
             @endforeach
@@ -64,22 +64,22 @@ $__siteSchema = json_encode([
     <form method="GET" action="{{ route('home') }}" id="filter-form" class="flex items-center gap-2">
         <button type="submit" name="league" value=""
                 class="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors
-                       {{ !$selectedLeague ? 'bg-green-600 text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white' }}">
+                       {{ !$selectedLeague ? 'bg-green-600 text-white' : 'bg-gray-200 dark:bg-white/10 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-white/20 hover:text-gray-900 dark:hover:text-white' }}">
             All
         </button>
         <div id="league-pills" class="flex items-center gap-2 overflow-x-auto no-scrollbar min-w-0 flex-1">
             @foreach($leagues as $league)
             <button type="submit" name="league" value="{{ $league }}"
                     class="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors
-                           {{ $selectedLeague === $league ? 'bg-green-600 text-white' : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white' }}">
+                           {{ $selectedLeague === $league ? 'bg-green-600 text-white' : 'bg-gray-200 dark:bg-white/10 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-white/20 hover:text-gray-900 dark:hover:text-white' }}">
                 {{ $league }}
             </button>
             @endforeach
         </div>
         <select name="sort" onchange="document.getElementById('filter-form').submit()"
                 class="flex-shrink-0 text-xs border rounded-lg px-2.5 py-1.5 cursor-pointer
-                       bg-white/5 border-white/15 text-gray-300
-                       hover:border-green-500/50 hover:text-green-400
+                       bg-white dark:bg-white/5 border-gray-300 dark:border-white/15 text-gray-700 dark:text-gray-300
+                       hover:border-green-500/50 hover:text-green-600 dark:hover:text-green-400
                        focus:outline-none focus:ring-1 focus:ring-green-500/40 transition-colors duration-150">
             <option value="time"      {{ $selectedSort === 'time'      ? 'selected' : '' }}>By Time</option>
             <option value="odds_asc"  {{ $selectedSort === 'odds_asc'  ? 'selected' : '' }}>Odds ↑</option>
@@ -90,6 +90,7 @@ $__siteSchema = json_encode([
         @endif
     </form>
 </div>
+
 @endsection
 @endif
 
@@ -121,12 +122,12 @@ $__siteSchema = json_encode([
     @if($yesterdayTips->isNotEmpty() || $premiumYesterdayTips->isNotEmpty())
     <div class="mb-4">
         <button onclick="document.getElementById('yesterday-panel').classList.toggle('hidden')"
-                class="w-full flex items-center justify-between px-4 py-3 rounded-2xl
+                class="w-full flex items-center justify-between px-3 py-2 rounded-xl
                        bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800
                        hover:border-green-500/30 transition-colors duration-150 group">
             <div class="flex items-center gap-2">
-                <div class="w-1 h-5 rounded-full bg-gray-400 dark:bg-gray-600"></div>
-                <span class="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest">Yesterday's Results</span>
+                <div class="w-1 h-4 rounded-full bg-gray-400 dark:bg-gray-600"></div>
+                <span class="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest">Yesterday's Results</span>
                 <span class="text-[10px] text-gray-400">{{ today()->subDay()->format('d M') }}</span>
             </div>
             <div class="flex items-center gap-2">
@@ -143,7 +144,7 @@ $__siteSchema = json_encode([
                         {{ round(($yWon / $yTotal) * 100) }}%
                     </span>
                 @endif
-                <svg class="w-4 h-4 text-gray-400 group-hover:text-green-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-green-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
             </div>
@@ -218,8 +219,46 @@ $__siteSchema = json_encode([
             </div>
             @endif
 
-            @if($premiumYesterdayTips->isNotEmpty())
-            @php $canSeePremiumYesterday = auth()->check() && auth()->user()->isPremium(); @endphp
+        </div>
+    </div>
+    @endif
+
+    {{-- ── Yesterday's Premium Results ── --}}
+    @if($premiumYesterdayTips->isNotEmpty())
+    @php
+        $canSeePremiumYesterday = auth()->check() && auth()->user()->isPremium();
+        $pyWon        = $premiumYesterdayTips->where('status', 'won')->count();
+        $pyLost       = $premiumYesterdayTips->where('status', 'lost')->count();
+        $pyTotal      = $pyWon + $pyLost;
+        $pyCombinedOdds = $premiumYesterdayTips
+            ->where('status', 'won')
+            ->filter(fn($t) => $t->odds > 0)
+            ->reduce(fn($carry, $t) => $carry * $t->odds, 1.0);
+    @endphp
+    <div id="premium-results" class="mb-4">
+        <button onclick="document.getElementById('yesterday-premium-panel').classList.toggle('hidden')"
+                class="w-full flex items-center justify-between px-3 py-2 rounded-xl
+                       bg-white dark:bg-gray-900 border border-yellow-200 dark:border-yellow-700/50
+                       hover:border-yellow-400/50 transition-colors duration-150 group">
+            <div class="flex items-center gap-2">
+                <div class="w-1 h-4 rounded-full bg-yellow-400"></div>
+                <span class="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest">Premium Results Yesterday</span>
+                <span class="text-[9px] font-black text-black bg-yellow-400 px-1.5 py-0.5 rounded uppercase">PRO</span>
+                <span class="text-[10px] text-gray-400">{{ today()->subDay()->format('d M') }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                @if($pyWon > 0 && $pyCombinedOdds > 1)
+                    <span class="text-[10px] font-black text-black bg-yellow-400 px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                        {{ number_format($pyCombinedOdds, 2) }} odds won
+                    </span>
+                @endif
+                <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-yellow-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+        </button>
+
+        <div id="yesterday-premium-panel" class="hidden mt-2">
             <div class="rounded-2xl overflow-hidden border border-yellow-300 dark:border-yellow-700/50">
                 @foreach($premiumYesterdayTips as $tip)
                 <div class="bg-white dark:bg-gray-900 px-4 py-2.5 {{ !$loop->last ? 'border-b border-gray-100 dark:border-gray-800' : '' }}">
@@ -241,25 +280,30 @@ $__siteSchema = json_encode([
                             {{ $tip->match_time->format('g:i A') }}
                             @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
                         </p>
-                        @if($canSeePremiumYesterday)
-                            <span class="text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0">
-                                {{ $tip->prediction }}
-                            </span>
-                        @else
-                            <a href="{{ route('premium') }}"
-                               class="flex items-center gap-1 text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0 hover:bg-yellow-100 transition-colors">
-                                <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                                </svg>
-                                Unlock
-                            </a>
-                        @endif
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            @if($tip->odds && $tip->status === 'won')
+                                <span class="text-[10px] font-black text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/30 border border-green-300 dark:border-green-700 px-1.5 py-0.5 rounded whitespace-nowrap">
+                                    @ {{ number_format($tip->odds, 2) }}
+                                </span>
+                            @endif
+                            @if($canSeePremiumYesterday)
+                                <span class="text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 px-1.5 py-0.5 rounded whitespace-nowrap">
+                                    {{ $tip->prediction }}
+                                </span>
+                            @else
+                                <a href="{{ route('premium') }}"
+                                   class="flex items-center gap-1 text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-1.5 py-0.5 rounded whitespace-nowrap hover:bg-yellow-100 transition-colors">
+                                    <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Unlock
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 @endforeach
             </div>
-            @endif
-
         </div>
     </div>
     @endif
@@ -281,52 +325,107 @@ $__siteSchema = json_encode([
     @else
         <div class="space-y-5">
             @foreach($tipsByDate as $date => $tips)
+                @php $isTomorrow = $date === today()->addDay()->toDateString(); @endphp
 
                 {{-- Date heading --}}
                 <div>
                     <p class="text-xs font-bold uppercase tracking-widest text-green-600 dark:text-green-400 mb-2 px-1">
                         @if($date === today()->toDateString())
                             Today · {{ \Carbon\Carbon::parse($date)->format('d M Y') }}
-                        @elseif($date === today()->addDay()->toDateString())
-                            Tomorrow · {{ \Carbon\Carbon::parse($date)->format('d M Y') }}
+                        @elseif($isTomorrow)
+                            Tomorrow Sample Tips · {{ \Carbon\Carbon::parse($date)->format('d M Y') }}
                         @else
                             {{ \Carbon\Carbon::parse($date)->format('l · d M Y') }}
                         @endif
                     </p>
 
                     {{-- Cards for this date --}}
-                    <div class="rounded-2xl overflow-hidden border border-gray-300 dark:border-gray-700">
-                        @foreach($tips as $tip)
-                        <div id="tip-{{ $tip->id }}" class="bg-white dark:bg-gray-900 px-4 py-2.5
-                                    {{ !$loop->last ? 'border-b border-gray-100 dark:border-gray-800' : '' }}">
-                            <div class="flex items-center justify-between gap-2 mb-1">
-                                <p class="text-sm font-bold text-gray-900 dark:text-white truncate">
-                                    {{ $tip->home_team }}
-                                    <span class="font-normal text-gray-400 dark:text-gray-500 mx-1">vs</span>
-                                    {{ $tip->away_team }}
-                                </p>
-                                <span class="text-[10px] px-1.5 py-0.5 rounded-full font-semibold flex-shrink-0 {{ $tip->status_badge }}">
-                                    {{ ucfirst($tip->status) }}
-                                </span>
-                            </div>
-                            <div class="flex items-center justify-between gap-2">
-                                <p class="text-[11px] text-gray-400 dark:text-gray-500 truncate">
-                                    {{ $tip->match_time->format('g:i A') }}
-                                    @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
-                                    @if($tip->odds)<span class="mx-1">·</span>{{ number_format($tip->odds, 2) }}@endif
-                                </p>
-                                <div class="flex-shrink-0 flex items-center gap-1">
-                                    @if($tip->confidence)
+                    <div class="space-y-2">
+                        @foreach($isTomorrow ? $tips->take(3) : $tips as $tip)
+                        @php
+                            $now = now();
+                            $isLive     = $tip->status === 'pending'
+                                          && $tip->match_time <= $now
+                                          && $tip->match_time >= $now->copy()->subMinutes(105);
+                            $isFinished = in_array($tip->status, ['won', 'lost'])
+                                          || ($tip->status === 'pending' && $tip->match_time < $now->copy()->subMinutes(105));
+                            $isPending  = $tip->status === 'pending' && $tip->match_time > $now;
+                        @endphp
+                        <div id="tip-{{ $tip->id }}" class="tip-card-wrap rounded-2xl overflow-hidden border">
+                            {{-- Main content --}}
+                            <a href="{{ route('tips.show', $tip) }}" class="block px-4 pt-3.5 pb-3">
+                                {{-- Row 1: Teams + Status badge --}}
+                                <div class="flex items-start justify-between gap-2 mb-1.5">
+                                    <p class="text-[13px] leading-snug text-gray-900 dark:text-white">
+                                        <span class="font-bold">{{ $tip->home_team }}</span>
+                                        <span class="font-normal text-gray-400 mx-1">vs</span>
+                                        <span class="font-bold">{{ $tip->away_team }}</span>
+                                    </p>
+                                    @if($isLive)
+                                    <span class="inline-flex items-center gap-0.5 text-[8px] px-1 py-px rounded-full font-medium flex-shrink-0 mt-0.5 bg-red-50 dark:bg-red-500/15 text-red-500 dark:text-red-400 border border-red-200 dark:border-red-500/35">
+                                        <span class="w-1 h-1 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
+                                        Live
+                                    </span>
+                                    @elseif($isFinished)
+                                    <span class="text-[8px] px-1 py-px rounded-full font-medium flex-shrink-0 mt-0.5 bg-gray-100 dark:bg-white/[0.08] text-gray-400 border border-gray-200 dark:border-white/[0.12]">
+                                        Finished
+                                    </span>
+                                    @else
+                                    <span class="inline-flex items-center gap-0.5 text-[8px] px-1 py-px rounded-full font-medium flex-shrink-0 mt-0.5 bg-yellow-50 dark:bg-yellow-400/10 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-400/30">
+                                        <span class="w-1 h-1 rounded-full bg-yellow-400 animate-pulse flex-shrink-0"></span>
+                                        Pending
+                                    </span>
+                                    @endif
+                                </div>
+                                {{-- Row 2: Time · League  |  Stars  @ odds  Prediction --}}
+                                <div class="flex items-center justify-between gap-2">
+                                    <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate">
+                                        {{ $tip->match_time->format('g:i A') }}
+                                        @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
+                                    </p>
+                                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                                        @if($tip->confidence)
                                         <div class="flex items-center gap-px">
                                             @for($i = 1; $i <= 5; $i++)
-                                                <span class="text-[10px] {{ $i <= $tip->confidence ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600' }}">★</span>
+                                                <span class="text-[11px] {{ $i <= $tip->confidence ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600' }}">★</span>
                                             @endfor
                                         </div>
-                                    @endif
-                                    <span class="text-[10px] font-bold text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 px-1.5 py-0.5 rounded whitespace-nowrap">
-                                        {{ $tip->prediction }}
-                                    </span>
+                                        @if($tip->odds)
+                                        <span class="text-[11px] text-gray-400">@ {{ number_format($tip->odds, 2) }}</span>
+                                        @endif
+                                        @endif
+                                        <span class="text-[9px] font-bold px-2 py-px rounded-full whitespace-nowrap" style="background:#f97316;color:#fff;">
+                                            {{ $tip->prediction }}
+                                        </span>
+                                    </div>
                                 </div>
+                            </a>
+                            {{-- Tab bar --}}
+                            <div class="grid grid-cols-3 border-t border-gray-100 dark:border-white/[0.07]">
+                                <a href="{{ route('tips.show', $tip) }}"
+                                   class="flex items-center justify-center gap-1.5 py-2 text-[11px] font-semibold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/[0.09]">
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                    </svg>
+                                    Analysis
+                                </a>
+                                <a href="{{ route('premium') }}"
+                                   class="flex items-center justify-center gap-1.5 py-2 text-[11px] font-semibold text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-400/[0.06] border-l border-r border-gray-100 dark:border-white/[0.07]">
+                                    <svg class="w-3.5 h-3.5 text-yellow-500 dark:text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                    </svg>
+                                    VIP Odds
+                                </a>
+                                <button
+                                    data-share-url="{{ route('tips.show', $tip) }}"
+                                    data-share-title="{{ $tip->home_team }} vs {{ $tip->away_team }}"
+                                    onclick="(function(b){var u=b.dataset.shareUrl,t=b.dataset.shareTitle;if(navigator.share){navigator.share({title:t,url:u});}else{navigator.clipboard.writeText(u);var h=b.innerHTML;b.textContent='Copied!';setTimeout(function(){b.innerHTML=h;},1500);}})(this)"
+                                    class="flex items-center justify-center gap-1.5 py-2 text-[11px] font-semibold w-full text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-white/[0.03]">
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                                    </svg>
+                                    Share
+                                </button>
                             </div>
                         </div>
                         @endforeach
@@ -362,39 +461,31 @@ $__siteSchema = json_encode([
             <div class="flex items-center justify-between px-4 py-3" style="border-bottom:1px solid rgba(250,204,21,0.2);">
                 <div>
                     <p class="text-[10px] font-bold uppercase tracking-widest mb-0.5" style="color:#facc15;"> VIP Accumulator</p>
-                    @if($canSeePremium)
                         <p class="text-2xl font-black leading-none" style="color:#facc15;">
                             {{ number_format($combinedOdds, 2) }}
                             <span class="text-xs font-semibold ml-1" style="color:rgba(250,204,21,0.7);">combined odds</span>
                         </p>
-                    @else
-                        <p class="text-2xl font-black leading-none blur-[6px] select-none" style="color:#facc15;">
-                            {{ number_format($combinedOdds, 2) }}
-                            <span class="text-xs font-semibold ml-1" style="color:rgba(250,204,21,0.7);">combined odds</span>
-                        </p>
-                    @endif
                     <p class="text-[10px] mt-0.5" style="color:#6b7280;">{{ $tipCount }} tip{{ $tipCount !== 1 ? 's' : '' }} · {{ today()->format('d M Y') }}</p>
                 </div>
-                @if($canSeePremium)
-                    <div class="text-right">
-                        <p class="text-[10px] uppercase tracking-widest mb-1" style="color:#6b7280;">Individual</p>
-                        <div class="flex items-center gap-1 flex-wrap justify-end">
-                            @foreach($todayPremiumTips->filter(fn($t) => $t->odds > 0) as $tip)
-                                <span class="text-xs font-bold px-2 py-0.5 rounded-lg" style="color:#ffffff;background:rgba(255,255,255,0.1);">
-                                    {{ number_format($tip->odds, 2) }}
-                                </span>
-                            @endforeach
+                    <div class="flex items-center gap-2">
+                        <div class="text-right">
+                            <p class="text-[10px] uppercase tracking-widest mb-1" style="color:#6b7280;">Individual</p>
+                            <div class="flex items-center gap-1 flex-wrap justify-end">
+                                @foreach($todayPremiumTips->filter(fn($t) => $t->odds > 0) as $tip)
+                                    <span class="text-xs font-bold px-2 py-0.5 rounded-lg" style="color:#ffffff;background:rgba(255,255,255,0.1);">
+                                        {{ number_format($tip->odds, 2) }}
+                                    </span>
+                                @endforeach
+                            </div>
                         </div>
+                        <a href="{{ route('premium') }}"
+                           class="flex items-center gap-1.5 px-3 py-2 bg-yellow-400 hover:bg-yellow-300 rounded-xl transition-colors flex-shrink-0">
+                            <svg class="w-3.5 h-3.5 text-black" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-xs font-black text-black">Unlock</span>
+                        </a>
                     </div>
-                @else
-                    <a href="{{ route('premium') }}"
-                       class="flex items-center gap-1.5 px-3 py-2 bg-yellow-400 hover:bg-yellow-300 rounded-xl transition-colors flex-shrink-0">
-                        <svg class="w-3.5 h-3.5 text-black" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="text-xs font-black text-black">Unlock</span>
-                    </a>
-                @endif
             </div>
         </div>
         @endif
@@ -510,7 +601,7 @@ $__siteSchema = json_encode([
     {{-- ── Premium CTA ── --}}
     <a href="{{ route('premium') }}"
        class="mt-6 flex items-center justify-between gap-3 px-5 py-4 rounded-2xl
-              bg-gradient-to-r from-[#0a0f1a] to-[#0f1a0a] border border-green-500/40
+              bg-gray-100 dark:bg-gradient-to-r dark:from-[#0a0f1a] dark:to-[#0f1a0a] border border-green-500/40
               hover:border-green-400/70 hover:shadow-lg hover:shadow-green-500/10
               transition-all duration-200 group">
         <div class="flex items-center gap-3">
@@ -520,8 +611,8 @@ $__siteSchema = json_encode([
                 </svg>
             </div>
             <div>
-                <p class="text-sm font-bold text-white">Unlock Premium Tips</p>
-                <p class="text-xs text-green-400">From $15/week — high-confidence picks & accumulators</p>
+                <p class="text-sm font-bold text-gray-900 dark:text-white">Unlock Premium Tips</p>
+                <p class="text-xs text-green-400">From $10/week — high-confidence picks & accumulators</p>
             </div>
         </div>
         <div class="flex items-center gap-2 flex-shrink-0">
@@ -713,7 +804,7 @@ $__siteSchema = json_encode([
                              class="w-9 h-9 rounded-full flex-shrink-0 border-2 border-yellow-400/50 object-cover"/>
                         <div>
                             <p class="text-sm font-bold text-gray-900 dark:text-white">Samuel O.</p>
-                            <p class="text-[10px] text-gray-400">Premium Member · Lagos, Nigeria</p>
+                            <p class="text-[10px] text-gray-400">Premium Member · Istanbul, Turkey</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-1 flex-shrink-0">
@@ -802,7 +893,7 @@ $__siteSchema = json_encode([
         {{-- Paripesa --}}
         <a href="https://paripesa.bet/ball" target="_blank" rel="noopener noreferrer sponsored"
            class="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl
-                  bg-gradient-to-r from-[#1a1f2e] to-[#0f1419] border border-orange-500/30
+                  bg-gray-100 dark:bg-gradient-to-r dark:from-[#1a1f2e] dark:to-[#0f1419] border border-orange-500/30
                   hover:border-orange-500/60 hover:shadow-lg hover:shadow-orange-500/10
                   transition-all duration-200 group">
             <div class="flex items-center gap-3">
@@ -810,7 +901,7 @@ $__siteSchema = json_encode([
                     <span class="text-xs font-black text-white">PP</span>
                 </div>
                 <div>
-                    <p class="text-sm font-bold text-white">Paripesa</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-white">Paripesa</p>
                     <p class="text-xs text-orange-400 font-semibold">Register & Get Welcome Bonus</p>
                 </div>
             </div>
@@ -825,7 +916,7 @@ $__siteSchema = json_encode([
         {{-- 22Bet --}}
         <a href="https://cutt.ly/DwBTVik8" target="_blank" rel="noopener noreferrer sponsored"
            class="flex items-center justify-between gap-3 px-4 py-3 rounded-2xl
-                  bg-gradient-to-r from-[#1a1f2e] to-[#0f1419] border border-blue-500/30
+                  bg-gray-100 dark:bg-gradient-to-r dark:from-[#1a1f2e] dark:to-[#0f1419] border border-blue-500/30
                   hover:border-blue-500/60 hover:shadow-lg hover:shadow-blue-500/10
                   transition-all duration-200 group">
             <div class="flex items-center gap-3">
@@ -833,7 +924,7 @@ $__siteSchema = json_encode([
                     <span class="text-xs font-black text-white">22</span>
                 </div>
                 <div>
-                    <p class="text-sm font-bold text-white">22Bet</p>
+                    <p class="text-sm font-bold text-gray-900 dark:text-white">22Bet</p>
                     <p class="text-xs text-blue-400 font-semibold">Register & Get Welcome Bonus</p>
                 </div>
             </div>
@@ -869,4 +960,12 @@ $__siteSchema = json_encode([
 
 </div>
 
+<script>
+if (window.location.hash === '#premium-results') {
+    var panel = document.getElementById('yesterday-premium-panel');
+    var target = document.getElementById('premium-results');
+    if (panel) panel.classList.remove('hidden');
+    if (target) setTimeout(function(){ target.scrollIntoView({behavior:'smooth', block:'start'}); }, 200);
+}
+</script>
 @endsection
