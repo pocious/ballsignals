@@ -38,6 +38,12 @@
 .dark .tip-card-star-off { color:#374151; }
 .dark .tip-card-chevron  { color:#22c55e; }
 
+/* Tab bar inside tip card — force dark bg on all child elements */
+.dark .tip-card-wrap .tip-tab-analysis { background-color:rgba(34,197,94,0.09) !important; }
+.dark .tip-card-wrap .tip-tab-vip      { background-color:rgba(250,204,21,0.06) !important; }
+.dark .tip-card-wrap .tip-tab-share    { background-color:rgba(255,255,255,0.03) !important; }
+.dark .tip-card-wrap .tip-tab-border   { border-color:rgba(255,255,255,0.07) !important; }
+
 /* Horizontal bouncing chevron */
 @keyframes bounce-x {
     0%, 100% { transform: translateX(0); }
