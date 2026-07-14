@@ -57,7 +57,7 @@ class BlogController extends Controller
             'is_published' => ['nullable', 'boolean'],
         ]);
 
-        $data['slug']         = Str::slug($data['title']);
+        $data['slug']         = $blog->slug; // keep existing slug to preserve Google-indexed URLs
         $data['author']       = $data['author'] ?? 'BallSignals';
         $data['is_published'] = $request->boolean('is_published');
         if ($data['is_published'] && !$blog->published_at) {

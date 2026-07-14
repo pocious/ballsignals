@@ -1,3 +1,8 @@
+@php
+/** @var \App\Models\Blog|null $blog */
+$blog ??= null;
+@endphp
+
 <div class="space-y-5">
 
     {{-- Title --}}

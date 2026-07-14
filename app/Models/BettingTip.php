@@ -24,6 +24,8 @@ class BettingTip extends Model
         'match_time',
         'status',
         'is_premium',
+        'reasoning',
+        'analyst',
     ];
 
     protected function casts(): array
@@ -70,6 +72,11 @@ class BettingTip extends Model
         return $query->where('sport', 'Football');
     }
 
+    public function scopeBasketball($query)
+    {
+        return $query->where('sport', 'Basketball');
+    }
+
     public function scopeForLeague($query, ?string $league)
     {
         return $league ? $query->where('league', $league) : $query;
@@ -96,6 +103,32 @@ class BettingTip extends Model
         return implode(' / ', $parts);
     }
 
+    public function getDisplayStatusAttribute(): string
+    {
+        if ($this->status !== 'pending') {
+            return $this->status;
+        }
+        $now = now();
+        if ($now >= $this->match_time && $now < $this->match_time->copy()->addMinutes(115)) {
+            return 'live';
+        }
+        if ($now >= $this->match_time->copy()->addMinutes(115)) {
+            return 'finished';
+        }
+        return 'pending';
+    }
+
+    public function getDisplayStatusBadgeAttribute(): string
+    {
+        return match ($this->display_status) {
+            'won'      => 'bg-green-500 text-white',
+            'lost'     => 'bg-red-500 text-white',
+            'live'     => 'bg-red-600 text-white',
+            'finished' => 'bg-gray-400 text-white',
+            default    => 'bg-yellow-400/20 text-yellow-700 dark:text-yellow-300 border border-yellow-400/50 animate-pulse',
+        };
+    }
+
     public function getStatusBadgeAttribute(): string
     {
         return match ($this->status) {
@@ -113,4 +146,5 @@ class BettingTip extends Model
             default => 'bg-yellow-400/20 text-yellow-700 border border-yellow-400/50',
         };
     }
+
 }

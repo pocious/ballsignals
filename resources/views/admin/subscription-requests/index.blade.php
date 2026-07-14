@@ -84,15 +84,26 @@
                                class="px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition-colors">
                                 View
                             </a>
-                            @if($req->status === 'pending')
+                            @if($req->status !== 'approved')
                             <form method="POST" action="{{ route('admin.subscription-requests.approve', $req) }}"
                                   onsubmit="return confirm('Approve this request?')">
                                 @csrf @method('PATCH')
                                 <button type="submit"
                                         class="px-3 py-1 rounded-lg bg-green-100 hover:bg-green-200 text-green-700 text-xs font-bold transition-colors">
-                                    Approve
+                                    {{ in_array($req->status, ['rejected','expired']) ? 'Re-approve' : 'Approve' }}
                                 </button>
                             </form>
+                            @else
+                            <form method="POST" action="{{ route('admin.subscription-requests.approve', $req) }}"
+                                  onsubmit="return confirm('Extend access from today?')">
+                                @csrf @method('PATCH')
+                                <button type="submit"
+                                        class="px-3 py-1 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-bold transition-colors">
+                                    Extend
+                                </button>
+                            </form>
+                            @endif
+                            @if(in_array($req->status, ['pending', 'approved']))
                             <form method="POST" action="{{ route('admin.subscription-requests.reject', $req) }}"
                                   onsubmit="return confirm('Reject this request?')">
                                 @csrf @method('PATCH')

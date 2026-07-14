@@ -87,16 +87,31 @@
         </div>
 
         {{-- Actions --}}
-        @if($subscriptionRequest->status === 'pending')
         <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center gap-3 flex-wrap">
+
+            @if($subscriptionRequest->status !== 'approved')
+            {{-- Approve / Re-approve --}}
             <form method="POST" action="{{ route('admin.subscription-requests.approve', $subscriptionRequest) }}"
-                  onsubmit="return confirm('Approve this subscription request?')">
+                  onsubmit="return confirm('Approve this subscription? Access will be granted from now.')">
                 @csrf @method('PATCH')
                 <button type="submit"
                         class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors">
-                    ✓ Approve
+                    ✓ {{ in_array($subscriptionRequest->status, ['rejected','expired']) ? 'Re-approve' : 'Approve' }}
                 </button>
             </form>
+            @else
+            {{-- Extend (re-approve with fresh expiry) --}}
+            <form method="POST" action="{{ route('admin.subscription-requests.approve', $subscriptionRequest) }}"
+                  onsubmit="return confirm('Extend this subscription? Expiry will be reset from today.')">
+                @csrf @method('PATCH')
+                <button type="submit"
+                        class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                    ↻ Extend Access
+                </button>
+            </form>
+            @endif
+
+            @if(in_array($subscriptionRequest->status, ['pending', 'approved']))
             <form method="POST" action="{{ route('admin.subscription-requests.reject', $subscriptionRequest) }}"
                   onsubmit="return confirm('Reject this request?')">
                 @csrf @method('PATCH')
@@ -105,6 +120,8 @@
                     ✗ Reject
                 </button>
             </form>
+            @endif
+
             <form method="POST" action="{{ route('admin.subscription-requests.destroy', $subscriptionRequest) }}"
                   onsubmit="return confirm('Delete this request permanently?')" class="ml-auto">
                 @csrf @method('DELETE')
@@ -113,19 +130,8 @@
                     Delete
                 </button>
             </form>
+
         </div>
-        @else
-        <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end">
-            <form method="POST" action="{{ route('admin.subscription-requests.destroy', $subscriptionRequest) }}"
-                  onsubmit="return confirm('Delete this request permanently?')">
-                @csrf @method('DELETE')
-                <button type="submit"
-                        class="px-4 py-2 text-sm text-red-500 border border-red-200 hover:bg-red-50 rounded-lg transition-colors">
-                    Delete Request
-                </button>
-            </form>
-        </div>
-        @endif
 
     </div>
 

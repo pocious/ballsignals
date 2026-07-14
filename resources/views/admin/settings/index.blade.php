@@ -130,6 +130,9 @@
                     <div>
                         <p class="text-sm font-semibold text-gray-900">
                             {{ $manager->name }}
+                            @if($manager->id === $mainAdminId)
+                                <span class="ml-1 text-[10px] bg-blue-100 text-blue-700 font-semibold px-1.5 py-0.5 rounded-full">Main Admin</span>
+                            @endif
                             @if($manager->id === auth()->id())
                                 <span class="ml-1 text-[10px] bg-green-100 text-green-700 font-semibold px-1.5 py-0.5 rounded-full">You</span>
                             @endif
@@ -138,7 +141,9 @@
                     </div>
                 </div>
 
-                @if($manager->id !== auth()->id())
+                @if($manager->id === $mainAdminId)
+                    <span class="text-xs text-gray-300 italic">protected</span>
+                @elseif($manager->id !== auth()->id())
                     <form method="POST" action="{{ route('admin.settings.managers.destroy', $manager) }}"
                           onsubmit="return confirm('Remove admin access for {{ addslashes($manager->name) }}? This cannot be undone.')">
                         @csrf

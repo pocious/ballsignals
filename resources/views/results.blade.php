@@ -23,6 +23,83 @@
 
 <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6">
 
+    {{-- ── Yesterday's Premium Results ── --}}
+    @if($premiumYesterday->isNotEmpty())
+    <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3 px-1">
+            <div class="w-1 h-5 rounded-full bg-yellow-400"></div>
+            <h2 class="text-sm font-bold uppercase tracking-widest text-yellow-500 dark:text-yellow-400">Premium Results Yesterday</h2>
+            <span class="text-[10px] font-black text-black bg-yellow-400 px-1.5 py-0.5 rounded uppercase">Pro</span>
+            <span class="text-[10px] text-gray-400 ml-auto">{{ today()->subDay()->format('d M Y') }}</span>
+        </div>
+
+        {{-- Premium stats strip --}}
+        @if($premiumStats['won'] + $premiumStats['lost'] > 0)
+        <div class="rounded-2xl overflow-hidden mb-3" style="background:#0a0f1a;border:1px solid rgba(250,204,21,0.3);">
+            <div class="flex items-center justify-between px-4 py-3">
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-yellow-400 mb-0.5">VIP Accumulator Won</p>
+                    <p class="text-2xl font-black text-yellow-400 leading-none">
+                        {{ number_format($premiumCombinedOdds, 2) }}
+                        <span class="text-xs font-semibold ml-1 text-yellow-400/70">combined odds</span>
+                    </p>
+                    <p class="text-[10px] mt-0.5 text-gray-500">{{ $premiumStats['won'] }}W · {{ $premiumStats['lost'] }}L</p>
+                </div>
+                <a href="{{ route('premium') }}"
+                   class="flex items-center gap-1.5 px-3 py-2 bg-yellow-400 hover:bg-yellow-300 rounded-xl transition-colors text-xs font-black text-black flex-shrink-0">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                    </svg>
+                    Unlock VIP
+                </a>
+            </div>
+        </div>
+        @endif
+
+        {{-- Premium tip rows --}}
+        <div class="rounded-2xl overflow-hidden border border-yellow-300 dark:border-yellow-700/50">
+            @foreach($premiumYesterday as $tip)
+            <div class="bg-white dark:bg-gray-900 px-4 py-3 {{ !$loop->last ? 'border-b border-gray-100 dark:border-gray-800' : '' }}">
+                <div class="flex items-center justify-between gap-2 mb-1">
+                    <p class="text-sm font-bold text-gray-900 dark:text-white truncate">
+                        {{ $tip->home_team }}
+                        <span class="font-normal text-gray-400 mx-1">vs</span>
+                        {{ $tip->away_team }}
+                    </p>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <span class="text-[9px] font-black text-black bg-yellow-400 px-1.5 py-0.5 rounded uppercase">Pro</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold {{ $tip->status_badge }}">
+                            {{ ucfirst($tip->status) }}
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between gap-2">
+                    <p class="text-[11px] text-gray-400 dark:text-gray-500 truncate">
+                        {{ $tip->match_time->format('g:i A') }}
+                        @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
+                    </p>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        @if($tip->confidence)
+                            <div class="flex items-center gap-px">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <span class="text-[10px] {{ $i <= $tip->confidence ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600' }}">★</span>
+                                @endfor
+                            </div>
+                        @endif
+                        @if($tip->odds)
+                            <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400">@ {{ number_format($tip->odds, 2) }}</span>
+                        @endif
+                        <span class="text-[10px] font-black px-2 py-0.5 rounded-full" style="color:#000;background:#facc15;">
+                            {{ $tip->prediction }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     {{-- Overall stats --}}
     <div class="grid grid-cols-3 gap-3 mb-6">
         <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4 text-center">

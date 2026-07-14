@@ -7,10 +7,10 @@
     <meta name="google-site-verification" content="5stoS4gFxhcR0wdEBNJXJM-Qv5DUdYdNyMu5dZVlRj8">
 
     {{-- SEO: Title --}}
-    <title>@yield('title', 'BallSignals — Free Football Betting Tips & Predictions')</title>
+    <title>@yield('title', 'BallSignals — Free Football & Basketball Betting Tips')</title>
 
     {{-- SEO: Description & robots --}}
-    <meta name="description" content="@yield('meta_description', 'BallSignals delivers expert football betting tips and match predictions every day. Free daily tips across Premier League, La Liga, Champions League, Serie A and more.')">
+    <meta name="description" content="@yield('meta_description', 'BallSignals delivers expert football and basketball betting tips every day. Free daily picks across Premier League, NBA, La Liga, EuroLeague, Champions League and more.')">
     <meta name="robots" content="@yield('robots', 'index, follow')">
 
     {{-- SEO: Canonical URL --}}
@@ -19,18 +19,12 @@
     {{-- Open Graph --}}
     <meta property="og:site_name" content="BallSignals">
     <meta property="og:type" content="@yield('og_type', 'website')">
-    <meta property="og:title" content="@yield('title', 'BallSignals — Free Football Betting Tips & Predictions')">
-    <meta property="og:description" content="@yield('meta_description', 'BallSignals delivers expert football betting tips and match predictions every day. Free daily tips across Premier League, La Liga, Champions League and more.')">
+    <meta property="og:title" content="@yield('title', 'BallSignals — Free Football & Basketball Betting Tips')">
+    <meta property="og:description" content="@yield('meta_description', 'BallSignals delivers expert football and basketball betting tips every day. Free daily picks across Premier League, NBA, La Liga, EuroLeague, Champions League and more.')">
     <meta property="og:url" content="@yield('canonical', url()->current())">
     <meta property="og:image" content="@yield('og_image', asset('images/og-default.jpg'))">
     <meta property="og:locale" content="en_GB">
 
-    {{-- Twitter Card --}}
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@ballsignals">
-    <meta name="twitter:title" content="@yield('title', 'BallSignals — Free Football Betting Tips & Predictions')">
-    <meta name="twitter:description" content="@yield('meta_description', 'BallSignals delivers expert football betting tips and match predictions every day.')">
-    <meta name="twitter:image" content="@yield('og_image', asset('images/og-default.jpg'))">
 
     {{-- JSON-LD: Organization (sitewide) --}}
     @php
@@ -51,6 +45,17 @@
 
     {{-- Page-specific structured data --}}
     @stack('schema')
+
+    {{-- OneSignal Push Notifications --}}
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "e7b78462-2bf0-4ef3-b618-021c060a3f7d",
+            });
+        });
+    </script>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
@@ -97,11 +102,12 @@
                 <nav class="hidden md:flex items-center gap-0.5">
                     @php
                         $navLinks = [
-                            ['Home',         route('home'),       request()->routeIs('home')],
-                            ["Today's Tips", route('home'),       false],
-                            ['Blog',         route('blog.index'), request()->routeIs('blog.*')],
-                            ['Premium',      route('premium'),    request()->routeIs('premium')],
-                            ['Results',      route('results'),    request()->routeIs('results')],
+                            ['Home',                 route('home'),        request()->routeIs('home')],
+                            ["Today's Tips",         route('home'),        false],
+                            ['Basketball',           route('basketball'),  request()->routeIs('basketball')],
+                            ['Blog',                 route('blog.index'),  request()->routeIs('blog.*')],
+                            ['Premium Tips',         route('premium'),     request()->routeIs('premium')],
+                            ["Yesterday's Results",  route('results'),     request()->routeIs('results')],
                         ];
                     @endphp
                     @foreach($navLinks as [$label, $href, $active])
@@ -124,14 +130,6 @@
                         </svg>
                         <span class="text-xs font-semibold text-[#229ED9]">Telegram</span>
                     </a>
-                    @guest
-                        <a href="{{ route('login') }}"
-                           class="px-4 py-2 text-sm font-semibold text-gray-300 border border-white/10
-                                  rounded-lg hover:text-white hover:border-white/25 hover:bg-white/5 transition-all duration-200">
-                            Login
-                        </a>
-                    @endguest
-
                     <button id="dark-toggle" aria-label="Toggle dark mode"
                             class="w-9 h-9 flex items-center justify-center rounded-lg text-gray-500
                                    hover:text-white hover:bg-white/5 transition-colors duration-200 ml-1">
@@ -190,13 +188,14 @@
                     Home
                 </a>
                 <a href="{{ route('home') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Today's Tips</a>
+                <a href="{{ route('basketball') }}" class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors {{ request()->routeIs('basketball') ? 'text-orange-400 bg-orange-500/10' : '' }}">Basketball</a>
                 <a href="{{ route('blog.index') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Blog</a>
                 <a href="{{ route('tip-of-the-day') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Tip of the Day</a>
                 <a href="{{ route('premium') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
-                    Premium
+                    Premium Tips
                     <span class="text-[10px] font-black text-black bg-green-400 px-1.5 py-0.5 rounded uppercase">Pro</span>
                 </a>
-                <a href="{{ route('results') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Results</a>
+                <a href="{{ route('results') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Yesterday's Results</a>
                 <a href="https://t.me/ballsigtips" target="_blank" rel="noopener noreferrer"
                    class="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium bg-[#229ED9]/10 border border-[#229ED9]/20 text-[#229ED9] hover:bg-[#229ED9]/20 transition-colors">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -205,16 +204,6 @@
                     Join Telegram
                 </a>
             </div>
-            @guest
-            <div class="px-4 py-3 border-t border-white/10">
-                <div class="flex gap-2 pb-1">
-                    <a href="{{ route('login') }}"
-                       class="flex-1 text-center py-2 text-sm font-semibold text-gray-300 border border-white/10 rounded-xl hover:text-white hover:border-white/25 transition-all">
-                        Login
-                    </a>
-                </div>
-            </div>
-            @endguest
         </div>
     </header>
 
@@ -307,16 +296,7 @@
                             </svg>
                         </a>
 
-                        {{-- X / Twitter --}}
-                        <a href="https://x.com/ballsignals" target="_blank" rel="noopener noreferrer"
-                           title="X (Twitter)"
-                           class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/30 transition-all duration-200 group">
-                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                            </svg>
-                        </a>
-
-                        {{-- Threads --}}
+{{-- Threads --}}
                         <a href="https://threads.net/@ballsignals" target="_blank" rel="noopener noreferrer"
                            title="Threads"
                            class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/30 transition-all duration-200 group">
@@ -333,10 +313,11 @@
                     <h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Quick Links</h3>
                     <ul class="space-y-2.5">
                         @foreach([
-                            ["Today's Tips",   route('home')],
-                            ['Blog',           route('blog.index')],
-                            ['Premium Picks',  route('premium')],
-                            ['Results',        route('results')],
+                            ["Today's Tips",        route('home')],
+                            ['Basketball Tips',  route('basketball')],
+                            ['Blog',                route('blog.index')],
+                            ['Premium Tips',        route('premium')],
+                            ["Yesterday's Results", route('results')],
                             ['League Stats',   route('league-stats')],
                             ['Get Daily Tips', route('subscribe')],
                         ] as [$label, $href])
@@ -355,13 +336,12 @@
                     <h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">How We Analyse</h3>
                     <ul class="space-y-3">
                         @foreach([
-                            ['📊', 'Statistical Models',    'We process head-to-head records, form tables, and Poisson distribution models to calculate win probabilities.'],
-                            ['📈', 'Odds Movement',         'We track live line movements across major bookmakers to detect sharp money and value opportunities.'],
-                            ['🧠', 'Expert Review',         'Every tip is reviewed by our analysts before publishing — no automated picks without human validation.'],
-                            ['🗂️', 'Data Sources',          'We collect data from official league APIs, betting exchanges, and verified statistical providers.'],
-                        ] as [$icon, $title, $desc])
+                            ['Statistical Models',    'We process head-to-head records, form tables, and Poisson distribution models to calculate win probabilities.'],
+                            ['Odds Movement',         'We track live line movements across major bookmakers to detect sharp money and value opportunities.'],
+                            ['Expert Review',         'Every tip is reviewed by our analysts before publishing — no automated picks without human validation.'],
+                            ['Data Sources',          'We collect data from official league APIs, betting exchanges, and verified statistical providers.'],
+                        ] as [$title, $desc])
                             <li class="flex items-start gap-2.5">
-                                <span class="text-base leading-none mt-0.5">{{ $icon }}</span>
                                 <div>
                                     <p class="text-sm font-semibold text-gray-300">{{ $title }}</p>
                                     <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $desc }}</p>
@@ -376,11 +356,13 @@
                     <h3 class="text-xs font-bold uppercase tracking-widest text-gray-500 mb-4">Popular Searches</h3>
                     <div class="flex flex-wrap gap-1.5 mb-6">
                         @foreach([
-                            'Football Tips', 'Betting Predictions', 'Free Tips Today',
-                            'Premier League Tips', 'Over 2.5 Goals', 'BTTS Tips',
+                            'Football Tips', 'Basketball Tips', 'Betting Predictions',
+                            'Free Tips Today', 'Premier League Tips', 'NBA Tips',
+                            'Over 2.5 Goals', 'BTTS Tips', 'EuroLeague Tips',
                             'Accumulator Tips', 'Both Teams to Score', 'Match Predictions',
                             'Best Odds', 'La Liga Tips', 'Champions League Tips',
                             'Draw Predictions', 'Home Win Tips', 'Value Bets',
+                            'Basketball Predictions', 'NBA Picks', 'ACB Tips',
                         ] as $kw)
                             <span class="text-[10px] px-2 py-0.5 rounded-full border border-white/10 text-gray-500 hover:border-green-500/30 hover:text-green-400 transition-colors cursor-default">
                                 {{ $kw }}

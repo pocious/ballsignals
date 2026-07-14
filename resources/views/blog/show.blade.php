@@ -67,7 +67,7 @@ $__articleSchema = json_encode([
                     prose-a:text-green-600 dark:prose-a:text-green-400 prose-a:no-underline hover:prose-a:underline
                     prose-strong:text-gray-800 dark:prose-strong:text-gray-200
                     prose-li:text-gray-600 dark:prose-li:text-gray-400">
-            {!! nl2br(e($post->content)) !!}
+            {!! $post->content !!}
         </div>
     </div>
 

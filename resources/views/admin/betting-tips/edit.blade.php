@@ -35,17 +35,19 @@
                     </a>
                 </div>
 
-                {{-- Danger Zone --}}
-                <form method="POST" action="{{ route('admin.betting-tips.destroy', $bettingTip) }}"
-                      onsubmit="return confirm('Permanently delete this tip?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                            class="px-4 py-2.5 text-red-600 hover:bg-red-50 font-medium text-sm rounded-lg transition-colors border border-red-200">
-                        Delete Tip
-                    </button>
-                </form>
+                {{-- Danger Zone — separate form, outside the update form --}}
+                <button type="submit" form="delete-tip-form"
+                        class="px-4 py-2.5 text-red-600 hover:bg-red-50 font-medium text-sm rounded-lg transition-colors border border-red-200">
+                    Delete Tip
+                </button>
             </div>
+        </form>
+
+        <form id="delete-tip-form"
+              method="POST" action="{{ route('admin.betting-tips.destroy', $bettingTip) }}"
+              onsubmit="return confirm('Permanently delete this tip?')">
+            @csrf
+            @method('DELETE')
         </form>
 
     </div>

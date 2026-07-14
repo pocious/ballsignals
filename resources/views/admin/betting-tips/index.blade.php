@@ -54,7 +54,7 @@
                         <td class="px-5 py-3 font-bold text-gray-900">{{ $tip->odds }}</td>
                         <td class="px-5 py-3 text-gray-500 whitespace-nowrap">
                             {{ $tip->match_time->format('M j, Y') }}<br>
-                            <span class="text-xs text-gray-400">{{ $tip->match_time->format('H:i') }}</span>
+                            <span class="text-xs text-gray-400">{{ $tip->match_time->format('g:i A') }}</span>
                         </td>
                         <td class="px-5 py-3">
                             <span class="px-2 py-1 rounded-full text-xs font-medium {{ $tip->admin_status_badge }}">

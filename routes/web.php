@@ -10,31 +10,64 @@ use App\Http\Controllers\Admin\SubscriptionRequestController as AdminSubscriptio
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\BasketballController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LiveMatchesController;
 use App\Http\Controllers\LeagueStatsController;
+use App\Http\Controllers\Admin\PesapalStatusController;
+use App\Http\Controllers\PesapalController;
 use App\Http\Controllers\PremiumController;
 use App\Http\Controllers\ResultsController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SubscriptionRequestController;
+use App\Http\Controllers\TipDetailController;
 use App\Http\Controllers\TipOfTheDayController;
 use Illuminate\Support\Facades\Route;
 
 // Public
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/live', [LiveMatchesController::class, 'index'])->name('live');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/premium', [PremiumController::class, 'index'])->name('premium');
+Route::get('/tips/{bettingTip}', [TipDetailController::class, 'show'])->name('tips.show');
 Route::get('/tip-of-the-day', [TipOfTheDayController::class, 'index'])->name('tip-of-the-day');
 Route::get('/results', [ResultsController::class, 'index'])->name('results');
+Route::get('/basketball', [BasketballController::class, 'index'])->name('basketball');
 Route::get('/league-stats', [LeagueStatsController::class, 'index'])->name('league-stats');
 Route::get('/subscribe', [ContactController::class, 'index'])->name('subscribe');
 Route::post('/subscribe', [ContactController::class, 'send'])->name('subscribe.send');
 Route::get('/contact', [ContactController::class, 'showContact'])->name('contact');
 Route::post('/contact', [ContactController::class, 'sendContact'])->name('contact.send');
 Route::post('/premium/request', [SubscriptionRequestController::class, 'store'])->name('premium.request');
-Route::post('/premium/access', [PremiumController::class, 'access'])->name('premium.access');
+Route::post('/premium/access', [PremiumController::class, 'access'])->name('premium.access')->middleware('throttle:5,1');
 Route::post('/premium/revoke', [PremiumController::class, 'revoke'])->name('premium.revoke');
+Route::get('/premium/renew', [PremiumController::class, 'renew'])->name('premium.renew')->middleware('signed');
+
+// Scraper webhook — token-protected, for external cron services
+Route::get('/api/scrape', function (\Illuminate\Http\Request $request) {
+    if ($request->query('token') !== env('SCRAPE_TOKEN')) {
+        abort(403, 'Forbidden');
+    }
+    $cmd = $request->query('cmd', 'results');
+    $allowed = ['results', 'fixtures', 'week', 'form'];
+    if (!in_array($cmd, $allowed)) abort(400, 'Invalid cmd');
+
+    $map = [
+        'results'  => ['--results-only'],
+        'fixtures' => ['--fixtures-only'],
+        'week'     => ['--week', '--fixtures-only'],
+        'form'     => ['--update-form'],
+    ];
+
+    \Illuminate\Support\Facades\Artisan::call('tips:scrape', $map[$cmd]);
+    return response()->json(['ok' => true, 'cmd' => $cmd, 'output' => \Illuminate\Support\Facades\Artisan::output()]);
+})->name('api.scrape');
+
+// Pesapal payment gateway
+Route::get('/pesapal/callback', [PesapalController::class, 'callback'])->name('pesapal.callback');
+Route::get('/pesapal/ipn', [PesapalController::class, 'ipn'])->name('pesapal.ipn');
 
 // Auth
 Route::middleware('guest')->group(function () {
@@ -59,6 +92,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('settings/password', [AdminSettingsController::class, 'updatePassword'])->name('settings.password');
     Route::post('settings/managers', [AdminSettingsController::class, 'addManager'])->name('settings.managers.store');
     Route::delete('settings/managers/{user}', [AdminSettingsController::class, 'removeManager'])->name('settings.managers.destroy');
+    Route::get('pesapal/status', [PesapalStatusController::class, 'index'])->name('pesapal.status');
+    Route::post('pesapal/register-ipn', [PesapalStatusController::class, 'registerIpn'])->name('pesapal.register-ipn');
     Route::get('subscription-requests', [AdminSubscriptionRequestController::class, 'index'])->name('subscription-requests.index');
     Route::get('subscription-requests/{subscriptionRequest}', [AdminSubscriptionRequestController::class, 'show'])->name('subscription-requests.show');
     Route::patch('subscription-requests/{subscriptionRequest}/approve', [AdminSubscriptionRequestController::class, 'approve'])->name('subscription-requests.approve');

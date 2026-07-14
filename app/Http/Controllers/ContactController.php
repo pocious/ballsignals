@@ -25,10 +25,11 @@ class ContactController extends Controller
 
         if (!$alreadySubscribed) {
             ContactMessage::create([
-                'name'    => $request->name,
-                'email'   => $request->email,
-                'subject' => 'Daily Tips Subscription',
-                'message' => 'Subscribed for daily tips.',
+                'name'          => $request->name,
+                'email'         => $request->email,
+                'subject'       => 'Daily Tips Subscription',
+                'message'       => 'Subscribed for daily tips.',
+                'is_subscriber' => true,
             ]);
         }
 

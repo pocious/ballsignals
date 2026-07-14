@@ -7,21 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 class SubscriptionRequest extends Model
 {
     protected $fillable = [
-        'name', 'email', 'phone', 'plan', 'status', 'notes', 'approved_at', 'expires_at',
+        'name', 'email', 'phone', 'plan', 'status', 'notes',
+        'approved_at', 'expires_at', 'renewal_notified_at', 'session_token',
+        'pesapal_merchant_ref', 'pesapal_tracking_id',
     ];
 
     protected function casts(): array
     {
         return [
-            'approved_at' => 'datetime',
-            'expires_at'  => 'datetime',
+            'approved_at'         => 'datetime',
+            'expires_at'          => 'datetime',
+            'renewal_notified_at' => 'datetime',
         ];
     }
 
     public static array $plans = [
-        'weekly'     => ['label' => 'Weekly',   'price' => '$15/week',     'days' => 7],
-        'monthly'    => ['label' => 'Monthly',  'price' => '$30/month',    'days' => 30],
-        'two_months' => ['label' => '2 Months', 'price' => '$45/2 months', 'days' => 60],
+        'weekly'     => ['label' => 'Weekly',   'price' => '$10/week',     'days' => 7,  'amount_usd' => 10.00, 'amount_ugx' => 37000],
+        'monthly'    => ['label' => 'Monthly',  'price' => '$20/month',    'days' => 30, 'amount_usd' => 20.00, 'amount_ugx' => 74000],
+        'two_months' => ['label' => '2 Months', 'price' => '$30/2 months', 'days' => 60, 'amount_usd' => 30.00, 'amount_ugx' => 112000],
     ];
 
     public function getPlanLabelAttribute(): string

@@ -3,32 +3,36 @@
 
     <url>
         <loc>{{ url('/') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
 
     <url>
-        <loc>{{ route('blog.index') }}</loc>
+        <loc>{{ route('tip-of-the-day') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
+    </url>
+
+    <url>
+        <loc>{{ route('results') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>{{ route('blog.index') }}</loc>
+        <lastmod>{{ now()->toAtomString() }}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
     </url>
 
     <url>
         <loc>{{ route('premium') }}</loc>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>{{ route('tip-of-the-day') }}</loc>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
-        <loc>{{ route('results') }}</loc>
-        <changefreq>daily</changefreq>
-        <priority>0.7</priority>
     </url>
 
     <url>
@@ -43,6 +47,23 @@
         <priority>0.5</priority>
     </url>
 
+    <url>
+        <loc>{{ route('contact') }}</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+
+    {{-- Individual free tip pages --}}
+    @foreach($tips as $tip)
+    <url>
+        <loc>{{ route('tips.show', $tip->id) }}</loc>
+        <lastmod>{{ $tip->updated_at->toAtomString() }}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    @endforeach
+
+    {{-- Blog posts --}}
     @foreach($posts as $post)
     <url>
         <loc>{{ route('blog.show', $post->slug) }}</loc>

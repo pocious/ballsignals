@@ -14,8 +14,7 @@ class ResultsController extends Controller
         $selectedStatus = $request->query('status');
 
         $query = BettingTip::football()
-            ->whereDate('match_time', '<', today())
-            ->where('status', '!=', 'pending')
+            ->whereDate('match_time', '<=', today())
             ->when($selectedLeague, fn ($q) => $q->where('league', $selectedLeague))
             ->when($selectedStatus, fn ($q) => $q->where('status', $selectedStatus))
             ->orderBy('match_time', 'desc');
@@ -23,8 +22,7 @@ class ResultsController extends Controller
         $results = $query->paginate(20)->withQueryString();
 
         $leagues = BettingTip::football()
-            ->whereDate('match_time', '<', today())
-            ->where('status', '!=', 'pending')
+            ->whereDate('match_time', '<=', today())
             ->whereNotNull('league')
             ->distinct()
             ->orderBy('league')
@@ -43,6 +41,21 @@ class ResultsController extends Controller
             'lost_pct' => $total > 0 ? round(($lost / $total) * 100) : 0,
         ];
 
-        return view('results', compact('results', 'leagues', 'stats', 'selectedLeague', 'selectedStatus'));
+        $premiumYesterday = BettingTip::where('is_premium', true)
+            ->whereDate('match_time', today()->subDay())
+            ->orderBy('match_time')
+            ->get();
+
+        $premiumStats = [
+            'won'  => $premiumYesterday->where('status', 'won')->count(),
+            'lost' => $premiumYesterday->where('status', 'lost')->count(),
+        ];
+
+        $premiumCombinedOdds = $premiumYesterday
+            ->where('status', 'won')
+            ->filter(fn($t) => $t->odds > 0)
+            ->reduce(fn($carry, $t) => $carry * $t->odds, 1.0);
+
+        return view('results', compact('results', 'leagues', 'stats', 'selectedLeague', 'selectedStatus', 'premiumYesterday', 'premiumStats', 'premiumCombinedOdds'));
     }
 }

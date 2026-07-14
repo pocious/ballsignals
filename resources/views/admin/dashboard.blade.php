@@ -5,6 +5,33 @@
 
 @section('content')
 
+{{-- ── New Payment Notification Banner ── --}}
+@if($newPayments->isNotEmpty())
+<div class="mb-6 rounded-xl border border-green-300 bg-green-50 px-5 py-4">
+    <div class="flex items-start gap-3">
+        <span class="text-2xl">💰</span>
+        <div class="flex-1">
+            <p class="font-bold text-green-800 text-sm">
+                {{ $newPayments->count() }} new payment{{ $newPayments->count() > 1 ? 's' : '' }} in the last 24 hours!
+            </p>
+            <div class="mt-2 space-y-1">
+                @foreach($newPayments as $np)
+                <p class="text-xs text-green-700">
+                    <strong>{{ $np->name }}</strong> ({{ $np->email }}) — {{ $np->plan_label }} plan ·
+                    <span class="font-semibold">${{ number_format(App\Models\SubscriptionRequest::$plans[$np->plan]['amount_usd'] ?? 0, 2) }}</span> ·
+                    paid {{ $np->approved_at->diffForHumans() }}
+                </p>
+                @endforeach
+            </div>
+        </div>
+        <a href="{{ route('admin.subscription-requests.index') }}"
+           class="flex-shrink-0 px-3 py-1.5 bg-green-600 text-white text-xs font-bold rounded-lg hover:bg-green-700 transition-colors">
+            View All
+        </a>
+    </div>
+</div>
+@endif
+
 {{-- Stats Cards --}}
 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
 
@@ -37,6 +64,127 @@
         </p>
     </a>
 
+</div>
+
+{{-- ── Premium Subscriptions Overview ── --}}
+<div class="bg-white rounded-xl border-2 border-green-400 mb-8">
+    <div class="px-6 py-4 border-b border-green-100 flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-2">
+            <span class="text-lg">💎</span>
+            <h2 class="font-bold text-gray-900">Premium Subscriptions</h2>
+        </div>
+        <a href="{{ route('admin.subscription-requests.index') }}"
+           class="text-sm text-green-600 font-semibold hover:underline">View all →</a>
+    </div>
+
+    {{-- Sub Stats --}}
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-0 divide-x divide-y sm:divide-y-0 divide-gray-100 border-b border-gray-100">
+        <div class="px-6 py-4">
+            <p class="text-xs text-gray-500 mb-1">Active Subscribers</p>
+            <p class="text-2xl font-black text-green-600">{{ $subStats['active'] }}</p>
+        </div>
+        <div class="px-6 py-4">
+            <p class="text-xs text-gray-500 mb-1">Pending Payments</p>
+            <p class="text-2xl font-black text-yellow-500">{{ $subStats['pending'] }}</p>
+        </div>
+        <div class="px-6 py-4">
+            <p class="text-xs text-gray-500 mb-1">Expiring in 3 Days</p>
+            <p class="text-2xl font-black {{ $subStats['expiring_soon'] > 0 ? 'text-red-500' : 'text-gray-400' }}">
+                {{ $subStats['expiring_soon'] }}
+            </p>
+        </div>
+        <div class="px-6 py-4">
+            <p class="text-xs text-gray-500 mb-1">Total Revenue</p>
+            <p class="text-2xl font-black text-gray-900">${{ number_format($subStats['total_revenue'], 0) }}</p>
+        </div>
+    </div>
+
+    {{-- Recent Paid Subscribers --}}
+    @if($recentSubs->isNotEmpty())
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-green-50 text-gray-500 text-xs uppercase tracking-wider">
+                <tr>
+                    <th class="px-4 py-3 text-left">Subscriber</th>
+                    <th class="px-4 py-3 text-left">Plan</th>
+                    <th class="px-4 py-3 text-left">Amount</th>
+                    <th class="px-4 py-3 text-left">Progress</th>
+                    <th class="px-4 py-3 text-left">Expires</th>
+                    <th class="px-4 py-3 text-left">Paid</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                @foreach($recentSubs as $sub)
+                @php
+                    $plan        = App\Models\SubscriptionRequest::$plans[$sub->plan];
+                    $totalDays   = (int) $plan['days'];
+                    $elapsed     = $sub->approved_at ? (int) now()->diffInDays($sub->approved_at) : 0;
+                    $remaining   = $sub->expires_at  ? max(0, (int) now()->diffInDays($sub->expires_at, false)) : 0;
+                    $progress    = $totalDays > 0 ? min(100, (int) round(($elapsed / $totalDays) * 100)) : 0;
+                    $isNew       = (bool) ($sub->approved_at && $sub->approved_at->gte(now()->subHours(24)));
+                    $rowClass    = 'hover:bg-gray-50 transition-colors ' . ($isNew ? 'bg-green-50/60' : '');
+                    $barClass    = 'h-full rounded-full ' . ($progress >= 80 ? 'bg-red-400' : 'bg-green-400');
+                @endphp
+                <tr class="{{ $rowClass }}">
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-7 h-7 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                <span class="text-xs font-black text-green-700">{{ strtoupper($sub->name[0]) }}</span>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-900 text-xs whitespace-nowrap">
+                                    {{ $sub->name }}
+                                    @if($isNew)<span class="ml-1 px-1.5 py-0.5 bg-green-500 text-white text-[9px] font-black rounded-full">NEW</span>@endif
+                                </p>
+                                <p class="text-[11px] text-gray-400">{{ $sub->email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                            {{ $sub->plan_label }}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 font-bold text-gray-900 whitespace-nowrap">
+                        ${{ number_format($plan['amount_usd'], 2) }}
+                    </td>
+                    <td class="px-4 py-3 min-w-[120px]">
+                        <div class="flex items-center gap-2">
+                            <div class="flex-1 bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                                <div class="{{ $barClass }}" data-progress="{{ $progress }}"></div>
+                            </div>
+                            <span class="text-[10px] text-gray-400 whitespace-nowrap">{{ $remaining }}d left</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">
+                        {{ $sub->expires_at ? $sub->expires_at->format('d M Y') : '—' }}
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">
+                        {{ $sub->approved_at ? $sub->approved_at->diffForHumans() : '—' }}
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @else
+        <div class="px-6 py-8 text-center text-gray-400 text-sm">No paid subscribers yet.</div>
+    @endif
+
+    {{-- Pending (awaiting payment) --}}
+    @if($pendingSubs->isNotEmpty())
+    <div class="border-t border-gray-100 px-6 py-4">
+        <p class="text-xs font-bold uppercase tracking-widest text-yellow-600 mb-3">⏳ Pending — Awaiting Payment</p>
+        <div class="space-y-2">
+            @foreach($pendingSubs as $ps)
+            <div class="flex items-center justify-between text-xs text-gray-600 bg-yellow-50 rounded-lg px-3 py-2">
+                <span><strong>{{ $ps->name }}</strong> · {{ $ps->email }}</span>
+                <span class="font-semibold text-yellow-700">{{ $ps->plan_label }} · {{ $ps->created_at->diffForHumans() }}</span>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
 </div>
 
 {{-- Recent Tips --}}
@@ -74,7 +222,7 @@
                     <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">{{ $tip->matchup }}</td>
                     <td class="px-4 py-3 text-gray-600">{{ $tip->prediction }}</td>
                     <td class="px-4 py-3 font-semibold">{{ $tip->odds }}</td>
-                    <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ $tip->match_time->format('M j, Y H:i') }}</td>
+                    <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ $tip->match_time->format('M j, Y g:i A') }}</td>
                     <td class="px-4 py-3">
                         <span class="px-2 py-1 rounded-full text-xs font-medium {{ $tip->admin_status_badge }}">
                             {{ ucfirst($tip->status) }}
@@ -143,7 +291,7 @@
                     </td>
                     <td class="px-4 py-3 text-gray-700 font-medium">{{ $tip->prediction }}</td>
                     <td class="px-4 py-3 font-bold text-gray-900">{{ $tip->odds ? number_format($tip->odds, 2) : '—' }}</td>
-                    <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ $tip->match_time->format('M j, Y H:i') }}</td>
+                    <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ $tip->match_time->format('M j, Y g:i A') }}</td>
                     <td class="px-4 py-3">
                         <span class="px-2 py-1 rounded-full text-xs font-bold {{ $tip->admin_status_badge }}">
                             {{ ucfirst($tip->status) }}
@@ -234,3 +382,11 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    document.querySelectorAll('[data-progress]').forEach(function(el) {
+        el.style.width = el.getAttribute('data-progress') + '%';
+    });
+</script>
+@endpush

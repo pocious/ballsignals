@@ -39,6 +39,7 @@ class ContactMessageController extends Controller
             ->get();
 
         $subscribers = ContactMessage::select('email', 'name')
+            ->where('is_subscriber', true)
             ->distinct('email')
             ->get();
 

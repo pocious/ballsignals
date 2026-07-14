@@ -6,9 +6,9 @@
     } else if (saved === 'light') {
         document.documentElement.classList.remove('dark');
     } else {
-        // Auto: dark between 8pm (20:00) and 6am (06:00)
+        // Auto: light 6am–6pm, dark 6pm–6am
         const hour = new Date().getHours();
-        const isNight = hour >= 20 || hour < 6;
+        const isNight = hour >= 18 || hour < 6;
         document.documentElement.classList.toggle('dark', isNight);
     }
 })();
