@@ -6,6 +6,19 @@ if (($_GET['tok'] ?? '') !== 'bsK9x2mQ') {
 $envPath = dirname(__DIR__) . '/.env';
 $artisan  = dirname(__DIR__) . '/artisan';
 
+// DB password tester
+if (isset($_GET['testdb'])) {
+    $pass = $_POST['pass'] ?? '';
+    try {
+        $pdo = new PDO("mysql:host=localhost;dbname=u343042962_ballsignals;charset=utf8", "u343042962_ballsignals", $pass);
+        echo "<b style='color:green'>✓ Password works! Use it below.</b>";
+    } catch (Exception $e) {
+        echo "<b style='color:red'>✗ Wrong: " . htmlspecialchars($e->getMessage()) . "</b>";
+    }
+    echo '<br><br><form method="post">Password: <input name="pass" type="text"> <button type="submit">Test</button></form>';
+    exit;
+}
+
 // Show existing .env if requested
 if (isset($_GET['show'])) {
     echo '<pre>' . htmlspecialchars(file_get_contents($envPath)) . '</pre>';
