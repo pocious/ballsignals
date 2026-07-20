@@ -19,7 +19,7 @@ composer.lock
 /public/storage
 /storage/*.key
 /storage/pail
-#/vendor
+/vendor
 _ide_helper.php
 Homestead.json
 Homestead.yaml
