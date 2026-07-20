@@ -25,15 +25,26 @@ $bettingTip ??= null;
     </div>
 </div>
 
-{{-- Row 2: League --}}
-<div>
-    <label class="block text-sm font-medium text-gray-700 mb-1.5">League</label>
-    <input type="text" name="league" list="leagues-list"
-           value="{{ old('league', $bettingTip->league ?? '') }}"
-           placeholder="e.g. Premier League"
-           autocomplete="off"
-           class="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-    @error('league')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+{{-- Row 2: Sport + League --}}
+<div class="grid grid-cols-2 gap-4">
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">Sport <span class="text-red-500">*</span></label>
+        <select name="sport" required class="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500">
+            @foreach(\App\Models\BettingTip::$sports as $s)
+                <option value="{{ $s }}" {{ old('sport', $bettingTip->sport ?? 'Football') === $s ? 'selected' : '' }}>{{ $s }}</option>
+            @endforeach
+        </select>
+        @error('sport')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">League</label>
+        <input type="text" name="league" list="leagues-list"
+               value="{{ old('league', $bettingTip->league ?? '') }}"
+               placeholder="e.g. Premier League"
+               autocomplete="off"
+               class="w-full px-3 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+        @error('league')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
+    </div>
 </div>
 
 {{-- Row 3: Prediction + Confidence + Odds + Match Time --}}
