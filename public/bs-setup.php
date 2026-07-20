@@ -1,13 +1,14 @@
 <?php
-// One-time .env setup script — auto-deletes after use
 if (($_GET['tok'] ?? '') !== 'bsK9x2mQ') {
     http_response_code(404); exit('Not found');
 }
 
 $envPath = dirname(__DIR__) . '/.env';
+$artisan  = dirname(__DIR__) . '/artisan';
 
-if (file_exists($envPath)) {
-    echo '<b style="color:green">✓ .env already exists. You are good!</b>';
+// Show existing .env if requested
+if (isset($_GET['show'])) {
+    echo '<pre>' . htmlspecialchars(file_get_contents($envPath)) . '</pre>';
     exit;
 }
 
@@ -72,10 +73,25 @@ TZ_OFFSET_HOURS=3
 ';
 
 file_put_contents($envPath, $env);
+echo "<b style='color:blue'>✓ .env written</b><br><br>";
 
-// Run key artisan commands via shell
-$artisan = dirname(__DIR__) . '/artisan';
-shell_exec("php $artisan config:clear 2>&1");
-shell_exec("php $artisan migrate --force 2>&1");
+$out = shell_exec("php $artisan config:clear 2>&1");
+echo "<b>config:clear:</b><pre>$out</pre>";
 
-echo '<b style="color:green">✓ .env created and migrations ran! Site should work now.</b>';
+$out = shell_exec("php $artisan migrate --force 2>&1");
+echo "<b>migrate:</b><pre>$out</pre>";
+
+$out = shell_exec("php $artisan storage:link 2>&1");
+echo "<b>storage:link:</b><pre>$out</pre>";
+
+// Show last Laravel log lines
+$log = base_path('storage/logs/laravel.log');
+if (!function_exists('base_path')) {
+    $log = dirname(__DIR__) . '/storage/logs/laravel.log';
+}
+if (file_exists($log)) {
+    $lines = array_slice(file($log), -30);
+    echo "<b>Last 30 log lines:</b><pre>" . htmlspecialchars(implode('', $lines)) . "</pre>";
+}
+
+echo "<br><b style='color:green'>Done! Visit ballsignals.com now.</b>";
