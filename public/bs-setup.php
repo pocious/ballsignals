@@ -8,14 +8,16 @@ $artisan  = dirname(__DIR__) . '/artisan';
 
 // DB password tester
 if (isset($_GET['testdb'])) {
-    $pass = $_POST['pass'] ?? '';
-    try {
-        $pdo = new PDO("mysql:host=localhost;dbname=u343042962_ballsignals;charset=utf8", "u343042962_ballsignals", $pass);
-        echo "<b style='color:green'>✓ Password works! Use it below.</b>";
-    } catch (Exception $e) {
-        echo "<b style='color:red'>✗ Wrong: " . htmlspecialchars($e->getMessage()) . "</b>";
+    $pass = $_GET['pass'] ?? '';
+    if ($pass !== '') {
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=u343042962_ballsignals;charset=utf8", "u343042962_ballsignals", $pass);
+            echo "<b style='color:green'>✓ Password works! Tell me this password.</b>";
+        } catch (Exception $e) {
+            echo "<b style='color:red'>✗ Wrong password.</b>";
+        }
     }
-    echo '<br><br><form method="post">Password: <input name="pass" type="text"> <button type="submit">Test</button></form>';
+    echo '<br><br><form method="get"><input type="hidden" name="tok" value="bsK9x2mQ"><input type="hidden" name="testdb" value="1">Password: <input name="pass" type="text" value="' . htmlspecialchars($pass) . '"> <button type="submit">Test</button></form>';
     exit;
 }
 
