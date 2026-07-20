@@ -107,6 +107,8 @@ if (isset($_GET['fetch'])) {
     echo "<b>tips:scrape --odds-api:</b><pre>" . htmlspecialchars($out) . "</pre>";
     $out2 = shell_exec("php $artisan tips:scrape --basketball 2>&1");
     echo "<b>tips:scrape --basketball:</b><pre>" . htmlspecialchars($out2) . "</pre>";
+    // Clear old news so images get re-downloaded
+    shell_exec("php $artisan db:query --database=mysql \"DELETE FROM football_news\" 2>&1");
     $out3 = shell_exec("php $artisan news:fetch-football 2>&1");
     echo "<b>news:fetch-football:</b><pre>" . htmlspecialchars($out3) . "</pre>";
     echo "<br><b style='color:green'>Done! Visit ballsignals.com to see tips.</b>";

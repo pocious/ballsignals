@@ -88,12 +88,18 @@ class FetchFootballNews extends Command
 
                     if (FootballNews::where('guid', $guid)->exists()) continue;
 
+                    // Download image locally to avoid hotlink blocking
+                    $localImage = null;
+                    if ($image) {
+                        $localImage = $this->downloadImage($image, $guid);
+                    }
+
                     FootballNews::create([
                         'guid'         => $guid,
                         'title'        => $title,
                         'description'  => $desc ?: null,
                         'url'          => $link,
-                        'image'        => $image ?: null,
+                        'image'        => $localImage ?? $image ?? null,
                         'source'       => $source,
                         'published_at' => $publishedAt,
                     ]);
@@ -108,6 +114,36 @@ class FetchFootballNews extends Command
                 $this->warn("  [{$source}] Error: {$e->getMessage()}");
             }
         }
+
+    private function downloadImage(string $url, string $guid): ?string
+    {
+        try {
+            $dir = public_path('images/news');
+            if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+            $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+            if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'])) $ext = 'jpg';
+
+            $filename = $guid . '.' . $ext;
+            $filepath = $dir . '/' . $filename;
+
+            if (file_exists($filepath)) return '/images/news/' . $filename;
+
+            $ctx = stream_context_create(['http' => [
+                'timeout'         => 8,
+                'follow_location' => true,
+                'user_agent'      => 'Mozilla/5.0 (compatible; BallSignals/1.0)',
+            ]]);
+
+            $data = @file_get_contents($url, false, $ctx);
+            if ($data && strlen($data) > 1000) {
+                file_put_contents($filepath, $data);
+                return '/images/news/' . $filename;
+            }
+        } catch (\Exception) {}
+
+        return null;
+    }
 
         // Keep only the latest 200 articles
         $oldest = FootballNews::orderByDesc('published_at')->skip(200)->first();
