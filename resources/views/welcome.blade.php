@@ -656,20 +656,31 @@ $__siteSchema = json_encode([
                             </span>
                         </div>
                     </div>
-                    {{-- Row 2: time · league · odds · Unlock --}}
+                    {{-- Row 2: time · league | odds (yellow) | stars + blurred prediction + Unlock --}}
                     <div class="flex items-center justify-between gap-2">
                         <p class="text-[11px] text-gray-400 dark:text-gray-500 truncate">
                             {{ $tip->match_time->format('g:i A') }}
                             @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
-                            @if($tip->odds > 0)<span class="mx-1">·</span>{{ number_format($tip->odds, 2) }}@endif
                         </p>
-                        <a href="{{ route('premium') }}"
-                           class="flex items-center gap-1 text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-2 py-0.5 rounded whitespace-nowrap hover:bg-yellow-100 transition-colors flex-shrink-0">
-                            <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                            </svg>
-                            Unlock
-                        </a>
+                        @if($tip->odds > 0)
+                            <span class="text-[11px] font-bold text-yellow-500 dark:text-yellow-400 flex-shrink-0">@ {{ number_format($tip->odds, 2) }}</span>
+                        @endif
+                        <div class="flex-shrink-0 flex items-center gap-1">
+                            @if($tip->confidence)
+                                <div class="flex items-center gap-px">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <span class="text-[10px] {{ $i <= $tip->confidence ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600' }}">★</span>
+                                    @endfor
+                                </div>
+                            @endif
+                            <a href="{{ route('premium') }}"
+                               class="flex items-center gap-1 text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-2 py-0.5 rounded whitespace-nowrap hover:bg-yellow-100 transition-colors">
+                                <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                                </svg>
+                                Unlock
+                            </a>
+                        </div>
                     </div>
                 </div>
                 @endforeach
