@@ -100,6 +100,15 @@ echo "<b>migrate:</b><pre>$out</pre>";
 $out = shell_exec("php $artisan storage:link 2>&1");
 echo "<b>storage:link:</b><pre>$out</pre>";
 
+// Fix tips with null/empty sport directly via PDO
+try {
+    $pdo2 = new PDO("mysql:host=localhost;dbname=u343042962_ballsignals;charset=utf8", "u343042962_ballsignals", "BsK9m2xQ77");
+    $fixed = $pdo2->exec("UPDATE betting_tips SET sport='Football' WHERE sport IS NULL OR sport=''");
+    echo "<b style='color:green'>✓ Fixed null sport on {$fixed} tip(s)</b><br><br>";
+} catch (Exception $e) {
+    echo "<b style='color:red'>Sport fix failed: " . htmlspecialchars($e->getMessage()) . "</b><br><br>";
+}
+
 // Fetch today's tips from API
 if (isset($_GET['fetch'])) {
     set_time_limit(120);
