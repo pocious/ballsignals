@@ -57,6 +57,126 @@ $__siteSchema = json_encode([
     </div>
 </div>
 
+{{-- ── News Carousel Strip ── --}}
+@if($latestNews->isNotEmpty())
+<div style="background:#080e1c;border-bottom:1px solid rgba(255,255,255,0.06)">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-4">
+
+        {{-- Header --}}
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px">
+                <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:20px">
+                    <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;display:inline-block;animation:pulse 2s infinite"></span>
+                    News
+                </div>
+                <span style="font-size:12px;font-weight:700;color:#94a3b8">Latest Headlines</span>
+            </div>
+            <a href="{{ route('news.index') }}" style="font-size:11px;font-weight:700;color:#22c55e;display:flex;align-items:center;gap:3px;text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                All news
+                <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+
+        {{-- Slider --}}
+        <div style="overflow:hidden;border-radius:14px" id="hnv">
+            <div style="display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)" id="hnt">
+                @foreach($latestNews as $article)
+                <div style="min-width:100%">
+                    <a href="{{ $article->url }}" target="_blank" rel="noopener noreferrer"
+                       style="display:block;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);text-decoration:none;position:relative;transition:border-color .2s"
+                       onmouseover="this.style.borderColor='rgba(34,197,94,0.4)'"
+                       onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+
+                        @if($article->image)
+                        {{-- Image card --}}
+                        <div style="position:relative;height:148px;overflow:hidden;background:#0f1929">
+                            <img src="{{ $article->image }}" alt=""
+                                 style="width:100%;height:100%;object-fit:cover;opacity:.65;transition:transform .4s;display:block"
+                                 loading="lazy"
+                                 onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'"
+                                 onerror="this.parentElement.style.background='linear-gradient(135deg,#1e3a5f,#0f1929)';this.remove()">
+                            {{-- gradient overlay --}}
+                            <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(8,14,28,.98) 0%,rgba(8,14,28,.55) 55%,rgba(8,14,28,.1) 100%)"></div>
+                            {{-- source badge top-left --}}
+                            <div style="position:absolute;top:10px;left:12px">
+                                <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.35);color:#4ade80;padding:2px 9px;border-radius:20px">{{ $article->source }}</span>
+                            </div>
+                            {{-- title overlaid at bottom --}}
+                            <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 14px 12px">
+                                <p style="font-size:14px;font-weight:700;color:#fff;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;margin:0">
+                                    {{ $article->title }}
+                                </p>
+                            </div>
+                        </div>
+                        {{-- footer bar --}}
+                        <div style="background:#0d1629;padding:8px 14px;display:flex;align-items:center;justify-content:space-between">
+                            <span style="font-size:11px;color:#64748b">{{ $article->published_at?->diffForHumans() }}</span>
+                            <span style="font-size:11px;font-weight:700;color:#22c55e;display:flex;align-items:center;gap:3px">
+                                Read more
+                                <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                            </span>
+                        </div>
+
+                        @else
+                        {{-- No-image card --}}
+                        <div style="background:linear-gradient(135deg,#0f1e35 0%,#0d1629 100%);padding:18px 16px">
+                            <div style="margin-bottom:10px">
+                                <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.35);color:#4ade80;padding:2px 9px;border-radius:20px">{{ $article->source }}</span>
+                            </div>
+                            <p style="font-size:15px;font-weight:700;color:#f1f5f9;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;margin:0 0 12px">
+                                {{ $article->title }}
+                            </p>
+                            <div style="display:flex;align-items:center;justify-content:space-between">
+                                <span style="font-size:11px;color:#64748b">{{ $article->published_at?->diffForHumans() }}</span>
+                                <span style="font-size:11px;font-weight:700;color:#22c55e;display:flex;align-items:center;gap:3px">
+                                    Read more
+                                    <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                        @endif
+
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Dots --}}
+        <div style="display:flex;justify-content:center;align-items:center;gap:5px;margin-top:10px">
+            @foreach($latestNews as $i => $article)
+            <button onclick="hnGo({{ $i }})" aria-label="Slide {{ $i+1 }}" class="hn-dot"
+                style="height:3px;border-radius:2px;border:none;cursor:pointer;outline:none;transition:all .3s;{{ $i === 0 ? 'width:22px;background:#22c55e' : 'width:8px;background:rgba(255,255,255,0.2)' }}"></button>
+            @endforeach
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function(){
+    var track = document.getElementById('hnt');
+    var dots  = document.querySelectorAll('.hn-dot');
+    var total = {{ $latestNews->count() }};
+    var cur = 0, timer;
+    window.hnGo = function(n){
+        cur = (n + total) % total;
+        track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+        dots.forEach(function(d,i){
+            d.style.width      = i === cur ? '22px' : '8px';
+            d.style.background = i === cur ? '#22c55e' : 'rgba(255,255,255,0.2)';
+        });
+        clearInterval(timer);
+        timer = setInterval(function(){ hnGo(cur + 1); }, 4500);
+    };
+    var vp = document.getElementById('hnv'), sx = 0;
+    vp.addEventListener('touchstart', function(e){ sx = e.changedTouches[0].clientX; }, {passive:true});
+    vp.addEventListener('touchend',   function(e){ var dx = e.changedTouches[0].clientX - sx; if(Math.abs(dx)>40) hnGo(dx<0?cur+1:cur-1); }, {passive:true});
+    if(total > 1) timer = setInterval(function(){ hnGo(cur + 1); }, 4500);
+})();
+</script>
+@endif
+
 {{-- League filter row injected into layout's sticky bar --}}
 @if($leagues->isNotEmpty())
 @section('sub-bar')
@@ -450,43 +570,54 @@ $__siteSchema = json_encode([
             @endif
         </div>
 
-        {{-- Today's VIP Odds Strip --}}
-        @php $todayPremiumTips = $premiumTipsByDate->get(today()->toDateString(), collect()); @endphp
-        @if($todayPremiumTips->isNotEmpty())
+        {{-- VIP Accumulator — always show, fall back to next available date if no tips today --}}
         @php
-            $combinedOdds = $todayPremiumTips->filter(fn($t) => $t->odds > 0)->reduce(fn($carry, $t) => $carry * $t->odds, 1);
-            $tipCount = $todayPremiumTips->count();
+            $accumTips = $premiumTipsByDate->get(today()->toDateString(), collect());
+            $accumDate = today();
+            if ($accumTips->isEmpty() && $premiumTipsByDate->isNotEmpty()) {
+                $accumDate = \Carbon\Carbon::parse($premiumTipsByDate->keys()->first());
+                $accumTips = $premiumTipsByDate->first();
+            }
+        @endphp
+        @if($accumTips->isNotEmpty())
+        @php
+            $combinedOdds = $accumTips->filter(fn($t) => $t->odds > 0)->reduce(fn($carry, $t) => $carry * $t->odds, 1);
+            $tipCount     = $accumTips->count();
+            $isToday      = $accumDate->isToday();
         @endphp
         <div class="rounded-2xl overflow-hidden mb-3" style="background-color:#0a0f1a;border:1px solid rgba(250,204,21,0.3);">
-            {{-- Combined odds banner --}}
             <div class="flex items-center justify-between px-4 py-3" style="border-bottom:1px solid rgba(250,204,21,0.2);">
                 <div>
-                    <p class="text-[10px] font-bold uppercase tracking-widest mb-0.5" style="color:#facc15;"> VIP Accumulator</p>
-                        <p class="text-2xl font-black leading-none" style="color:#facc15;">
-                            {{ number_format($combinedOdds, 2) }}
-                            <span class="text-xs font-semibold ml-1" style="color:rgba(250,204,21,0.7);">combined odds</span>
-                        </p>
-                    <p class="text-[10px] mt-0.5" style="color:#6b7280;">{{ $tipCount }} tip{{ $tipCount !== 1 ? 's' : '' }} · {{ today()->format('d M Y') }}</p>
+                    <p class="text-[10px] font-bold uppercase tracking-widest mb-0.5" style="color:#facc15;">
+                        VIP Accumulator{{ !$isToday ? ' · ' . $accumDate->format('d M') : '' }}
+                    </p>
+                    <p class="text-2xl font-black leading-none" style="color:#facc15;">
+                        {{ number_format($combinedOdds, 2) }}
+                        <span class="text-xs font-semibold ml-1" style="color:rgba(250,204,21,0.7);">combined odds</span>
+                    </p>
+                    <p class="text-[10px] mt-0.5" style="color:#6b7280;">
+                        {{ $tipCount }} tip{{ $tipCount !== 1 ? 's' : '' }} · {{ $accumDate->format('d M Y') }}
+                    </p>
                 </div>
-                    <div class="flex items-center gap-2">
-                        <div class="text-right">
-                            <p class="text-[10px] uppercase tracking-widest mb-1" style="color:#6b7280;">Individual</p>
-                            <div class="flex items-center gap-1 flex-wrap justify-end">
-                                @foreach($todayPremiumTips->filter(fn($t) => $t->odds > 0) as $tip)
-                                    <span class="text-xs font-bold px-2 py-0.5 rounded-lg" style="color:#ffffff;background:rgba(255,255,255,0.1);">
-                                        {{ number_format($tip->odds, 2) }}
-                                    </span>
-                                @endforeach
-                            </div>
+                <div class="flex items-center gap-2">
+                    <div class="text-right">
+                        <p class="text-[10px] uppercase tracking-widest mb-1" style="color:#6b7280;">Individual</p>
+                        <div class="flex items-center gap-1 flex-wrap justify-end">
+                            @foreach($accumTips->filter(fn($t) => $t->odds > 0) as $t)
+                                <span class="text-xs font-bold px-2 py-0.5 rounded-lg" style="color:#ffffff;background:rgba(255,255,255,0.1);">
+                                    {{ number_format($t->odds, 2) }}
+                                </span>
+                            @endforeach
                         </div>
-                        <a href="{{ route('premium') }}"
-                           class="flex items-center gap-1.5 px-3 py-2 bg-yellow-400 hover:bg-yellow-300 rounded-xl transition-colors flex-shrink-0">
-                            <svg class="w-3.5 h-3.5 text-black" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                            </svg>
-                            <span class="text-xs font-black text-black">Unlock</span>
-                        </a>
                     </div>
+                    <a href="{{ route('premium') }}"
+                       class="flex items-center gap-1.5 px-3 py-2 bg-yellow-400 hover:bg-yellow-300 rounded-xl transition-colors flex-shrink-0">
+                        <svg class="w-3.5 h-3.5 text-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-xs font-black text-black">Unlock</span>
+                    </a>
+                </div>
             </div>
         </div>
         @endif
@@ -511,31 +642,34 @@ $__siteSchema = json_encode([
             <div class="rounded-2xl overflow-hidden border border-yellow-300 dark:border-yellow-700/50">
                 @foreach($premiumTipsByDate->flatten() as $tip)
                 <div class="bg-white dark:bg-gray-900 px-4 py-2.5 {{ !$loop->last ? 'border-b border-gray-100 dark:border-gray-800' : '' }}">
+                    {{-- Row 1: match name · PRO + status (mirrors unlocked layout) --}}
                     <div class="flex items-center justify-between gap-2 mb-1">
                         <p class="text-sm font-bold text-gray-900 dark:text-white truncate">
                             {{ $tip->home_team }}
                             <span class="font-normal text-gray-400 dark:text-gray-500 mx-1">vs</span>
                             {{ $tip->away_team }}
                         </p>
-                        <span class="text-[10px] px-1.5 py-0.5 rounded-full font-semibold flex-shrink-0 {{ $tip->status_badge }}">
-                            {{ ucfirst($tip->status) }}
-                        </span>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <span class="text-[9px] font-black text-black bg-yellow-400 px-1.5 py-0.5 rounded uppercase">PRO</span>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded-full font-semibold {{ $tip->status_badge }}">
+                                {{ ucfirst($tip->status) }}
+                            </span>
+                        </div>
                     </div>
+                    {{-- Row 2: time · league · odds · Unlock --}}
                     <div class="flex items-center justify-between gap-2">
                         <p class="text-[11px] text-gray-400 dark:text-gray-500 truncate">
                             {{ $tip->match_time->format('g:i A') }}
                             @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
+                            @if($tip->odds > 0)<span class="mx-1">·</span>{{ number_format($tip->odds, 2) }}@endif
                         </p>
-                        <div class="flex items-center gap-1.5 flex-shrink-0">
-                            <span class="text-[9px] font-black text-black bg-yellow-400 px-1.5 py-0.5 rounded uppercase">PRO</span>
-                            <a href="{{ route('premium') }}"
-                               class="flex items-center gap-1 text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-1.5 py-0.5 rounded whitespace-nowrap hover:bg-yellow-100 transition-colors">
-                                <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                                </svg>
-                                Unlock
-                            </a>
-                        </div>
+                        <a href="{{ route('premium') }}"
+                           class="flex items-center gap-1 text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-2 py-0.5 rounded whitespace-nowrap hover:bg-yellow-100 transition-colors flex-shrink-0">
+                            <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Unlock
+                        </a>
                     </div>
                 </div>
                 @endforeach
@@ -574,8 +708,10 @@ $__siteSchema = json_encode([
                                 <p class="text-[11px] text-gray-400 dark:text-gray-500 truncate">
                                     {{ $tip->match_time->format('g:i A') }}
                                     @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
-                                    @if($tip->odds)<span class="mx-1">·</span>{{ number_format($tip->odds, 2) }}@endif
                                 </p>
+                                @if($tip->odds)
+                                    <span class="text-[11px] font-bold text-yellow-500 dark:text-yellow-400 flex-shrink-0">@ {{ number_format($tip->odds, 2) }}</span>
+                                @endif
                                 <div class="flex-shrink-0 flex items-center gap-1">
                                     @if($tip->confidence)
                                         <div class="flex items-center gap-px">
@@ -596,6 +732,175 @@ $__siteSchema = json_encode([
                 @endforeach
             </div>
         @endif
+    </div>
+    @endif
+
+    {{-- ── More Sports Hub ── --}}
+    @php
+        $sportHub = [
+            ['tennis',           '🎾', 'Tennis',           'Tennis'],
+            ['cricket',          '🏏', 'Cricket',          'Cricket'],
+            ['mma',              '🥊', 'MMA',              'MMA'],
+            ['baseball',         '⚾', 'Baseball',         'Baseball'],
+            ['american-football','🏈', 'NFL / NCAAF',      'American Football'],
+            ['hockey',           '🏒', 'NHL Hockey',       'Hockey'],
+            ['rugby',            '🏉', 'Rugby',            'Rugby'],
+        ];
+    @endphp
+    <div class="mt-6">
+        <div class="flex items-center gap-2 mb-3 px-1">
+            <div class="w-1 h-5 rounded-full bg-orange-500"></div>
+            <h2 class="text-sm font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300">More Sports</h2>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+            @foreach($sportHub as [$slug, $icon, $label, $db])
+            @php
+                $count = \App\Models\BettingTip::where('sport', $db)
+                    ->where('match_time', '>=', today()->startOfDay())
+                    ->where('match_time', '<=', today()->addDays(7)->endOfDay())
+                    ->where('is_premium', false)->count();
+            @endphp
+            <a href="{{ route('sport', $slug) }}"
+               class="flex flex-col items-center justify-center gap-1 py-3 rounded-xl border transition-all duration-150
+                      {{ $count > 0
+                         ? 'border-orange-200 dark:border-orange-700/40 bg-orange-50/50 dark:bg-orange-900/10 hover:border-orange-400/60'
+                         : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700' }}">
+                <span class="text-xl leading-none">{{ $icon }}</span>
+                <span class="text-[10px] font-bold text-gray-700 dark:text-gray-300 text-center leading-tight">{{ $label }}</span>
+                @if($count > 0)
+                <span class="text-[9px] font-black text-orange-500 bg-orange-500/10 px-1.5 py-px rounded-full">{{ $count }} tip{{ $count !== 1 ? 's' : '' }}</span>
+                @else
+                <span class="text-[9px] text-gray-400">Off-season</span>
+                @endif
+            </a>
+            @endforeach
+            <a href="{{ route('basketball') }}"
+               class="flex flex-col items-center justify-center gap-1 py-3 rounded-xl border transition-all duration-150
+                      border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700">
+                <span class="text-xl leading-none">🏀</span>
+                <span class="text-[10px] font-bold text-gray-700 dark:text-gray-300">Basketball</span>
+                <span class="text-[9px] text-gray-400">View all</span>
+            </a>
+        </div>
+    </div>
+
+    {{-- ── Basketball Tips ── --}}
+    @if($basketballTips->isNotEmpty())
+    @php $basketballByDate = $basketballTips->groupBy(fn($t) => $t->match_time->toDateString()); @endphp
+    <div class="mt-6">
+        <div class="flex items-center justify-between mb-3 px-1">
+            <div class="flex items-center gap-2">
+                <div class="w-1 h-5 rounded-full bg-orange-500"></div>
+                <h2 class="text-sm font-bold uppercase tracking-widest text-orange-500">Basketball Tips</h2>
+                <span class="text-[10px] text-gray-400">{{ $basketballTips->count() }} tip{{ $basketballTips->count() !== 1 ? 's' : '' }}</span>
+            </div>
+            <a href="{{ route('basketball') }}"
+               class="text-[10px] font-bold text-orange-500 hover:text-orange-400 flex items-center gap-1">
+                See all
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="space-y-5">
+            @foreach($basketballByDate as $date => $tips)
+            <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-orange-500 mb-2 px-1">
+                    @if($date === today()->toDateString())
+                        Today · {{ \Carbon\Carbon::parse($date)->format('d M Y') }}
+                    @elseif($date === today()->addDay()->toDateString())
+                        Tomorrow · {{ \Carbon\Carbon::parse($date)->format('d M Y') }}
+                    @else
+                        {{ \Carbon\Carbon::parse($date)->format('l · d M Y') }}
+                    @endif
+                </p>
+                <div class="space-y-2">
+                    @foreach($tips as $tip)
+                    @php
+                        $bNow = now();
+                        $bIsLive     = $tip->status === 'pending' && $tip->match_time <= $bNow && $tip->match_time >= $bNow->copy()->subMinutes(50);
+                        $bIsFinished = in_array($tip->status, ['won','lost']) || ($tip->status === 'pending' && $tip->match_time < $bNow->copy()->subMinutes(50));
+                    @endphp
+                    <div class="rounded-2xl overflow-hidden border {{ $tip->status === 'won' ? 'border-green-400 dark:border-green-700/60' : ($tip->status === 'lost' ? 'border-red-400 dark:border-red-700/60' : 'border-gray-200 dark:border-gray-800') }} bg-white dark:bg-gray-900">
+                        <a href="{{ route('tips.show', $tip) }}" class="block px-4 pt-3.5 pb-3">
+                            <div class="flex items-start justify-between gap-2 mb-1.5">
+                                <p class="text-[13px] leading-snug text-gray-900 dark:text-white">
+                                    <span class="font-bold">{{ $tip->home_team }}</span>
+                                    <span class="font-normal text-gray-400 mx-1">vs</span>
+                                    <span class="font-bold">{{ $tip->away_team }}</span>
+                                </p>
+                                @if($bIsLive)
+                                <span class="inline-flex items-center gap-0.5 text-[8px] px-1 py-px rounded-full font-medium flex-shrink-0 mt-0.5 bg-red-50 dark:bg-red-500/15 text-red-500 dark:text-red-400 border border-red-200 dark:border-red-500/35">
+                                    <span class="w-1 h-1 rounded-full bg-red-500 animate-pulse flex-shrink-0"></span>
+                                    Live
+                                </span>
+                                @elseif($bIsFinished)
+                                <span class="text-[8px] px-1 py-px rounded-full font-medium flex-shrink-0 mt-0.5 bg-gray-100 dark:bg-white/[0.08] text-gray-400 border border-gray-200 dark:border-white/[0.12]">
+                                    {{ $tip->status === 'won' ? '✔ Won' : ($tip->status === 'lost' ? '✗ Lost' : 'Finished') }}
+                                </span>
+                                @else
+                                <span class="inline-flex items-center gap-0.5 text-[8px] px-1 py-px rounded-full font-medium flex-shrink-0 mt-0.5 bg-orange-50 dark:bg-orange-500/10 text-orange-500 border border-orange-200 dark:border-orange-500/25">
+                                    <span class="w-1 h-1 rounded-full bg-orange-400 animate-pulse flex-shrink-0"></span>
+                                    Pending
+                                </span>
+                                @endif
+                            </div>
+                            <div class="flex items-center justify-between gap-2">
+                                <p class="text-[11px] text-gray-500 dark:text-gray-400 truncate">
+                                    {{ $tip->match_time->format('g:i A') }}
+                                    @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
+                                </p>
+                                <div class="flex items-center gap-1.5 flex-shrink-0">
+                                    @if($tip->confidence)
+                                    <div class="flex items-center gap-px">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <span class="text-[11px] {{ $i <= $tip->confidence ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600' }}">★</span>
+                                        @endfor
+                                    </div>
+                                    @endif
+                                    @if($tip->odds)
+                                    <span class="text-[11px] text-gray-400">@ {{ number_format($tip->odds, 2) }}</span>
+                                    @endif
+                                    <span class="text-[9px] font-bold px-2 py-px rounded-full whitespace-nowrap text-white" style="background:#f97316;">
+                                        {{ $tip->prediction }}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="grid grid-cols-3" style="border-top:1px solid rgba(128,128,128,0.15)">
+                            <a href="{{ route('tips.show', $tip) }}"
+                               class="flex items-center justify-center gap-1.5 py-2 text-[11px] font-semibold text-orange-500 dark:text-orange-400">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                                Analysis
+                            </a>
+                            <a href="{{ route('premium') }}"
+                               class="flex items-center justify-center gap-1.5 py-2 text-[11px] font-semibold text-yellow-600 dark:text-yellow-400"
+                               style="border-left:1px solid rgba(128,128,128,0.15);border-right:1px solid rgba(128,128,128,0.15)">
+                                <svg class="w-3.5 h-3.5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                </svg>
+                                VIP Odds
+                            </a>
+                            <button
+                                data-share-url="{{ route('tips.show', $tip) }}"
+                                data-share-title="{{ $tip->home_team }} vs {{ $tip->away_team }}"
+                                onclick="(function(b){var u=b.dataset.shareUrl,t=b.dataset.shareTitle;if(navigator.share){navigator.share({title:t,url:u});}else{navigator.clipboard.writeText(u);var h=b.innerHTML;b.textContent='Copied!';setTimeout(function(){b.innerHTML=h;},1500);}})(this)"
+                                class="flex items-center justify-center gap-1.5 py-2 text-[11px] font-semibold w-full text-gray-500 dark:text-gray-400">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                                </svg>
+                                Share
+                            </button>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+        </div>
     </div>
     @endif
 
@@ -960,6 +1265,7 @@ $__siteSchema = json_encode([
     </a>
 
 </div>
+
 
 <script>
 if (window.location.hash === '#premium-results') {

@@ -53,18 +53,20 @@ class BettingTip extends Model
 
     public static array $sports = [
         'Football', 'Basketball', 'Tennis', 'Baseball',
-        'Hockey', 'Rugby', 'Cricket', 'Volleyball',
+        'Hockey', 'Rugby', 'Cricket', 'MMA', 'American Football', 'Volleyball',
     ];
 
     public static array $sportIcons = [
-        'Football'   => '⚽',
-        'Basketball' => '🏀',
-        'Tennis'     => '🎾',
-        'Baseball'   => '⚾',
-        'Hockey'     => '🏒',
-        'Rugby'      => '🏉',
-        'Cricket'    => '🏏',
-        'Volleyball' => '🏐',
+        'Football'         => '⚽',
+        'Basketball'       => '🏀',
+        'Tennis'           => '🎾',
+        'Baseball'         => '⚾',
+        'Hockey'           => '🏒',
+        'Rugby'            => '🏉',
+        'Cricket'          => '🏏',
+        'MMA'              => '🥊',
+        'American Football'=> '🏈',
+        'Volleyball'       => '🏐',
     ];
 
     public function scopeFootball($query)
@@ -75,6 +77,41 @@ class BettingTip extends Model
     public function scopeBasketball($query)
     {
         return $query->where('sport', 'Basketball');
+    }
+
+    public function scopeTennis($query)
+    {
+        return $query->where('sport', 'Tennis');
+    }
+
+    public function scopeCricket($query)
+    {
+        return $query->where('sport', 'Cricket');
+    }
+
+    public function scopeMma($query)
+    {
+        return $query->where('sport', 'MMA');
+    }
+
+    public function scopeBaseballSport($query)
+    {
+        return $query->where('sport', 'Baseball');
+    }
+
+    public function scopeAmericanFootball($query)
+    {
+        return $query->where('sport', 'American Football');
+    }
+
+    public function scopeHockey($query)
+    {
+        return $query->where('sport', 'Hockey');
+    }
+
+    public function scopeRugby($query)
+    {
+        return $query->where('sport', 'Rugby');
     }
 
     public function scopeForLeague($query, ?string $league)

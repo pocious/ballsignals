@@ -6,10 +6,8 @@
     } else if (saved === 'light') {
         document.documentElement.classList.remove('dark');
     } else {
-        // Auto: light 6am–6pm, dark 6pm–6am
-        const hour = new Date().getHours();
-        const isNight = hour >= 18 || hour < 6;
-        document.documentElement.classList.toggle('dark', isNight);
+        // Default: always dark unless user has overridden
+        document.documentElement.classList.add('dark');
     }
 })();
 

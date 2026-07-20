@@ -52,62 +52,6 @@
                 <p class="text-lg sm:text-2xl font-black text-gray-900 dark:text-white flex-1 text-right">{{ $bettingTip->away_team }}</p>
             </div>
 
-            {{-- Recent form --}}
-            <div class="mb-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-3 border border-gray-100 dark:border-gray-700/50">
-                <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-2.5">Recent Form (last 5)</p>
-                <div class="flex items-center justify-between gap-4">
-                    {{-- Home team form --}}
-                    <div class="flex-1">
-                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mb-1.5 truncate">{{ $bettingTip->home_team }}</p>
-                        <div class="flex items-center gap-1">
-                            @if($bettingTip->home_form)
-                                @foreach(str_split($bettingTip->home_form) as $r)
-                                    @if($r === 'W')
-                                        <span class="w-6 h-6 rounded-md bg-green-500 text-white text-[10px] font-black flex items-center justify-center">W</span>
-                                    @elseif($r === 'D')
-                                        <span class="w-6 h-6 rounded-md bg-yellow-400 text-black text-[10px] font-black flex items-center justify-center">D</span>
-                                    @elseif($r === 'L')
-                                        <span class="w-6 h-6 rounded-md bg-red-500 text-white text-[10px] font-black flex items-center justify-center">L</span>
-                                    @else
-                                        <span class="w-6 h-6 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-400 text-[10px] font-black flex items-center justify-center">?</span>
-                                    @endif
-                                @endforeach
-                            @else
-                                @for($i = 0; $i < 5; $i++)
-                                    <span class="w-6 h-6 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-400 text-[10px] font-black flex items-center justify-center">–</span>
-                                @endfor
-                            @endif
-                        </div>
-                    </div>
-
-                    <span class="text-[10px] font-bold text-gray-300 dark:text-gray-600 flex-shrink-0">VS</span>
-
-                    {{-- Away team form --}}
-                    <div class="flex-1 text-right">
-                        <p class="text-[10px] text-gray-500 dark:text-gray-400 mb-1.5 truncate">{{ $bettingTip->away_team }}</p>
-                        <div class="flex items-center justify-end gap-1">
-                            @if($bettingTip->away_form)
-                                @foreach(str_split($bettingTip->away_form) as $r)
-                                    @if($r === 'W')
-                                        <span class="w-6 h-6 rounded-md bg-green-500 text-white text-[10px] font-black flex items-center justify-center">W</span>
-                                    @elseif($r === 'D')
-                                        <span class="w-6 h-6 rounded-md bg-yellow-400 text-black text-[10px] font-black flex items-center justify-center">D</span>
-                                    @elseif($r === 'L')
-                                        <span class="w-6 h-6 rounded-md bg-red-500 text-white text-[10px] font-black flex items-center justify-center">L</span>
-                                    @else
-                                        <span class="w-6 h-6 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-400 text-[10px] font-black flex items-center justify-center">?</span>
-                                    @endif
-                                @endforeach
-                            @else
-                                @for($i = 0; $i < 5; $i++)
-                                    <span class="w-6 h-6 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-400 text-[10px] font-black flex items-center justify-center">–</span>
-                                @endfor
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {{-- Prediction / Odds / Confidence --}}
             <div class="grid grid-cols-3 gap-3 mb-6">
                 <div class="{{ $bettingTip->is_premium ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800' : 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' }} rounded-xl p-3 text-center">
@@ -158,18 +102,6 @@
 
                 {{-- Analyst attribution --}}
                 @if($bettingTip->analyst)
-                <div class="flex items-center gap-2.5 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <div class="w-9 h-9 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center flex-shrink-0">
-                        <span class="text-sm font-black text-green-700 dark:text-green-400">{{ strtoupper($bettingTip->analyst[0]) }}</span>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-gray-900 dark:text-white">{{ $bettingTip->analyst }}</p>
-                        <p class="text-xs text-gray-400">BallSignals Analyst · Verified Pick</p>
-                    </div>
-                    <span class="ml-auto text-[10px] font-bold uppercase tracking-widest {{ $bettingTip->is_premium ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800' : 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800' }} px-2 py-1 rounded-full">
-                        {{ $bettingTip->is_premium ? 'VIP Analysis' : 'Expert Analysis' }}
-                    </span>
-                </div>
                 @endif
 
                 <p class="text-xs font-bold uppercase tracking-widest text-green-600 dark:text-green-400 mb-3 flex items-center gap-1.5">
@@ -178,7 +110,172 @@
                     </svg>
                     Full Analysis
                 </p>
-                <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{{ $bettingTip->reasoning }}</p>
+                @php
+                    $raw    = $bettingTip->reasoning ?? '';
+                    $blocks = preg_split('/\n{2,}/', trim($raw));
+                    $sportIcon = match($bettingTip->sport ?? '') {
+                        'Football'         => '⚽',
+                        'Basketball'       => '🏀',
+                        'Baseball'         => '⚾',
+                        'Tennis'           => '🎾',
+                        'Cricket'          => '🏏',
+                        'MMA'              => '🥊',
+                        'Hockey'           => '🏒',
+                        'Rugby'            => '🏉',
+                        'American Football'=> '🏈',
+                        default            => '🏅',
+                    };
+                @endphp
+                <div class="space-y-4 text-sm leading-relaxed">
+                @foreach($blocks as $block)
+                    @php
+                        $block  = trim($block);
+                        if ($block === '') continue;
+                        $lines  = explode("\n", $block);
+                        $header = trim($lines[0] ?? '');
+                        $body   = array_values(array_filter(array_map('trim', array_slice($lines, 1))));
+
+                        $isMatchResult = (bool) preg_match('/^(MATCH RESULT|MATCH ODDS)/i', $header);
+                        $isGoals       = (bool) preg_match('/^GOALS MARKETS/i', $header);
+                        $isAnalysis    = (bool) preg_match('/^MARKET ANALYSIS/i', $header);
+                        $isOurPick     = (bool) preg_match('/^OUR PICK/i', $header);
+                    @endphp
+
+                    @if($isMatchResult)
+                        @php
+                            $oddsLine = $body[0] ?? '';
+                            preg_match_all('/([^|:]+):\s*([\d.]+)\s*\(([\d.]+%)\)/', $oddsLine, $om, PREG_SET_ORDER);
+                            $lowestOdds = $om ? min(array_column(array_map(fn($x)=>['o'=>(float)$x[2]],$om),'o')) : null;
+                            $gridClass  = count($om) === 3 ? 'grid-cols-3' : 'grid-cols-2';
+                        @endphp
+                        <div class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-600 shadow-sm">
+                            <div class="flex items-center gap-2 px-3.5 py-2.5 bg-gray-800 dark:bg-gray-900">
+                                <span>{{ $sportIcon }}</span>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-white">{{ $header }}</span>
+                            </div>
+                            @if(count($om) >= 2)
+                                <div class="grid {{ $gridClass }} divide-x divide-gray-200 dark:divide-gray-600 bg-white dark:bg-gray-800">
+                                    @foreach($om as $o)
+                                        @php $isFav = (float)$o[2] === $lowestOdds; @endphp
+                                        <div class="flex flex-col items-center py-4 px-1 {{ $isFav ? 'bg-green-50 dark:bg-green-900/30' : 'bg-white dark:bg-gray-800' }}">
+                                            <span class="text-[10px] text-gray-500 dark:text-gray-300 font-semibold text-center mb-1.5 line-clamp-1 px-1">{{ trim($o[1]) }}</span>
+                                            <span class="text-2xl font-black {{ $isFav ? 'text-green-600 dark:text-green-400' : 'text-gray-700 dark:text-gray-100' }}">{{ $o[2] }}</span>
+                                            <span class="text-xs mt-1 font-bold {{ $isFav ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-300' }}">{{ $o[3] }}</span>
+                                            @if($isFav)
+                                                <span class="mt-2 text-[9px] font-black bg-green-500 text-white px-2 py-0.5 rounded-full uppercase tracking-wide">Fav</span>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="p-3.5 font-mono text-sm font-semibold text-gray-900 dark:text-white bg-white dark:bg-gray-800">{{ $oddsLine }}</p>
+                            @endif
+                        </div>
+
+                    @elseif($isGoals)
+                        <div class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-600 shadow-sm">
+                            <div class="flex items-center gap-2 px-3.5 py-2.5 bg-indigo-700 dark:bg-indigo-800">
+                                <span>📊</span>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-white">{{ $header }}</span>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
+                                @foreach($body as $line)
+                                    @php
+                                        $mOU = $mBTTS = [];
+                                        preg_match('/^(.*?):\s+O\s+([\d.]+)\s*(\(\d+%\))?\s*\/\s*U\s+([\d.]+)\s*(\(\d+%\))?/i', $line, $mOU);
+                                        preg_match('/^(Both Teams.*?):\s+Yes\s+([\d.]+)\s*(\(\d+%\))?\s*\/\s*No\s+([\d.]+)\s*(\(\d+%\))?/i', $line, $mBTTS);
+                                        $overPct = 0;
+                                        if (!empty($mOU[3])) { preg_match('/(\d+)/', $mOU[3], $px); $overPct = (int)($px[1] ?? 0); }
+                                    @endphp
+                                    @if(count($mOU) >= 5)
+                                        <div class="px-3.5 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-28 text-xs text-gray-600 dark:text-gray-300 font-semibold flex-shrink-0">{{ trim($mOU[1]) }}</span>
+                                                <span class="text-xs font-bold text-gray-900 dark:text-white bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 px-2.5 py-1 rounded-full font-mono shadow-sm">O {{ $mOU[2] }}{{ !empty($mOU[3]) ? ' '.$mOU[3] : '' }}</span>
+                                                <span class="text-gray-400 dark:text-gray-500 text-xs font-bold">/</span>
+                                                <span class="text-xs font-bold text-white bg-gray-700 dark:bg-gray-900 border border-gray-600 dark:border-gray-700 px-2.5 py-1 rounded-full font-mono shadow-sm">U {{ $mOU[4] }}{{ !empty($mOU[5]) ? ' '.$mOU[5] : '' }}</span>
+                                            </div>
+                                            @if($overPct > 0)
+                                                <div class="mt-2.5 h-2 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-600">
+                                                    <div class="h-full rounded-full bg-gray-700 dark:bg-white" style="width:{{ $overPct }}%"></div>
+                                                </div>
+                                                <div class="flex justify-between mt-0.5">
+                                                    <span class="text-[10px] text-gray-600 dark:text-gray-300 font-bold">Over {{ $overPct }}%</span>
+                                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold">Under {{ 100 - $overPct }}%</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @elseif(count($mBTTS) >= 5)
+                                        @php
+                                            $yesPct = 0;
+                                            if (!empty($mBTTS[3])) { preg_match('/(\d+)/', $mBTTS[3], $bx); $yesPct = (int)($bx[1] ?? 0); }
+                                        @endphp
+                                        <div class="px-3.5 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-28 text-xs text-gray-600 dark:text-gray-300 font-semibold flex-shrink-0">{{ trim($mBTTS[1]) }}</span>
+                                                <span class="text-xs font-bold text-gray-900 dark:text-white bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 px-2.5 py-1 rounded-full font-mono shadow-sm">Yes {{ $mBTTS[2] }}{{ !empty($mBTTS[3]) ? ' '.$mBTTS[3] : '' }}</span>
+                                                <span class="text-gray-400 dark:text-gray-500 text-xs font-bold">/</span>
+                                                <span class="text-xs font-bold text-white dark:text-gray-100 bg-gray-700 dark:bg-gray-900 border border-gray-600 dark:border-gray-700 px-2.5 py-1 rounded-full font-mono shadow-sm">No {{ $mBTTS[4] }}{{ !empty($mBTTS[5]) ? ' '.$mBTTS[5] : '' }}</span>
+                                            </div>
+                                            @if($yesPct > 0)
+                                                <div class="mt-2.5 h-2 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-600">
+                                                    <div class="h-full rounded-full bg-gray-700 dark:bg-white" style="width:{{ $yesPct }}%"></div>
+                                                </div>
+                                                <div class="flex justify-between mt-0.5">
+                                                    <span class="text-[10px] text-gray-600 dark:text-gray-300 font-bold">Yes {{ $yesPct }}%</span>
+                                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold">No {{ 100 - $yesPct }}%</span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <p class="px-3.5 py-2 text-xs font-mono text-gray-600 dark:text-gray-300">{{ $line }}</p>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+
+                    @elseif($isAnalysis)
+                        <div class="rounded-xl border border-gray-200 dark:border-gray-600 overflow-hidden shadow-sm">
+                            <div class="flex items-center gap-2 px-3.5 py-2.5 bg-gray-100 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+                                <svg class="w-3.5 h-3.5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-gray-700 dark:text-white">{{ $header }}</span>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 px-4 py-4 space-y-3">
+                                @foreach($body as $i => $line)
+                                    <p class="text-sm text-gray-800 dark:text-gray-100 leading-relaxed {{ $i === 0 ? 'font-semibold' : '' }}">{{ $line }}</p>
+                                @endforeach
+                            </div>
+                        </div>
+
+                    @elseif($isOurPick)
+                        @php
+                            $pickText = preg_replace('/^OUR PICK:\s*/i', '', $header);
+                            preg_match('/^(.+?)\s*@\s*([\d.]+)$/', $pickText, $pp);
+                            $pickPred = count($pp) >= 2 ? trim($pp[1]) : $pickText;
+                            $pickOdds = $pp[2] ?? null;
+                        @endphp
+                        <div class="rounded-xl overflow-hidden shadow-sm border border-green-300 dark:border-green-700">
+                            <div class="bg-gradient-to-r from-green-600 to-emerald-500 px-4 py-4">
+                                <p class="text-[10px] font-black uppercase tracking-widest text-green-100 mb-2">🎯 Our Selection</p>
+                                <div class="flex items-center justify-between gap-3">
+                                    <p class="text-xl font-black text-white leading-tight">{{ $pickPred }}</p>
+                                    @if($pickOdds)
+                                        <span class="flex-shrink-0 bg-white text-green-700 font-black text-xl px-4 py-1.5 rounded-lg shadow">{{ $pickOdds }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 dark:bg-gray-800 px-4 py-4 space-y-2 border-t border-green-100 dark:border-green-900">
+                                @foreach($body as $line)
+                                    <p class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">{{ $line }}</p>
+                                @endforeach
+                            </div>
+                        </div>
+
+                    @else
+                        <p class="text-sm text-gray-600 dark:text-gray-200 leading-relaxed">{{ $block }}</p>
+                    @endif
+                @endforeach
+                </div>
 
                 <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between gap-3">
                     <p class="text-xs text-gray-400">Want more in-depth breakdowns and betting insights?</p>

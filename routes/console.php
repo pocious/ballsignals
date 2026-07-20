@@ -32,6 +32,9 @@ Schedule::command('tips:scrape', ['--results-only'])->everyFifteenMinutes();
 // Post yesterday's results summary to Telegram at 11:00 PM
 Schedule::command('tips:telegram', ['--results'])->dailyAt('23:00');
 
+// Fetch latest football news from RSS feeds every 6 hours
+Schedule::command('news:fetch-football')->everySixHours();
+
 // Auto-publish weekly football news roundup every Saturday at 9:00 AM
 Schedule::command('news:post', ['--sport' => 'football'])->weekly()->saturdays()->at('09:00');
 

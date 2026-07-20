@@ -33,6 +33,12 @@ class DashboardController extends Controller
             'lost'    => BettingTip::where('is_premium', true)->where('status', 'lost')->count(),
         ];
 
+        // Today's VIP tips for the quick-manage panel
+        $todayVipTips = BettingTip::where('is_premium', true)
+            ->whereDate('match_time', today())
+            ->orderBy('match_time')
+            ->get();
+
         // Premium subscription data
         $allApproved    = SubscriptionRequest::where('status', 'approved')->get();
         $revenueUsd     = $allApproved->sum(fn ($s) => SubscriptionRequest::$plans[$s->plan]['amount_usd'] ?? 0);
@@ -60,6 +66,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact(
             'stats', 'recent', 'recentMessages',
             'premiumTips', 'premiumStats',
+            'todayVipTips',
             'subStats', 'newPayments', 'recentSubs', 'pendingSubs'
         ));
     }

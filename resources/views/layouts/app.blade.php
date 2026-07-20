@@ -102,12 +102,12 @@
                 <nav class="hidden md:flex items-center gap-0.5">
                     @php
                         $navLinks = [
-                            ['Home',                 route('home'),        request()->routeIs('home')],
-                            ["Today's Tips",         route('home'),        false],
-                            ['Basketball',           route('basketball'),  request()->routeIs('basketball')],
-                            ['Blog',                 route('blog.index'),  request()->routeIs('blog.*')],
-                            ['Premium Tips',         route('premium'),     request()->routeIs('premium')],
-                            ["Yesterday's Results",  route('results'),     request()->routeIs('results')],
+                            ['Home',        route('home'),       request()->routeIs('home')],
+                            ['Basketball',  route('basketball'), request()->routeIs('basketball')],
+                            ['News',        route('news.index'), request()->routeIs('news.*')],
+                            ['Blog',        route('blog.index'), request()->routeIs('blog.*')],
+                            ['Premium',     route('premium'),    request()->routeIs('premium')],
+                            ['Results',     route('results'),    request()->routeIs('results')],
                         ];
                     @endphp
                     @foreach($navLinks as [$label, $href, $active])
@@ -119,6 +119,38 @@
                                          {{ $active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100' }}"></span>
                         </a>
                     @endforeach
+
+                    {{-- More Sports dropdown --}}
+                    <div class="relative group">
+                        <button class="relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 flex items-center gap-1
+                                       {{ request()->routeIs('sport') ? 'text-orange-400' : 'text-gray-400 group-hover:text-white group-hover:bg-white/5' }}">
+                            More Sports
+                            <svg class="w-3 h-3 mt-px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="absolute top-full left-0 mt-1 w-52 bg-[#0a0f1a] border border-white/10 rounded-xl shadow-xl shadow-black/40 overflow-hidden z-50
+                                    opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
+                            @foreach([
+                                ['tennis',           '🎾', 'Tennis'],
+                                ['cricket',          '🏏', 'Cricket'],
+                                ['mma',              '🥊', 'MMA'],
+                                ['baseball',         '⚾', 'Baseball'],
+                                ['american-football','🏈', 'American Football'],
+                                ['hockey',           '🏒', 'Hockey (NHL)'],
+                                ['rugby',            '🏉', 'Rugby'],
+                            ] as [$slug, $icon, $label])
+                            <a href="{{ route('sport', $slug) }}"
+                               class="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors
+                                      {{ request()->routeIs('sport') && request()->route('sport') === $slug
+                                         ? 'text-orange-400 bg-orange-500/10'
+                                         : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                                <span>{{ $icon }}</span>
+                                {{ $label }}
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
                 </nav>
 
                 {{-- Right — auth + dark toggle --}}
@@ -184,11 +216,27 @@
              class="menu-hidden md:hidden absolute top-full left-0 right-0 bg-[#0a0f1a] border-b border-white/10 shadow-xl">
             <div class="px-4 py-3 space-y-1">
                 <a href="{{ route('home') }}"
-                   class="flex items-center px-3 py-2.5 rounded-xl text-sm font-semibold text-green-400 bg-green-500/10">
-                    Home
+                   class="flex items-center px-3 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('home') ? 'text-green-400 bg-green-500/10' : 'text-gray-400 hover:text-white hover:bg-white/5' }} transition-colors">
+                    ⚽ Football
                 </a>
-                <a href="{{ route('home') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Today's Tips</a>
-                <a href="{{ route('basketball') }}" class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors {{ request()->routeIs('basketball') ? 'text-orange-400 bg-orange-500/10' : '' }}">Basketball</a>
+                <a href="{{ route('basketball') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('basketball') ? 'text-orange-400 bg-orange-500/10' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">🏀 Basketball</a>
+                @foreach([
+                    ['tennis',           '🎾', 'Tennis'],
+                    ['cricket',          '🏏', 'Cricket'],
+                    ['mma',              '🥊', 'MMA'],
+                    ['baseball',         '⚾', 'Baseball'],
+                    ['american-football','🏈', 'American Football'],
+                    ['hockey',           '🏒', 'Hockey (NHL)'],
+                    ['rugby',            '🏉', 'Rugby'],
+                ] as [$slug, $icon, $label])
+                <a href="{{ route('sport', $slug) }}"
+                   class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
+                          {{ request()->routeIs('sport') && request()->route('sport') === $slug ? 'text-orange-400 bg-orange-500/10' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                    {{ $icon }} {{ $label }}
+                </a>
+                @endforeach
+                <div class="h-px bg-white/5 my-1"></div>
+                <a href="{{ route('news.index') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">News</a>
                 <a href="{{ route('blog.index') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Blog</a>
                 <a href="{{ route('tip-of-the-day') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Tip of the Day</a>
                 <a href="{{ route('premium') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
@@ -315,6 +363,7 @@
                         @foreach([
                             ["Today's Tips",        route('home')],
                             ['Basketball Tips',  route('basketball')],
+                            ['Football News',       route('news.index')],
                             ['Blog',                route('blog.index')],
                             ['Premium Tips',        route('premium')],
                             ["Yesterday's Results", route('results')],

@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BasketballController;
+use App\Http\Controllers\SportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LiveMatchesController;
 use App\Http\Controllers\LeagueStatsController;
@@ -22,12 +23,14 @@ use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SubscriptionRequestController;
 use App\Http\Controllers\TipDetailController;
 use App\Http\Controllers\TipOfTheDayController;
+use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
 // Public
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/live', [LiveMatchesController::class, 'index'])->name('live');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/premium', [PremiumController::class, 'index'])->name('premium');
@@ -35,6 +38,9 @@ Route::get('/tips/{bettingTip}', [TipDetailController::class, 'show'])->name('ti
 Route::get('/tip-of-the-day', [TipOfTheDayController::class, 'index'])->name('tip-of-the-day');
 Route::get('/results', [ResultsController::class, 'index'])->name('results');
 Route::get('/basketball', [BasketballController::class, 'index'])->name('basketball');
+Route::get('/sports/{sport}', [SportController::class, 'index'])
+    ->where('sport', 'tennis|cricket|mma|baseball|american-football|hockey|rugby')
+    ->name('sport');
 Route::get('/league-stats', [LeagueStatsController::class, 'index'])->name('league-stats');
 Route::get('/subscribe', [ContactController::class, 'index'])->name('subscribe');
 Route::post('/subscribe', [ContactController::class, 'send'])->name('subscribe.send');

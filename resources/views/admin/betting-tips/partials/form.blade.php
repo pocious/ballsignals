@@ -159,13 +159,21 @@ $bettingTip ??= null;
     @error('status')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
 </div>
 <div class="flex flex-col justify-center">
-    <label class="block text-sm font-medium text-gray-700 mb-1.5">Premium Tip</label>
+    <label class="block text-sm font-medium text-gray-700 mb-1.5">Premium / VIP Tip</label>
     <label class="flex items-center gap-2 cursor-pointer">
+        @php
+            $isPremiumChecked = old('is_premium', $bettingTip->is_premium ?? request()->boolean('vip'));
+        @endphp
         <input type="checkbox" name="is_premium" value="1"
-               {{ old('is_premium', $bettingTip->is_premium ?? false) ? 'checked' : '' }}
-               class="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500">
-        <span class="text-sm text-gray-600">Mark as Premium</span>
+               {{ $isPremiumChecked ? 'checked' : '' }}
+               class="w-4 h-4 rounded border-gray-300 text-yellow-500 focus:ring-yellow-400">
+        <span class="text-sm font-semibold {{ $isPremiumChecked ? 'text-yellow-600' : 'text-gray-600' }}">
+            Mark as VIP / Premium
+        </span>
     </label>
+    @if(request()->boolean('vip'))
+        <p class="text-[11px] text-yellow-600 mt-1 font-semibold">Auto-checked — this tip will be shown as a VIP pick.</p>
+    @endif
 </div>
 </div>
 

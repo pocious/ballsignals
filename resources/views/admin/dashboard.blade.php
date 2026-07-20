@@ -66,6 +66,80 @@
 
 </div>
 
+{{-- ── Today's VIP Tips ── --}}
+<div class="bg-white rounded-xl border-2 border-yellow-400 mb-8">
+    <div class="px-6 py-4 border-b border-yellow-100 flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-2">
+            <span class="text-[10px] font-black text-black bg-yellow-400 px-2 py-0.5 rounded uppercase tracking-wide">VIP</span>
+            <h2 class="font-bold text-gray-900">Today's VIP Tips</h2>
+            <span class="text-xs text-gray-400">{{ today()->format('d M Y') }}</span>
+            @php $vipCount = $todayVipTips->count(); @endphp
+            @if($vipCount < 2)
+                <span class="text-[10px] font-bold text-orange-600 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">
+                    {{ $vipCount }}/2 tips — add {{ 2 - $vipCount }} more
+                </span>
+            @else
+                <span class="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
+                    {{ $vipCount }} tips ready
+                </span>
+            @endif
+        </div>
+        <a href="{{ route('admin.betting-tips.create', ['vip' => 1]) }}"
+           class="inline-flex items-center gap-1.5 px-4 py-2 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-black rounded-lg transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add VIP Tip
+        </a>
+    </div>
+
+    @if($todayVipTips->isEmpty())
+        <div class="px-6 py-8 text-center">
+            <p class="text-sm text-gray-400 mb-3">No VIP tips added for today yet.</p>
+            <a href="{{ route('admin.betting-tips.create', ['vip' => 1]) }}"
+               class="inline-flex items-center gap-1.5 px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-black text-sm font-black rounded-xl transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                </svg>
+                Add Today's First VIP Tip
+            </a>
+        </div>
+    @else
+        <div class="divide-y divide-gray-100">
+            @foreach($todayVipTips as $vip)
+            <div class="px-6 py-3.5 flex items-center justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <p class="text-sm font-bold text-gray-900 whitespace-nowrap">
+                            {{ $vip->home_team }} <span class="font-normal text-gray-400">vs</span> {{ $vip->away_team }}
+                        </p>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full
+                            {{ $vip->status === 'won' ? 'bg-green-100 text-green-700' : ($vip->status === 'lost' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
+                            {{ ucfirst($vip->status) }}
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-0.5">
+                        {{ $vip->match_time->format('g:i A') }}
+                        @if($vip->league) · {{ $vip->league }}@endif
+                        · <span class="font-semibold text-gray-600">{{ $vip->prediction }}</span>
+                        @if($vip->odds) · <span class="text-yellow-600 font-bold">{{ number_format($vip->odds, 2) }}</span>@endif
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <a href="{{ route('admin.betting-tips.edit', $vip) }}"
+                       class="text-xs text-blue-600 hover:underline font-semibold">Edit</a>
+                    <form method="POST" action="{{ route('admin.betting-tips.destroy', $vip) }}"
+                          onsubmit="return confirm('Delete this VIP tip?')">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="text-xs text-red-500 hover:text-red-700 font-semibold">Delete</button>
+                    </form>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    @endif
+</div>
+
 {{-- ── Premium Subscriptions Overview ── --}}
 <div class="bg-white rounded-xl border-2 border-green-400 mb-8">
     <div class="px-6 py-4 border-b border-green-100 flex items-center justify-between flex-wrap gap-3">
