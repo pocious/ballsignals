@@ -12,6 +12,7 @@ if (isset($_GET['testdb'])) {
     if ($pass !== '') {
         try {
             $pdo = new PDO("mysql:host=localhost;dbname=u343042962_ballsignals;charset=utf8", "u343042962_ballsignals", $pass);
+            // also try 127.0.0.1 if needed
             echo "<b style='color:green'>✓ Password works! Tell me this password.</b>";
         } catch (Exception $e) {
             echo "<b style='color:red'>✗ Wrong password.</b>";
@@ -49,7 +50,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_DATABASE=u343042962_ballsignals
 DB_USERNAME=u343042962_ballsignals
-DB_PASSWORD=Ballsigna2024
+DB_PASSWORD=BsK9m2xQ77
 
 SESSION_DRIVER=database
 SESSION_LIFETIME=120
