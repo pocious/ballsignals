@@ -100,14 +100,18 @@ echo "<b>migrate:</b><pre>$out</pre>";
 $out = shell_exec("php $artisan storage:link 2>&1");
 echo "<b>storage:link:</b><pre>$out</pre>";
 
-// Show last Laravel log lines
-$log = base_path('storage/logs/laravel.log');
-if (!function_exists('base_path')) {
-    $log = dirname(__DIR__) . '/storage/logs/laravel.log';
-}
-if (file_exists($log)) {
-    $lines = array_slice(file($log), -30);
-    echo "<b>Last 30 log lines:</b><pre>" . htmlspecialchars(implode('', $lines)) . "</pre>";
+// Fetch today's tips from API
+if (isset($_GET['fetch'])) {
+    set_time_limit(120);
+    $out = shell_exec("php $artisan tips:scrape --odds-api 2>&1");
+    echo "<b>tips:scrape --odds-api:</b><pre>" . htmlspecialchars($out) . "</pre>";
+    $out2 = shell_exec("php $artisan tips:scrape --basketball 2>&1");
+    echo "<b>tips:scrape --basketball:</b><pre>" . htmlspecialchars($out2) . "</pre>";
+    $out3 = shell_exec("php $artisan fetch:football-news 2>&1");
+    echo "<b>fetch:football-news:</b><pre>" . htmlspecialchars($out3) . "</pre>";
+    echo "<br><b style='color:green'>Done! Visit ballsignals.com to see tips.</b>";
+    exit;
 }
 
 echo "<br><b style='color:green'>Done! Visit ballsignals.com now.</b>";
+echo '<br><br><a href="?tok=bsK9x2mQ&fetch=1" style="background:#16a34a;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;">Fetch Today\'s Tips from API</a>';
