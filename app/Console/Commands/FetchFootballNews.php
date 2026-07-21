@@ -74,15 +74,19 @@ class FetchFootballNews extends Command
                         try { $publishedAt = new \DateTime($pubDate); } catch (\Exception) {}
                     }
 
-                    // Extract image from media:content, media:thumbnail, enclosure, or description img
+                    // Extract image from media:thumbnail, media:content, enclosure, or description img
                     $image = null;
                     $ns    = $item->getNamespaces(true);
 
-                    if (!$image && isset($ns['media'])) {
-                        $media = $item->children($ns['media']);
-                        $url = (string) ($media->thumbnail['url'] ?? '');
-                        if (!$url) $url = (string) ($media->content['url'] ?? '');
-                        if ($url) $image = $url;
+                    if (isset($ns['media'])) {
+                        // Use XPath — children() silently returns empty for self-closing elements with attrs
+                        $item->registerXPathNamespace('media', $ns['media']);
+                        $res = $item->xpath('media:thumbnail/@url');
+                        if (!empty($res)) $image = str_replace('/standard/240/', '/standard/640/', (string) $res[0]);
+                        if (!$image) {
+                            $res = $item->xpath('media:content/@url');
+                            if (!empty($res)) $image = (string) $res[0];
+                        }
                     }
                     if (!$image) {
                         $enc = (string) ($item->enclosure['url'] ?? '');
