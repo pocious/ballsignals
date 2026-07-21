@@ -69,21 +69,23 @@ class FetchFootballNews extends Command
                         try { $publishedAt = new \DateTime($pubDate); } catch (\Exception) {}
                     }
 
-                    // Extract image from media:content, enclosure, or description
+                    // Extract image from media:content, media:thumbnail, enclosure, or description img
                     $image = null;
                     $ns    = $item->getNamespaces(true);
 
-                    if (isset($ns['media'])) {
+                    if (!$image && isset($ns['media'])) {
                         $media = $item->children($ns['media']);
-                        $image = (string) ($media->content['url'] ?? $media->thumbnail['url'] ?? '');
-                    }
-                    if (!$image && isset($ns['enclosure'])) {
-                        $image = (string) ($item->enclosure['url'] ?? '');
+                        $url = (string) ($media->thumbnail['url'] ?? '');
+                        if (!$url) $url = (string) ($media->content['url'] ?? '');
+                        if ($url) $image = $url;
                     }
                     if (!$image) {
-                        // Try to extract from description HTML
+                        $enc = (string) ($item->enclosure['url'] ?? '');
+                        if ($enc) $image = $enc;
+                    }
+                    if (!$image) {
                         preg_match('/<img[^>]+src=["\']([^"\']+)["\']/', (string) ($item->description ?? ''), $m);
-                        $image = $m[1] ?? null;
+                        if (!empty($m[1])) $image = $m[1];
                     }
 
                     if (FootballNews::where('guid', $guid)->exists()) continue;
@@ -139,13 +141,17 @@ class FetchFootballNews extends Command
 
             if (file_exists($filepath)) return '/images/news/' . $filename;
 
-            $ctx = stream_context_create(['http' => [
-                'timeout'         => 8,
-                'follow_location' => true,
-                'user_agent'      => 'Mozilla/5.0 (compatible; BallSignals/1.0)',
-            ]]);
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_TIMEOUT        => 8,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_USERAGENT      => 'Mozilla/5.0 (compatible; BallSignals/1.0)',
+            ]);
+            $data = curl_exec($ch);
+            curl_close($ch);
 
-            $data = @file_get_contents($url, false, $ctx);
             if ($data && strlen($data) > 1000) {
                 file_put_contents($filepath, $data);
                 return '/images/news/' . $filename;
