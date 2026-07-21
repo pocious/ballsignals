@@ -115,6 +115,16 @@ class FetchFootballNews extends Command
             }
         }
 
+        // Keep only the latest 200 articles
+        $oldest = FootballNews::orderByDesc('published_at')->skip(200)->first();
+        if ($oldest) {
+            FootballNews::where('published_at', '<', $oldest->published_at)->delete();
+        }
+
+        $this->info("\nDone — {$inserted} new articles stored.");
+        return self::SUCCESS;
+    }
+
     private function downloadImage(string $url, string $guid): ?string
     {
         try {
@@ -143,15 +153,5 @@ class FetchFootballNews extends Command
         } catch (\Exception) {}
 
         return null;
-    }
-
-        // Keep only the latest 200 articles
-        $oldest = FootballNews::orderByDesc('published_at')->skip(200)->first();
-        if ($oldest) {
-            FootballNews::where('published_at', '<', $oldest->published_at)->delete();
-        }
-
-        $this->info("\nDone — {$inserted} new articles stored.");
-        return self::SUCCESS;
     }
 }
