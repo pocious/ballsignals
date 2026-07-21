@@ -18,11 +18,29 @@
     </div>
 </div>
 
-<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+
+    {{-- Source filter tabs --}}
+    @if($sources->isNotEmpty())
+    <div class="flex items-center gap-2 flex-wrap mb-6">
+        <a href="{{ route('news.index') }}"
+           class="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors
+                  {{ !$selectedSource ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+            All Sources
+        </a>
+        @foreach($sources as $source)
+        <a href="{{ route('news.index', ['source' => $source]) }}"
+           class="px-3 py-1.5 rounded-full text-xs font-semibold transition-colors
+                  {{ $selectedSource === $source ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white' }}">
+            {{ $source }}
+        </a>
+        @endforeach
+    </div>
+    @endif
 
     @if($articles->isEmpty())
         <div class="text-center py-16">
-            <p class="text-gray-400 text-sm">No news articles yet. Run <code class="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-xs">php artisan news:fetch-football</code> to fetch them.</p>
+            <p class="text-gray-400 text-sm">No articles found{{ $selectedSource ? ' for ' . $selectedSource : '' }}.</p>
         </div>
     @else
 
@@ -38,8 +56,6 @@
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                              loading="lazy" onerror="this.parentElement.style.display='none'">
                     </div>
-                @else
-                    <div class="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex-shrink-0"></div>
                 @endif
 
                 {{-- Content --}}

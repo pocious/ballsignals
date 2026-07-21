@@ -74,7 +74,7 @@
         </div>
     </article>
 
-    {{-- Related articles --}}
+    {{-- Related articles from same source --}}
     @if($related->isNotEmpty())
     <div class="mt-8">
         <h2 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4">
@@ -96,9 +96,7 @@
                         {{ $item->title }}
                     </p>
                     @if($item->published_at)
-                        <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1.5">
-                            {{ $item->published_at->diffForHumans() }}
-                        </p>
+                        <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1.5">{{ $item->published_at->diffForHumans() }}</p>
                     @endif
                 </div>
             </a>
@@ -106,6 +104,44 @@
         </div>
     </div>
     @endif
+
+    {{-- Articles from other sources --}}
+    @foreach($otherSources as $source => $items)
+    <div class="mt-8">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                From {{ $source }}
+            </h2>
+            <a href="{{ route('news.index', ['source' => $source]) }}"
+               class="text-xs font-semibold text-green-600 dark:text-green-400 hover:underline flex items-center gap-1">
+                See all
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            @foreach($items as $item)
+            <a href="{{ route('news.show', $item) }}"
+               class="group flex gap-3 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700/50 overflow-hidden hover:border-green-400 dark:hover:border-green-500 transition-all duration-200 p-3">
+                @if($item->image)
+                    <div class="w-20 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                        <img src="{{ $item->image }}" alt="{{ $item->title }}"
+                             class="w-full h-full object-cover"
+                             loading="lazy" onerror="this.parentElement.style.display='none'">
+                    </div>
+                @endif
+                <div class="flex flex-col justify-center min-w-0">
+                    <p class="text-xs font-bold text-gray-800 dark:text-white leading-snug group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors line-clamp-2">
+                        {{ $item->title }}
+                    </p>
+                    @if($item->published_at)
+                        <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1">{{ $item->published_at->diffForHumans() }}</p>
+                    @endif
+                </div>
+            </a>
+            @endforeach
+        </div>
+    </div>
+    @endforeach
 
 </div>
 
