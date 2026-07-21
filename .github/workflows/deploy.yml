@@ -21,5 +21,7 @@ jobs:
             composer install --no-dev --optimize-autoloader -q
             php artisan optimize:clear
             php artisan migrate --force
-            mkdir -p public/images/news
+            mkdir -p storage/app/public/news
+            rm -f public/storage
+            php artisan storage:link
             php artisan news:fetch-football

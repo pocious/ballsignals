@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\FootballNews;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class FetchFootballNews extends Command
@@ -12,24 +13,37 @@ class FetchFootballNews extends Command
     protected $description = 'Fetch football news from RSS feeds and cache in DB';
 
     private const FEEDS = [
-        'BBC Sport'       => 'https://feeds.bbci.co.uk/sport/football/rss.xml',
-        'Sky Sports'      => 'https://www.skysports.com/rss/12040',
-        'The Guardian'    => 'https://www.theguardian.com/football/rss',
-        'ESPN FC'         => 'https://www.espn.com/espn/rss/soccer/news',
+        'BBC Sport'    => 'https://feeds.bbci.co.uk/sport/football/rss.xml',
+        'Sky Sports'   => 'https://www.skysports.com/rss/12040',
+        'The Guardian' => 'https://www.theguardian.com/football/rss',
+        'ESPN FC'      => 'https://www.espn.com/espn/rss/soccer/news',
     ];
+
+    // Images live in storage/app/public/news/ and are served via public/storage symlink
+    private const IMG_DIR = 'news';
+    private const IMG_URL_PREFIX = '/storage/news/';
 
     public function handle(): int
     {
         $inserted = 0;
 
-        // Null out any previously stored remote URLs (hotlink-blocked on mobile)
+        // Ensure storage directory exists
+        $dir = storage_path('app/public/' . self::IMG_DIR);
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        // Migrate any old /images/news/ paths to /storage/news/
+        DB::table('football_news')
+            ->where('image', 'like', '/images/news/%')
+            ->update(['image' => DB::raw("REPLACE(image, '/images/news/', '/storage/news/')")]);
+
+        // Null out any remote URLs (not local storage paths)
         FootballNews::whereNotNull('image')
-            ->where('image', 'not like', '/images/news/%')
+            ->where('image', 'not like', self::IMG_URL_PREFIX . '%')
             ->update(['image' => null]);
 
-        // Null out references to local image files that no longer exist on disk
-        foreach (FootballNews::where('image', 'like', '/images/news/%')->get(['id', 'image']) as $article) {
-            if (!file_exists(public_path($article->image))) {
+        // Null out references to local files that no longer exist on disk
+        foreach (FootballNews::where('image', 'like', self::IMG_URL_PREFIX . '%')->get(['id', 'image']) as $article) {
+            if (!file_exists($this->storagePath($article->image))) {
                 $article->update(['image' => null]);
             }
         }
@@ -56,37 +70,32 @@ class FetchFootballNews extends Command
                 $count = 0;
 
                 foreach ($items as $item) {
-                    $guid  = trim((string) ($item->guid ?? $item->link ?? ''));
-                    $title = trim((string) ($item->title ?? ''));
-                    $link  = trim((string) ($item->link ?? ''));
-                    $desc  = trim(strip_tags((string) ($item->description ?? '')));
+                    $guid    = trim((string) ($item->guid ?? $item->link ?? ''));
+                    $title   = trim((string) ($item->title ?? ''));
+                    $link    = trim((string) ($item->link ?? ''));
+                    $desc    = trim(strip_tags((string) ($item->description ?? '')));
                     $pubDate = trim((string) ($item->pubDate ?? ''));
 
                     if (!$guid || !$title || !$link || strlen($link) > 255) continue;
 
-                    // Hash guid so it always fits varchar(255)
                     $guid = md5($guid);
 
-                    // Strip 4-byte UTF-8 chars (emoji etc.) that MySQL latin1/utf8mb3 rejects
                     $strip4 = fn($s) => $s ? preg_replace('/[\x{10000}-\x{10FFFF}]/u', '', $s) : $s;
-                    $title = $strip4($title);
-                    $desc  = $strip4($desc);
+                    $title  = $strip4($title);
+                    $desc   = $strip4($desc);
 
-                    // Limit description length
                     if (mb_strlen($desc) > 300) $desc = mb_substr($desc, 0, 297) . '…';
 
-                    // Parse date
                     $publishedAt = null;
                     if ($pubDate) {
                         try { $publishedAt = new \DateTime($pubDate); } catch (\Exception) {}
                     }
 
-                    // Extract image from media:thumbnail, media:content, enclosure, or description img
+                    // Extract image URL from RSS item
                     $image = null;
                     $ns    = $item->getNamespaces(true);
 
                     if (isset($ns['media'])) {
-                        // Use XPath — children() silently returns empty for self-closing elements with attrs
                         $item->registerXPathNamespace('media', $ns['media']);
                         $res = $item->xpath('media:thumbnail/@url');
                         if (!empty($res)) $image = str_replace('/standard/240/', '/standard/640/', (string) $res[0]);
@@ -104,19 +113,13 @@ class FetchFootballNews extends Command
                         if (!empty($m[1])) $image = $m[1];
                     }
 
-                    $existing = FootballNews::where('guid', $guid)->first();
-
-                    // Download image locally to avoid hotlink blocking
-                    $localImage = null;
-                    if ($image) {
-                        $localImage = $this->downloadImage($image, $guid, $link);
-                    }
+                    $existing   = FootballNews::where('guid', $guid)->first();
+                    $localImage = $image ? $this->downloadImage($image, $guid, $link) : null;
 
                     if ($existing) {
-                        // Update image if: no image in DB, or local file has gone missing
                         $fileMissing = $existing->image
-                            && str_starts_with($existing->image, '/images/news/')
-                            && !file_exists(public_path($existing->image));
+                            && str_starts_with($existing->image, self::IMG_URL_PREFIX)
+                            && !file_exists($this->storagePath($existing->image));
                         if ($localImage && (!$existing->image || $fileMissing)) {
                             $existing->update(['image' => $localImage]);
                         }
@@ -154,10 +157,16 @@ class FetchFootballNews extends Command
         return self::SUCCESS;
     }
 
+    private function storagePath(string $imageUrl): string
+    {
+        // /storage/news/xxx.jpg → storage/app/public/news/xxx.jpg
+        return storage_path('app/public' . substr($imageUrl, strlen('/storage')));
+    }
+
     private function downloadImage(string $url, string $guid, string $referer = ''): ?string
     {
         try {
-            $dir = public_path('images/news');
+            $dir = storage_path('app/public/' . self::IMG_DIR);
             if (!is_dir($dir)) mkdir($dir, 0755, true);
 
             $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
@@ -166,7 +175,7 @@ class FetchFootballNews extends Command
             $filename = $guid . '.' . $ext;
             $filepath = $dir . '/' . $filename;
 
-            if (file_exists($filepath)) return '/images/news/' . $filename;
+            if (file_exists($filepath)) return self::IMG_URL_PREFIX . $filename;
 
             $ch = curl_init($url);
             curl_setopt_array($ch, [
@@ -179,10 +188,10 @@ class FetchFootballNews extends Command
                 CURLOPT_HTTPHEADER     => ['Accept: image/avif,image/webp,image/apng,image/*,*/*;q=0.8'],
             ]);
             $data = curl_exec($ch);
-            curl_close($ch); // @phpstan-ignore-line (deprecated in PHP 8.4 but still works)
+            curl_close($ch); // @phpstan-ignore-line
 
             if ($data && strlen($data) > 1000 && file_put_contents($filepath, $data) !== false) {
-                return '/images/news/' . $filename;
+                return self::IMG_URL_PREFIX . $filename;
             }
         } catch (\Exception) {}
 
