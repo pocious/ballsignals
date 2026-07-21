@@ -106,8 +106,11 @@ class FetchFootballNews extends Command
                     }
 
                     if ($existing) {
-                        // Already in DB — update image only if we now have one and didn't before
-                        if ($localImage && !$existing->image) {
+                        // Update image if: no image in DB, or local file has gone missing
+                        $fileMissing = $existing->image
+                            && str_starts_with($existing->image, '/images/news/')
+                            && !file_exists(public_path($existing->image));
+                        if ($localImage && (!$existing->image || $fileMissing)) {
                             $existing->update(['image' => $localImage]);
                         }
                         continue;
