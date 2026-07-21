@@ -82,7 +82,7 @@ $__siteSchema = json_encode([
             <div style="display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)" id="hnt">
                 @foreach($latestNews as $article)
                 <div style="min-width:100%">
-                    <a href="{{ $article->url }}" target="_blank" rel="noopener noreferrer"
+                    <a href="{{ route('news.show', $article) }}"
                        style="display:block;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);text-decoration:none;position:relative;transition:border-color .2s"
                        onmouseover="this.style.borderColor='rgba(34,197,94,0.4)'"
                        onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">

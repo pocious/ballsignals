@@ -14,4 +14,16 @@ class NewsController extends Controller
 
         return view('news.index', compact('articles'));
     }
+
+    public function show(FootballNews $footballNews)
+    {
+        $related = FootballNews::whereNotNull('image')
+            ->where('id', '!=', $footballNews->id)
+            ->where('source', $footballNews->source)
+            ->orderByDesc('published_at')
+            ->limit(3)
+            ->get();
+
+        return view('news.show', compact('footballNews', 'related'));
+    }
 }

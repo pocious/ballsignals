@@ -28,7 +28,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach($articles as $article)
-            <a href="{{ $article->url }}" target="_blank" rel="noopener noreferrer"
+            <a href="{{ route('news.show', $article) }}"
                class="group flex flex-col bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 overflow-hidden hover:border-green-400 dark:hover:border-green-500 hover:shadow-lg transition-all duration-200">
 
                 {{-- Image --}}
@@ -70,7 +70,7 @@
 
                     {{-- Read more --}}
                     <div class="mt-3 flex items-center gap-1 text-[11px] font-bold text-green-600 dark:text-green-400">
-                        Read article
+                        Read more
                         <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                         </svg>

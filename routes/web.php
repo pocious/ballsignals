@@ -31,6 +31,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/live', [LiveMatchesController::class, 'index'])->name('live');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{footballNews}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/premium', [PremiumController::class, 'index'])->name('premium');
