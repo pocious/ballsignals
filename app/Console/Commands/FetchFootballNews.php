@@ -27,6 +27,13 @@ class FetchFootballNews extends Command
             ->where('image', 'not like', '/images/news/%')
             ->update(['image' => null]);
 
+        // Null out references to local image files that no longer exist on disk
+        foreach (FootballNews::where('image', 'like', '/images/news/%')->get(['id', 'image']) as $article) {
+            if (!file_exists(public_path($article->image))) {
+                $article->update(['image' => null]);
+            }
+        }
+
         foreach (self::FEEDS as $source => $url) {
             try {
                 $resp = Http::withoutVerifying()
