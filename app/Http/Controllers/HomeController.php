@@ -124,7 +124,7 @@ class HomeController extends Controller
             $worldTomorrowMatches = [];
         }
 
-        $latestNews = FootballNews::orderByDesc('published_at')->take(4)->get();
+        $latestNews = FootballNews::whereNotNull('image')->orderByDesc('published_at')->take(4)->get();
 
         return view('welcome', compact('tipsByDate', 'premiumTipsByDate', 'leagues', 'stats', 'selectedLeague', 'selectedSort', 'yesterdayTips', 'premiumYesterdayTips', 'sampleTips', 'canSeePremium', 'basketballTips', 'worldTomorrowMatches', 'latestNews'));
     }

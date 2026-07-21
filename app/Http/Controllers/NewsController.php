@@ -8,7 +8,8 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $articles = FootballNews::orderByDesc('published_at')
+        $articles = FootballNews::whereNotNull('image')
+            ->orderByDesc('published_at')
             ->paginate(18);
 
         return view('news.index', compact('articles'));
