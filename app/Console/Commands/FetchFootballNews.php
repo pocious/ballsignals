@@ -181,8 +181,7 @@ class FetchFootballNews extends Command
             $data = curl_exec($ch);
             curl_close($ch); // @phpstan-ignore-line (deprecated in PHP 8.4 but still works)
 
-            if ($data && strlen($data) > 1000) {
-                file_put_contents($filepath, $data);
+            if ($data && strlen($data) > 1000 && file_put_contents($filepath, $data) !== false) {
                 return '/images/news/' . $filename;
             }
         } catch (\Exception) {}
