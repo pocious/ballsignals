@@ -453,7 +453,7 @@ $__siteSchema = json_encode([
                         @if($date === today()->toDateString())
                             Today · {{ \Carbon\Carbon::parse($date)->format('d M Y') }}
                         @elseif($isTomorrow)
-                            Tomorrow Sample Tips · {{ \Carbon\Carbon::parse($date)->format('d M Y') }}
+                            Tomorrow · {{ \Carbon\Carbon::parse($date)->format('d M Y') }}
                         @else
                             {{ \Carbon\Carbon::parse($date)->format('l · d M Y') }}
                         @endif
@@ -461,7 +461,7 @@ $__siteSchema = json_encode([
 
                     {{-- Cards for this date --}}
                     <div class="space-y-2">
-                        @foreach($isTomorrow ? $tips->take(3) : $tips as $tip)
+                        @foreach($tips as $tip)
                         @php
                             $now = now();
                             $isLive     = $tip->status === 'pending'
