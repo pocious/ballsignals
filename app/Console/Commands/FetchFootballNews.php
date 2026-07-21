@@ -22,6 +22,11 @@ class FetchFootballNews extends Command
     {
         $inserted = 0;
 
+        // Null out any previously stored remote URLs (hotlink-blocked on mobile)
+        FootballNews::whereNotNull('image')
+            ->where('image', 'not like', '/images/news/%')
+            ->update(['image' => null]);
+
         foreach (self::FEEDS as $source => $url) {
             try {
                 $resp = Http::withoutVerifying()
@@ -101,7 +106,7 @@ class FetchFootballNews extends Command
                         'title'        => $title,
                         'description'  => $desc ?: null,
                         'url'          => $link,
-                        'image'        => $localImage ?? $image ?? null,
+                        'image'        => $localImage,
                         'source'       => $source,
                         'published_at' => $publishedAt,
                     ]);
@@ -150,7 +155,7 @@ class FetchFootballNews extends Command
                 CURLOPT_USERAGENT      => 'Mozilla/5.0 (compatible; BallSignals/1.0)',
             ]);
             $data = curl_exec($ch);
-            curl_close($ch);
+            curl_close($ch); // @phpstan-ignore-line (deprecated in PHP 8.4 but still works)
 
             if ($data && strlen($data) > 1000) {
                 file_put_contents($filepath, $data);
