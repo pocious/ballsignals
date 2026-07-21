@@ -91,7 +91,7 @@ $__siteSchema = json_encode([
                         {{-- Image card --}}
                         <div style="position:relative;height:148px;overflow:hidden;background:#0f1929">
                             <img src="{{ $article->image }}" alt=""
-                                 style="width:100%;height:100%;object-fit:cover;opacity:.65;transition:transform .4s;display:block"
+                                 style="width:100%;height:100%;object-fit:cover;opacity:.92;transition:transform .4s;display:block"
                                  loading="lazy"
                                  onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'"
                                  onerror="this.parentElement.style.background='linear-gradient(135deg,#1e3a5f,#0f1929)';this.remove()">
