@@ -98,7 +98,7 @@ class FetchFootballNews extends Command
                     // Download image locally to avoid hotlink blocking
                     $localImage = null;
                     if ($image) {
-                        $localImage = $this->downloadImage($image, $guid);
+                        $localImage = $this->downloadImage($image, $guid, $link);
                     }
 
                     FootballNews::create([
@@ -132,7 +132,7 @@ class FetchFootballNews extends Command
         return self::SUCCESS;
     }
 
-    private function downloadImage(string $url, string $guid): ?string
+    private function downloadImage(string $url, string $guid, string $referer = ''): ?string
     {
         try {
             $dir = public_path('images/news');
@@ -152,7 +152,9 @@ class FetchFootballNews extends Command
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_TIMEOUT        => 8,
                 CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_USERAGENT      => 'Mozilla/5.0 (compatible; BallSignals/1.0)',
+                CURLOPT_USERAGENT      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+                CURLOPT_REFERER        => $referer ?: $url,
+                CURLOPT_HTTPHEADER     => ['Accept: image/avif,image/webp,image/apng,image/*,*/*;q=0.8'],
             ]);
             $data = curl_exec($ch);
             curl_close($ch); // @phpstan-ignore-line (deprecated in PHP 8.4 but still works)
