@@ -22,6 +22,5 @@ jobs:
             php artisan optimize:clear
             php artisan migrate --force
             mkdir -p storage/app/public/news
-            rm -f public/storage
-            php artisan storage:link
+            ln -sfn /home/u343042962/domains/ballsignals.com/public_html/storage/app/public public/storage
             php artisan news:fetch-football
