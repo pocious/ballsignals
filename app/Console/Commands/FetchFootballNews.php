@@ -97,12 +97,20 @@ class FetchFootballNews extends Command
                         if (!empty($m[1])) $image = $m[1];
                     }
 
-                    if (FootballNews::where('guid', $guid)->exists()) continue;
+                    $existing = FootballNews::where('guid', $guid)->first();
 
                     // Download image locally to avoid hotlink blocking
                     $localImage = null;
                     if ($image) {
                         $localImage = $this->downloadImage($image, $guid, $link);
+                    }
+
+                    if ($existing) {
+                        // Already in DB — update image only if we now have one and didn't before
+                        if ($localImage && !$existing->image) {
+                            $existing->update(['image' => $localImage]);
+                        }
+                        continue;
                     }
 
                     FootballNews::create([
