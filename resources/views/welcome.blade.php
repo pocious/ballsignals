@@ -217,12 +217,24 @@ $__siteSchema = json_encode([
             @endif
         </a>
         @endforeach
+        @php
+            $bbCount = \App\Models\BettingTip::where('sport', 'Basketball')
+                ->where('match_time', '>=', today()->startOfDay())
+                ->where('match_time', '<=', today()->addDays(7)->endOfDay())
+                ->where('is_premium', false)->count();
+        @endphp
         <a href="{{ route('basketball') }}"
            class="flex flex-col items-center justify-center gap-1 py-3 rounded-xl border transition-all duration-150
-                  border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700">
+                  {{ $bbCount > 0
+                     ? 'border-orange-200 dark:border-orange-700/40 bg-orange-50/50 dark:bg-orange-900/10 hover:border-orange-400/60'
+                     : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700' }}">
             <span class="text-xl leading-none">🏀</span>
             <span class="text-[10px] font-bold text-gray-700 dark:text-gray-300">Basketball</span>
+            @if($bbCount > 0)
+            <span class="text-[9px] font-black text-orange-500 bg-orange-500/10 px-1.5 py-px rounded-full">{{ $bbCount }} tip{{ $bbCount !== 1 ? 's' : '' }}</span>
+            @else
             <span class="text-[9px] text-gray-400">View all</span>
+            @endif
         </a>
     </div>
 </div>
