@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BasketballController;
+use App\Http\Controllers\FootballController;
 use App\Http\Controllers\SportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LiveMatchesController;
@@ -38,6 +39,7 @@ Route::get('/premium', [PremiumController::class, 'index'])->name('premium');
 Route::get('/tips/{bettingTip}', [TipDetailController::class, 'show'])->name('tips.show');
 Route::get('/tip-of-the-day', [TipOfTheDayController::class, 'index'])->name('tip-of-the-day');
 Route::get('/results', [ResultsController::class, 'index'])->name('results');
+Route::get('/football', [FootballController::class, 'index'])->name('football');
 Route::get('/basketball', [BasketballController::class, 'index'])->name('basketball');
 Route::get('/sports/{sport}', [SportController::class, 'index'])
     ->where('sport', 'tennis|cricket|mma|baseball|american-football|hockey|rugby')
