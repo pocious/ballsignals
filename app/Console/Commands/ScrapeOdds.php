@@ -52,7 +52,16 @@ class ScrapeOdds extends Command
         262 => ['name' => 'Liga MX',               'country' => 'Mexico',       'odds_key' => 'soccer_mexico_ligamx'],
         307 => ['name' => 'Saudi Pro League',      'country' => 'Saudi Arabia', 'odds_key' => 'soccer_saudi_arabias_league'],
         98  => ['name' => 'J1 League',             'country' => 'Japan',        'odds_key' => 'soccer_japan_j_league'],
+        // Summer-active leagues (Nordic/Eastern Europe run Apr–Nov; fill the gap when big leagues are on break)
+        113 => ['name' => 'Allsvenskan',           'country' => 'Sweden',       'odds_key' => 'soccer_sweden_allsvenskan'],
+        103 => ['name' => 'Eliteserien',           'country' => 'Norway',       'odds_key' => 'soccer_norway_eliteserien'],
+        119 => ['name' => 'Superliga',             'country' => 'Denmark',      'odds_key' => 'soccer_denmark_superliga'],
+        218 => ['name' => 'Austrian Bundesliga',   'country' => 'Austria',      'odds_key' => 'soccer_austria_bundesliga'],
+        207 => ['name' => 'Swiss Super League',    'country' => 'Switzerland',  'odds_key' => 'soccer_switzerland_superleague'],
+        106 => ['name' => 'Ekstraklasa',           'country' => 'Poland',       'odds_key' => 'soccer_poland_ekstraklasa'],
+        283 => ['name' => 'Liga 1',                'country' => 'Romania',      'odds_key' => 'soccer_romania_1_liga'],
         // Leagues without an Odds API key — use API-Football predictions only
+        11  => ['name' => 'Copa Sudamericana',     'country' => 'South America','odds_key' => null],
         13  => ['name' => 'Copa Libertadores',     'country' => 'South America','odds_key' => null],
         288 => ['name' => 'Premier Soccer League', 'country' => 'South Africa', 'odds_key' => null],
         233 => ['name' => 'Egypt Premier League',  'country' => 'Egypt',        'odds_key' => null],
@@ -88,6 +97,14 @@ class ScrapeOdds extends Command
         352   => ['name' => 'Liga MX',               'country' => 'Mexico',       'odds_key' => 'soccer_mexico_ligamx'],
         955   => ['name' => 'Saudi Pro League',      'country' => 'Saudi Arabia', 'odds_key' => 'soccer_saudi_arabias_league'],
         196   => ['name' => 'J1 League',             'country' => 'Japan',        'odds_key' => 'soccer_japan_j_league'],
+        // Summer-active leagues
+        40    => ['name' => 'Allsvenskan',           'country' => 'Sweden',       'odds_key' => 'soccer_sweden_allsvenskan'],
+        41    => ['name' => 'Eliteserien',           'country' => 'Norway',       'odds_key' => 'soccer_norway_eliteserien'],
+        39    => ['name' => 'Superliga',             'country' => 'Denmark',      'odds_key' => 'soccer_denmark_superliga'],
+        45    => ['name' => 'Austrian Bundesliga',   'country' => 'Austria',      'odds_key' => 'soccer_austria_bundesliga'],
+        83    => ['name' => 'Swiss Super League',    'country' => 'Switzerland',  'odds_key' => 'soccer_switzerland_superleague'],
+        57    => ['name' => 'Ekstraklasa',           'country' => 'Poland',       'odds_key' => 'soccer_poland_ekstraklasa'],
+        15    => ['name' => 'Copa Sudamericana',     'country' => 'South America','odds_key' => null],
         25144 => ['name' => 'U17 Africa Cup of Nations', 'country' => 'Africa',       'odds_key' => null],
         13    => ['name' => 'Copa Libertadores',     'country' => 'South America','odds_key' => null],
         186   => ['name' => 'Premier Soccer League', 'country' => 'South Africa', 'odds_key' => null],
@@ -964,9 +981,9 @@ class ScrapeOdds extends Command
                 fn($e) => ($e['status']['type'] ?? '') === 'finished'
             );
 
-            // Secondary: API-Football (if quota available)
+            // Secondary: API-Football — always try as fallback when Sofascore is blocked/empty
             $afFinished = [];
-            if ($this->afQuota >= 3) {
+            if (empty($sfFinished) && $this->afQuota >= 1) {
                 $afData = $this->afGet('/fixtures', ['date' => $date, 'timezone' => 'UTC']);
                 $afFinished = array_filter(
                     $afData['response'] ?? [],

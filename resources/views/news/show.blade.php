@@ -24,7 +24,7 @@
             <div class="aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">
                 <img src="{{ $footballNews->image }}" alt="{{ $footballNews->title }}"
                      class="w-full h-full object-cover"
-                     onerror="this.parentElement.style.display='none'">
+                     referrerpolicy="no-referrer" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a3a2e,#0f2010)';this.style.display='none'">
             </div>
         @endif
 
@@ -88,7 +88,7 @@
                     <div class="aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0">
                         <img src="{{ $item->image }}" alt="{{ $item->title }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                             loading="lazy" onerror="this.parentElement.style.display='none'">
+                             loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a3a2e,#0f2010)';this.style.display='none'">
                     </div>
                 @endif
                 <div class="p-3">
@@ -126,7 +126,7 @@
                     <div class="w-20 h-16 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
                         <img src="{{ $item->image }}" alt="{{ $item->title }}"
                              class="w-full h-full object-cover"
-                             loading="lazy" onerror="this.parentElement.style.display='none'">
+                             loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a3a2e,#0f2010)';this.style.display='none'">
                     </div>
                 @endif
                 <div class="flex flex-col justify-center min-w-0">

@@ -22,5 +22,10 @@ jobs:
             php artisan optimize:clear
             php artisan migrate --force
             mkdir -p storage/app/public/news
+            # Ensure public/storage is a symlink, not a real directory
+            if [ -d public/storage ] && [ ! -L public/storage ]; then
+              rm -rf public/storage
+            fi
             ln -sfn /home/u343042962/domains/ballsignals.com/public_html/storage/app/public public/storage
             php artisan news:fetch-football
+            php artisan tips:scrape --fixtures-only

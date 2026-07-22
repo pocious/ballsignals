@@ -10,13 +10,9 @@ class NewsController extends Controller
     {
         $selectedSource = request('source');
 
-        $sources = FootballNews::whereNotNull('image')
-            ->distinct()
-            ->orderBy('source')
-            ->pluck('source');
+        $sources = FootballNews::distinct()->orderBy('source')->pluck('source');
 
-        $articles = FootballNews::whereNotNull('image')
-            ->when($selectedSource, fn($q) => $q->where('source', $selectedSource))
+        $articles = FootballNews::when($selectedSource, fn($q) => $q->where('source', $selectedSource))
             ->orderByDesc('published_at')
             ->paginate(18)->withQueryString();
 
@@ -25,15 +21,13 @@ class NewsController extends Controller
 
     public function show(FootballNews $footballNews)
     {
-        $related = FootballNews::whereNotNull('image')
-            ->where('id', '!=', $footballNews->id)
+        $related = FootballNews::where('id', '!=', $footballNews->id)
             ->where('source', $footballNews->source)
             ->orderByDesc('published_at')
             ->limit(3)
             ->get();
 
-        $otherSources = FootballNews::whereNotNull('image')
-            ->where('id', '!=', $footballNews->id)
+        $otherSources = FootballNews::where('id', '!=', $footballNews->id)
             ->where('source', '!=', $footballNews->source)
             ->orderByDesc('published_at')
             ->limit(6)

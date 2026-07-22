@@ -50,13 +50,14 @@
                class="group flex flex-col bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700/50 overflow-hidden hover:border-green-400 dark:hover:border-green-500 hover:shadow-lg transition-all duration-200">
 
                 {{-- Image --}}
-                @if($article->image)
-                    <div class="aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0">
+                <div class="aspect-video overflow-hidden flex-shrink-0 bg-gradient-to-br from-[#0f2010] to-[#0a1628] flex items-center justify-center">
+                    @if($article->image)
                         <img src="{{ $article->image }}" alt="{{ $article->title }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                             loading="lazy" onerror="this.parentElement.style.display='none'">
-                    </div>
-                @endif
+                             loading="lazy" referrerpolicy="no-referrer"
+                             onerror="this.style.display='none'">
+                    @endif
+                </div>
 
                 {{-- Content --}}
                 <div class="flex flex-col flex-1 p-4">

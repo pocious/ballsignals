@@ -105,6 +105,12 @@ class HomeController extends Controller
             ->orderBy('match_time', 'asc')
             ->get();
 
+        $basketballYesterdayTips = BettingTip::basketball()
+            ->whereDate('match_time', today()->subDay())
+            ->whereIn('status', ['won', 'lost'])
+            ->orderBy('match_time', 'asc')
+            ->get();
+
         // Basketball tips — next 7 days, free only, exclude matches that have a premium version
         $basketballTips = BettingTip::basketball()
             ->where('match_time', '>=', today()->startOfDay())
@@ -124,8 +130,8 @@ class HomeController extends Controller
             $worldTomorrowMatches = [];
         }
 
-        $latestNews = FootballNews::whereNotNull('image')->orderByDesc('published_at')->take(4)->get();
+        $latestNews = FootballNews::orderByDesc('published_at')->take(4)->get();
 
-        return view('welcome', compact('tipsByDate', 'premiumTipsByDate', 'leagues', 'stats', 'selectedLeague', 'selectedSort', 'yesterdayTips', 'premiumYesterdayTips', 'sampleTips', 'canSeePremium', 'basketballTips', 'worldTomorrowMatches', 'latestNews'));
+        return view('welcome', compact('tipsByDate', 'premiumTipsByDate', 'leagues', 'stats', 'selectedLeague', 'selectedSort', 'yesterdayTips', 'premiumYesterdayTips', 'basketballYesterdayTips', 'sampleTips', 'canSeePremium', 'basketballTips', 'worldTomorrowMatches', 'latestNews'));
     }
 }

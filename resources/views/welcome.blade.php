@@ -94,6 +94,7 @@ $__siteSchema = json_encode([
                                  style="width:100%;height:100%;object-fit:cover;opacity:.92;transition:transform .4s;display:block"
                                  loading="lazy"
                                  onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'"
+                                 referrerpolicy="no-referrer"
                                  onerror="this.parentElement.style.background='linear-gradient(135deg,#1e3a5f,#0f1929)';this.remove()">
                             {{-- gradient overlay --}}
                             <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(8,14,28,.98) 0%,rgba(8,14,28,.55) 55%,rgba(8,14,28,.1) 100%)"></div>
@@ -420,6 +421,67 @@ $__siteSchema = json_encode([
                                 </a>
                             @endif
                         </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
+
+    {{-- ── Yesterday's Basketball Results ── --}}
+    @if($basketballYesterdayTips->isNotEmpty())
+    @php
+        $bbyWon   = $basketballYesterdayTips->where('status','won')->count();
+        $bbyLost  = $basketballYesterdayTips->where('status','lost')->count();
+        $bbyTotal = $bbyWon + $bbyLost;
+    @endphp
+    <div class="mb-4">
+        <button onclick="document.getElementById('yesterday-basketball-panel').classList.toggle('hidden')"
+                class="w-full flex items-center justify-between px-3 py-2 rounded-xl
+                       bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800
+                       hover:border-orange-500/30 transition-colors duration-150 group">
+            <div class="flex items-center gap-2">
+                <div class="w-1 h-4 rounded-full bg-orange-400 dark:bg-orange-500"></div>
+                <span class="text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-widest">Basketball Results Yesterday</span>
+                <span class="text-[10px] text-gray-400">{{ today()->subDay()->format('d M') }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                @if($bbyTotal > 0)
+                    <span class="text-[10px] font-bold text-green-600 dark:text-green-400">{{ $bbyWon }}W</span>
+                    <span class="text-[10px] text-gray-400">/</span>
+                    <span class="text-[10px] font-bold text-red-500">{{ $bbyLost }}L</span>
+                    <span class="text-[10px] bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 font-bold px-1.5 py-0.5 rounded-full">
+                        {{ round(($bbyWon / $bbyTotal) * 100) }}%
+                    </span>
+                @endif
+                <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-orange-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </div>
+        </button>
+        <div id="yesterday-basketball-panel" class="hidden mt-2">
+            <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                @foreach($basketballYesterdayTips as $tip)
+                <div class="bg-white dark:bg-gray-900 px-4 py-2.5 {{ !$loop->last ? 'border-b border-gray-100 dark:border-gray-800' : '' }}">
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate">
+                            {{ $tip->home_team }}
+                            <span class="font-normal text-gray-400 dark:text-gray-500 mx-1">vs</span>
+                            {{ $tip->away_team }}
+                        </p>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-full font-semibold flex-shrink-0 {{ $tip->status_badge }}">
+                            {{ ucfirst($tip->status) }}
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="text-[11px] text-gray-400 dark:text-gray-500 truncate">
+                            {{ $tip->match_time->format('g:i A') }}
+                            @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
+                        </p>
+                        <span class="text-[10px] font-bold text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0">
+                            {{ $tip->prediction }}
+                        </span>
                     </div>
                 </div>
                 @endforeach
