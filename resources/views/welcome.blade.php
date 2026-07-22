@@ -196,6 +196,26 @@ $__siteSchema = json_encode([
         <h2 class="text-sm font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300">More Sports</h2>
     </div>
     <div class="grid grid-cols-4 gap-2">
+        @php
+            $fbCount = \App\Models\BettingTip::where('sport', 'Football')
+                ->where('match_time', '>=', today()->startOfDay())
+                ->where('match_time', '<=', today()->addDays(7)->endOfDay())
+                ->where('is_premium', false)->count();
+        @endphp
+        <a href="{{ route('home') }}"
+           class="flex flex-col items-center justify-center gap-1 py-3 rounded-xl border transition-all duration-150
+                  {{ $fbCount > 0
+                     ? 'border-green-200 dark:border-green-700/40 bg-green-50/50 dark:bg-green-900/10 hover:border-green-400/60'
+                     : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700' }}">
+            <span class="text-xl leading-none">⚽</span>
+            <span class="text-[10px] font-bold text-gray-700 dark:text-gray-300 text-center leading-tight">Football</span>
+            @if($fbCount > 0)
+            <span class="text-[9px] font-black text-green-600 dark:text-green-400 bg-green-500/10 px-1.5 py-px rounded-full">{{ $fbCount }} tip{{ $fbCount !== 1 ? 's' : '' }}</span>
+            @else
+            <span class="text-[9px] text-gray-400">Off-season</span>
+            @endif
+        </a>
+
         @foreach($sportHub as [$slug, $icon, $label, $db])
         @php
             $count = \App\Models\BettingTip::where('sport', $db)
