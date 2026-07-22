@@ -183,7 +183,6 @@ $__siteSchema = json_encode([
     <a href="{{ route('football') }}"
        class="flex items-center justify-between gap-3 w-full px-4 py-3 rounded-2xl bg-green-600 hover:bg-green-700 transition-colors group">
         <div class="flex items-center gap-3">
-            <span class="text-2xl leading-none">⚽</span>
             <div>
                 <p class="text-sm font-black text-white">Football Tips</p>
                 <p class="text-[11px] text-green-100">View all upcoming football predictions</p>
