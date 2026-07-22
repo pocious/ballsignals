@@ -178,6 +178,23 @@ $__siteSchema = json_encode([
 </script>
 @endif
 
+{{-- ── Football Tips CTA ── --}}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-white/5">
+    <a href="{{ route('football') }}"
+       class="flex items-center justify-between gap-3 w-full px-4 py-3 rounded-2xl bg-green-600 hover:bg-green-700 transition-colors group">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl leading-none">⚽</span>
+            <div>
+                <p class="text-sm font-black text-white">Football Tips</p>
+                <p class="text-[11px] text-green-100">View all upcoming football predictions</p>
+            </div>
+        </div>
+        <svg class="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+        </svg>
+    </a>
+</div>
+
 {{-- ── More Sports Hub ── --}}
 @php
     $sportHub = [
