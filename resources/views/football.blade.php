@@ -104,7 +104,8 @@
                 </p>
                 <div class="space-y-3">
                     @foreach($tips as $tip)
-                    <div class="rounded-2xl overflow-hidden border {{ $tip->display_status === 'won' ? 'border-green-400 dark:border-green-700/60 bg-green-50/40 dark:bg-green-900/10' : ($tip->display_status === 'lost' ? 'border-red-400 dark:border-red-700/60 bg-red-50/40 dark:bg-red-900/10' : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900') }}">
+                    @php $isFinished = in_array($tip->display_status, ['won', 'lost', 'finished']); @endphp
+                    <div class="rounded-2xl overflow-hidden border {{ $isFinished ? 'border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 opacity-75' : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900' }}">
                         <div class="px-4 pt-2.5 pb-2">
                             {{-- Teams + status --}}
                             <div class="flex items-center justify-between gap-2 mb-1">
@@ -115,11 +116,7 @@
                                 </p>
                                 @if($tip->display_status === 'live')
                                     <span class="text-[8px] px-1.5 py-px rounded-full font-bold flex-shrink-0 bg-red-500/20 text-red-400 border border-red-500/50 animate-pulse">● Live</span>
-                                @elseif($tip->display_status === 'won')
-                                    <span class="text-[8px] px-1.5 py-px rounded-full font-bold flex-shrink-0 bg-green-500/20 text-green-400 border border-green-500/30">✔ Won</span>
-                                @elseif($tip->display_status === 'lost')
-                                    <span class="text-[8px] px-1.5 py-px rounded-full font-bold flex-shrink-0 bg-red-500/20 text-red-400 border border-red-500/30">✗ Lost</span>
-                                @elseif($tip->display_status === 'finished')
+                                @elseif($isFinished)
                                     <span class="text-[8px] px-2 py-0.5 rounded-full font-semibold flex-shrink-0 bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400">Finished</span>
                                 @else
                                     <span class="inline-flex items-center gap-1 text-[8px] px-1.5 py-px rounded-full font-bold flex-shrink-0 bg-yellow-400/20 text-yellow-500 border border-yellow-400/40">
