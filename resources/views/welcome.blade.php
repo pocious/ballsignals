@@ -17,46 +17,6 @@ $__siteSchema = json_encode([
 
 @section('content')
 
-{{-- ── Hero Welcome Banner ── --}}
-<div class="bg-gray-100 dark:bg-[#0a0f1a] border-b border-gray-200 dark:border-white/5">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-6 text-center">
-
-        {{-- Live badge --}}
-        <div class="inline-flex items-center gap-1.5 bg-green-500/10 border border-green-500/25 text-green-600 dark:text-green-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">
-            <span class="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse"></span>
-            Live Tips Updated Daily
-        </div>
-
-        {{-- Headline --}}
-        <h1 class="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white leading-tight mb-2">
-            Welcome to <span class="text-green-500 dark:text-green-400">BallSignals</span>
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400 text-xs sm:text-sm max-w-lg mx-auto leading-relaxed mb-4">
-            Expert football predictions daily — our analysts do the work so you get
-            <span class="text-gray-900 dark:text-white font-semibold">high-confidence tips</span> fresh every day, completely free.
-        </p>
-
-{{-- Quick trust pills --}}
-        <div class="flex flex-wrap items-center justify-center gap-1 mb-3">
-            @php
-            $trustPills = [
-                ['Expert Analysis'],
-                ['Data-Driven'],
-                ['Daily Updates'],
-                ['All Major Leagues'],
-                ['Free to Use'],
-            ];
-            @endphp
-            @foreach($trustPills as [$label])
-            <span class="inline-flex items-center text-[10px] font-semibold text-gray-600 dark:text-gray-400 bg-gray-200 dark:bg-white/5 border border-gray-300 dark:border-white/10 px-2 py-0.5 rounded-full">
-                {{ $label }}
-            </span>
-            @endforeach
-        </div>
-
-    </div>
-</div>
-
 {{-- ── News Carousel Strip ── --}}
 @if($latestNews->isNotEmpty())
 <div style="background:#080e1c;border-bottom:1px solid rgba(255,255,255,0.06)">
