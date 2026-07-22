@@ -294,28 +294,6 @@ $__siteSchema = json_encode([
 
 <div class="max-w-3xl mx-auto px-4 sm:px-6 py-4">
 
-    {{-- ── Header + Stats ── --}}
-    <div class="flex items-center justify-between mb-4">
-        <div>
-            <h1 class="text-lg font-bold text-gray-900 dark:text-white">Today's Football Tips</h1>
-            <p class="text-sm text-gray-400 dark:text-gray-500">{{ now()->format('l, d M Y') }}</p>
-        </div>
-        <div class="flex items-center gap-3 text-xs font-semibold">
-            <span class="flex items-center gap-1 text-green-600 dark:text-green-400">
-                <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>
-                {{ $stats['won'] }}W
-            </span>
-            <span class="flex items-center gap-1 text-red-500 dark:text-red-400">
-                <span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span>
-                {{ $stats['lost'] }}L
-            </span>
-            <span class="flex items-center gap-1 text-yellow-500 dark:text-yellow-400">
-                <span class="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span>
-                {{ $stats['pending'] }}
-            </span>
-        </div>
-    </div>
-
     {{-- ── Yesterday's Results ── --}}
     @if($yesterdayTips->isNotEmpty() || $premiumYesterdayTips->isNotEmpty())
     <div class="mb-4">
