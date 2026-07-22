@@ -1107,7 +1107,8 @@ $__siteSchema = json_encode([
     </div>
     @endif
 
-    {{-- ── Testimonials ── --}}
+    {{-- ── Testimonials (removed) ── --}}
+    @if(false)
     <div class="mt-8">
         <div class="flex items-center gap-3 mb-4">
             <div class="w-1 h-5 rounded-full bg-yellow-400"></div>
@@ -1232,6 +1233,7 @@ $__siteSchema = json_encode([
 
         </div>
     </div>
+    @endif
 
     {{-- ── Affiliate Banners ── --}}
     <div class="mt-6 space-y-3">
