@@ -19,37 +19,39 @@ $__siteSchema = json_encode([
 
 {{-- ── News Carousel Strip ── --}}
 @if($latestNews->isNotEmpty())
-<div class="bg-white dark:bg-[#080e1c] border-b border-gray-200 dark:border-white/[0.06]">
+<div style="background:#080e1c;border-bottom:1px solid rgba(255,255,255,0.06)">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 py-4">
 
         {{-- Header --}}
-        <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-                <div class="inline-flex items-center gap-1.5 bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full">
-                    <span class="w-1.5 h-1.5 rounded-full bg-red-500 inline-block animate-pulse"></span>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px">
+                <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:20px">
+                    <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;display:inline-block;animation:pulse 2s infinite"></span>
                     News
                 </div>
-                <span class="text-xs font-bold text-gray-500 dark:text-slate-400">Latest Headlines</span>
+                <span style="font-size:12px;font-weight:700;color:#94a3b8">Latest Headlines</span>
             </div>
-            <a href="{{ route('news.index') }}" class="text-[11px] font-bold text-green-600 dark:text-green-400 flex items-center gap-1 hover:underline">
+            <a href="{{ route('news.index') }}" style="font-size:11px;font-weight:700;color:#22c55e;display:flex;align-items:center;gap:3px;text-decoration:none" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
                 All news
                 <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
             </a>
         </div>
 
         {{-- Slider --}}
-        <div class="overflow-hidden rounded-[14px]" id="hnv">
-            <div class="flex" style="transition:transform .5s cubic-bezier(.4,0,.2,1)" id="hnt">
+        <div style="overflow:hidden;border-radius:14px" id="hnv">
+            <div style="display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)" id="hnt">
                 @foreach($latestNews as $article)
                 <div style="min-width:100%">
                     <a href="{{ route('news.show', $article) }}"
-                       class="hn-card block rounded-[14px] overflow-hidden border border-gray-200 dark:border-white/[0.07] no-underline relative transition-colors duration-200 hover:border-green-500/40">
+                       style="display:block;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);text-decoration:none;position:relative;transition:border-color .2s"
+                       onmouseover="this.style.borderColor='rgba(34,197,94,0.4)'"
+                       onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
 
                         @if($article->image)
                         {{-- Image card --}}
-                        <div class="relative h-[148px] overflow-hidden bg-[#0f1929]">
+                        <div style="position:relative;height:148px;overflow:hidden;background:#0f1929">
                             <img src="{{ $article->image }}" alt=""
-                                 class="w-full h-full object-cover opacity-90 transition-transform duration-300 block"
+                                 style="width:100%;height:100%;object-fit:cover;opacity:.92;transition:transform .4s;display:block"
                                  loading="lazy"
                                  onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'"
                                  referrerpolicy="no-referrer"
@@ -68,9 +70,9 @@ $__siteSchema = json_encode([
                             </div>
                         </div>
                         {{-- footer bar --}}
-                        <div class="bg-gray-100 dark:bg-[#0d1629] px-3.5 py-2 flex items-center justify-between">
-                            <span class="text-[11px] text-gray-500 dark:text-slate-500">{{ $article->published_at?->diffForHumans() }}</span>
-                            <span class="text-[11px] font-bold text-green-600 dark:text-green-400 flex items-center gap-1">
+                        <div style="background:#0d1629;padding:8px 14px;display:flex;align-items:center;justify-content:space-between">
+                            <span style="font-size:11px;color:#64748b">{{ $article->published_at?->diffForHumans() }}</span>
+                            <span style="font-size:11px;font-weight:700;color:#22c55e;display:flex;align-items:center;gap:3px">
                                 Read more
                                 <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
                             </span>
@@ -78,16 +80,16 @@ $__siteSchema = json_encode([
 
                         @else
                         {{-- No-image card --}}
-                        <div class="bg-gradient-to-br from-gray-100 to-gray-50 dark:from-[#0f1e35] dark:to-[#0d1629] p-4">
-                            <div class="mb-2.5">
-                                <span class="text-[10px] font-black uppercase tracking-wider bg-green-500/10 dark:bg-green-500/15 border border-green-500/30 text-green-600 dark:text-green-400 px-2.5 py-0.5 rounded-full">{{ $article->source }}</span>
+                        <div style="background:linear-gradient(135deg,#0f1e35 0%,#0d1629 100%);padding:18px 16px">
+                            <div style="margin-bottom:10px">
+                                <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.35);color:#4ade80;padding:2px 9px;border-radius:20px">{{ $article->source }}</span>
                             </div>
-                            <p class="text-[15px] font-bold text-gray-900 dark:text-slate-100 leading-snug line-clamp-3 mb-3">
+                            <p style="font-size:15px;font-weight:700;color:#f1f5f9;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;margin:0 0 12px">
                                 {{ $article->title }}
                             </p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] text-gray-500 dark:text-slate-500">{{ $article->published_at?->diffForHumans() }}</span>
-                                <span class="text-[11px] font-bold text-green-600 dark:text-green-400 flex items-center gap-1">
+                            <div style="display:flex;align-items:center;justify-content:space-between">
+                                <span style="font-size:11px;color:#64748b">{{ $article->published_at?->diffForHumans() }}</span>
+                                <span style="font-size:11px;font-weight:700;color:#22c55e;display:flex;align-items:center;gap:3px">
                                     Read more
                                     <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
                                 </span>
@@ -102,10 +104,10 @@ $__siteSchema = json_encode([
         </div>
 
         {{-- Dots --}}
-        <div class="flex justify-center items-center gap-1.5 mt-2.5">
+        <div style="display:flex;justify-content:center;align-items:center;gap:5px;margin-top:10px">
             @foreach($latestNews as $i => $article)
             <button onclick="hnGo({{ $i }})" aria-label="Slide {{ $i+1 }}" class="hn-dot"
-                style="height:3px;border-radius:2px;border:none;cursor:pointer;outline:none;transition:all .3s;{{ $i === 0 ? 'width:22px;background:#22c55e' : 'width:8px;background:rgba(100,116,139,0.35)' }}"></button>
+                style="height:3px;border-radius:2px;border:none;cursor:pointer;outline:none;transition:all .3s;{{ $i === 0 ? 'width:22px;background:#22c55e' : 'width:8px;background:rgba(255,255,255,0.2)' }}"></button>
             @endforeach
         </div>
 
@@ -123,7 +125,7 @@ $__siteSchema = json_encode([
         track.style.transform = 'translateX(-' + (cur * 100) + '%)';
         dots.forEach(function(d,i){
             d.style.width      = i === cur ? '22px' : '8px';
-            d.style.background = i === cur ? '#22c55e' : 'rgba(100,116,139,0.35)';
+            d.style.background = i === cur ? '#22c55e' : 'rgba(255,255,255,0.2)';
         });
         clearInterval(timer);
         timer = setInterval(function(){ hnGo(cur + 1); }, 4500);
