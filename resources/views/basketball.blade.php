@@ -11,7 +11,7 @@
         {{-- Row 1: Title + Results button --}}
         <div class="flex items-center justify-between mb-1">
             <h1 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                🏀 <span>Basketball Tips</span>
+                <span>Basketball Tips</span>
             </h1>
             <div class="flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400">
