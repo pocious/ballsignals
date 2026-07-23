@@ -31,7 +31,6 @@
 
             {{-- League / Sport --}}
             <div class="flex items-center gap-2 mb-4 flex-wrap">
-                <span class="text-xl">{{ $bettingTip->sport_icon }}</span>
                 @if($bettingTip->league)
                     <span class="text-xs font-bold {{ $bettingTip->is_premium ? 'text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800' : 'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' }} px-2.5 py-1 rounded-full">
                         {{ $bettingTip->league }}

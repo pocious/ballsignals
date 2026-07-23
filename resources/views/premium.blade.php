@@ -80,7 +80,6 @@
                     {{-- Top row: league, time, status --}}
                     <div class="flex items-center justify-between gap-3 mb-4 flex-wrap">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-base">{{ $tip->sport_icon }}</span>
                             @if($tip->league)
                                 <span class="text-xs font-bold text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-2.5 py-1 rounded-full">
                                     {{ $tip->league }}
