@@ -28,18 +28,12 @@ class PremiumController extends Controller
         // Admin users bypass the subscription gate
         $isAdmin = auth()->check() && auth()->user()->role === 'admin';
 
-        $vipTips = null;
+        $vipTips = collect();
         if ($subscription || $isAdmin) {
             $vipTips = BettingTip::where('is_premium', true)
                 ->whereDate('match_time', '>=', today())
-                ->where('odds', '>=', 2.00)
-                ->orderByRaw('DATE(match_time) ASC')
-                ->orderByDesc('confidence')
-                ->orderByDesc('odds')
-                ->get()
-                ->groupBy(fn ($tip) => $tip->match_time->toDateString())
-                ->map(fn ($tips) => $tips->take(1))
-                ->flatten();
+                ->orderBy('match_time', 'asc')
+                ->get();
         }
 
         return view('premium', compact('stats', 'subscription', 'vipTips', 'isAdmin'));
