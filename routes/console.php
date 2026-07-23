@@ -8,6 +8,15 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+// Log every scheduler invocation so we can verify cron frequency
+Schedule::call(function () {
+    file_put_contents(
+        storage_path('logs/scheduler_heartbeat.log'),
+        date('Y-m-d H:i:s') . " UTC schedule:run called\n",
+        FILE_APPEND
+    );
+})->everyMinute();
+
 // Scrape full week of fixtures every Monday at 5:00 AM
 Schedule::command('tips:scrape', ['--week', '--fixtures-only'])->weekly()->mondays()->at('05:00');
 
