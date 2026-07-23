@@ -9,7 +9,6 @@
     <div class="mb-4">
         <div class="flex items-center justify-between mb-1">
             <h1 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <span>{{ $config['icon'] }}</span>
                 <span>{{ $config['name'] }} Tips</span>
             </h1>
             <div class="flex items-center gap-2">
