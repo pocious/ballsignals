@@ -177,29 +177,38 @@ class SendTelegramTips extends Command
             ->whereDate('match_time', today()->subDay())
             ->where('is_premium', false)
             ->whereIn('status', ['won', 'lost'])
-            ->orderBy('match_time', 'desc')
+            ->orderBy('match_time', 'asc')
             ->get();
 
         if ($tips->isEmpty()) {
             return null;
         }
 
-        $date  = today()->subDay()->format('j F Y');
+        $date  = today()->subDay()->format('l, j F Y');
         $won   = $tips->where('status', 'won')->count();
+        $lost  = $tips->where('status', 'lost')->count();
         $total = $tips->count();
-        $pct = round($won / $total * 100);
+        $pct   = round($won / $total * 100);
 
-        $lines = [$this->bold("YESTERDAY'S RESULTS") . " — {$date}\n"];
+        $lines = [];
+        $lines[] = $this->bold('BALLSIGNALS RESULTS') . " — {$date}";
+        $lines[] = '━━━━━━━━━━━━━━━━━━';
+        $lines[] = '';
 
         foreach ($tips as $tip) {
-            $label   = $tip->status === 'won' ? 'WON' : 'LOST';
-            $lines[] = "<b>{$tip->home_team} vs {$tip->away_team}</b> — {$label}";
-            $lines[] = "   {$tip->prediction}";
+            $label = $tip->status === 'won' ? 'WON' : 'LOST';
+            $odds  = $tip->odds ? '  @ ' . number_format($tip->odds, 2) : '';
+            $lines[] = $this->bold("{$tip->home_team} vs {$tip->away_team}") . " — {$label}";
+            $lines[] = '   ' . $tip->prediction . $odds;
             $lines[] = '';
         }
 
         $lines[] = '━━━━━━━━━━━━━━━━━━';
-        $lines[] = "Record: <b>{$won}/{$total}</b> ({$pct}%)";
+        $lines[] = $this->bold("RECORD: {$won}/{$total}") . " ({$pct}% win rate)";
+        $lines[] = '';
+        $lines[] = $this->bold('More tips: ') . config('app.url');
+        $lines[] = '';
+        $lines[] = '<i>18+ · Please bet responsibly</i>';
 
         return implode("\n", $lines);
     }
