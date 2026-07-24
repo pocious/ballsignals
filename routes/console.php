@@ -23,8 +23,8 @@ Schedule::command('tips:scrape', ['--week', '--fixtures-only'])->weekly()->monda
 // Scrape today + tomorrow fixtures daily at 6:00 AM (catches late additions)
 Schedule::command('tips:scrape', ['--fixtures-only'])->dailyAt('06:00');
 
-// Backfill team form on any tips missing it — runs at 6:30 AM after fixture scrape
-Schedule::command('tips:scrape', ['--update-form'])->dailyAt('06:30');
+// Form update disabled — saves API-Football credits
+// Schedule::command('tips:scrape', ['--update-form'])->dailyAt('06:30');
 
 // Send daily tips to all newsletter subscribers every day at 8:00 AM
 Schedule::command('tips:send-daily')->dailyAt('08:00');
