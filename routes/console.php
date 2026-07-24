@@ -35,8 +35,8 @@ Schedule::command('tips:telegram')->dailyAt('08:05');
 // Mark expired subscriptions + send renewal/expiry emails daily at 9:00 AM
 Schedule::command('subscriptions:renew')->dailyAt('09:00');
 
-// Update won/lost results every 15 minutes — within 15 min of any match finishing
-Schedule::command('tips:scrape', ['--results-only'])->everyFifteenMinutes();
+// Update won/lost results every 30 minutes — within 30 min of any match finishing
+Schedule::command('tips:scrape', ['--results-only'])->everyThirtyMinutes();
 
 // Post yesterday's results summary to Telegram at 11:00 PM
 Schedule::command('tips:telegram', ['--results'])->dailyAt('23:00');
