@@ -44,6 +44,8 @@
         </div>
     </div>
 
+    <hr class="border-gray-200 dark:border-gray-700 -mt-2">
+
     {{-- League filter --}}
     @if($leagues->isNotEmpty())
     <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
@@ -78,15 +80,10 @@
     @if($tipsByDate->isEmpty())
     @php
         $allSportLinks = [
-            ['slug' => null,               'route' => route('home'),              'name' => 'Football',         'icon' => '⚽', 'db' => 'Football'],
-            ['slug' => 'basketball',       'route' => route('basketball'),        'name' => 'Basketball',       'icon' => '🏀', 'db' => 'Basketball'],
-            ['slug' => 'tennis',           'route' => route('sport','tennis'),           'name' => 'Tennis',           'icon' => '🎾', 'db' => 'Tennis'],
-            ['slug' => 'cricket',          'route' => route('sport','cricket'),          'name' => 'Cricket',          'icon' => '🏏', 'db' => 'Cricket'],
-            ['slug' => 'mma',              'route' => route('sport','mma'),              'name' => 'MMA',              'icon' => '🥊', 'db' => 'MMA'],
-            ['slug' => 'baseball',         'route' => route('sport','baseball'),         'name' => 'Baseball',         'icon' => '⚾', 'db' => 'Baseball'],
-            ['slug' => 'american-football','route' => route('sport','american-football'),'name' => 'NFL',              'icon' => '🏈', 'db' => 'American Football'],
-            ['slug' => 'hockey',           'route' => route('sport','hockey'),           'name' => 'Hockey',           'icon' => '🏒', 'db' => 'Hockey'],
-            ['slug' => 'rugby',            'route' => route('sport','rugby'),            'name' => 'Rugby',            'icon' => '🏉', 'db' => 'Rugby'],
+            ['slug' => null,         'route' => route('home'),            'name' => 'Football',  'icon' => '⚽', 'db' => 'Football'],
+            ['slug' => 'basketball', 'route' => route('basketball'),      'name' => 'Basketball', 'icon' => '🏀', 'db' => 'Basketball'],
+            ['slug' => 'mma',        'route' => route('sport', 'mma'),   'name' => 'MMA',        'icon' => '🥊', 'db' => 'MMA'],
+            ['slug' => 'rugby',      'route' => route('sport', 'rugby'), 'name' => 'Rugby',      'icon' => '🏉', 'db' => 'Rugby'],
         ];
         $availableSports = collect($allSportLinks)->filter(fn($s) =>
             $s['db'] !== $config['db'] &&

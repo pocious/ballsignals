@@ -17,7 +17,13 @@ class ScrapeOdds extends Command
         {--backfill-scores : Populate home_score/away_score on already-settled tips that are missing scores}
         {--odds-api : Fetch football fixtures directly from The Odds API (use when Sofascore is blocked)}
         {--basketball : Fetch basketball fixtures + results from The Odds API only}
-        {--all-sports : Fetch all sports (basketball, tennis, cricket, MMA, baseball, NFL, NHL, rugby) from The Odds API}';
+        {--all-sports : Fetch all sports (basketball, MMA, rugby) from The Odds API}
+        {--standings : Fetch and cache league standings for all configured football leagues}
+        {--top-scorers : Fetch and cache top goal scorers for major football leagues}
+        {--lineups : Fetch and store starting lineups for today\'s pending fixtures}
+        {--match-stats : Fetch and store match statistics, events and player ratings for recently settled fixtures}
+        {--top-assists : Fetch and cache top assist providers for major football leagues}
+        {--football-only : Fetch football fixtures + odds only, skip all other sports}';
 
     protected $description = 'Fetch football + basketball tips and results via The Odds API + API-Football (pure PHP, no scraping)';
 
@@ -129,46 +135,9 @@ class ScrapeOdds extends Command
         ['key' => 'basketball_nbl',        'name' => 'NBL',        'country' => 'Australia'],
     ];
 
-    private const TENNIS_SPORTS = [
-        ['key' => 'tennis_atp_wimbledon',       'name' => 'Wimbledon (ATP)',       'country' => 'England'],
-        ['key' => 'tennis_wta_wimbledon',       'name' => 'Wimbledon (WTA)',       'country' => 'England'],
-        ['key' => 'tennis_atp_us_open',         'name' => 'US Open (ATP)',         'country' => 'USA'],
-        ['key' => 'tennis_wta_us_open',         'name' => 'US Open (WTA)',         'country' => 'USA'],
-        ['key' => 'tennis_atp_french_open',     'name' => 'French Open (ATP)',     'country' => 'France'],
-        ['key' => 'tennis_wta_french_open',     'name' => 'French Open (WTA)',     'country' => 'France'],
-        ['key' => 'tennis_atp_australian_open', 'name' => 'Australian Open (ATP)', 'country' => 'Australia'],
-        ['key' => 'tennis_wta_australian_open', 'name' => 'Australian Open (WTA)', 'country' => 'Australia'],
-    ];
-
-    private const CRICKET_SPORTS = [
-        ['key' => 'cricket_icc_world_cup',       'name' => 'ICC World Cup',     'country' => 'International'],
-        ['key' => 'cricket_icc_t20_world_cup',   'name' => 'T20 World Cup',     'country' => 'International'],
-        ['key' => 'cricket_ipl',                 'name' => 'IPL',               'country' => 'India'],
-        ['key' => 'cricket_big_bash',            'name' => 'Big Bash',          'country' => 'Australia'],
-        ['key' => 'cricket_psl',                 'name' => 'PSL',               'country' => 'Pakistan'],
-        ['key' => 'cricket_sa20',                'name' => 'SA20',              'country' => 'South Africa'],
-        ['key' => 'cricket_test_match',          'name' => 'Test Match',        'country' => 'International'],
-    ];
 
     private const MMA_SPORTS = [
         ['key' => 'mma_mixed_martial_arts', 'name' => 'UFC / MMA', 'country' => 'International'],
-    ];
-
-    private const BASEBALL_SPORTS = [
-        ['key' => 'baseball_mlb',  'name' => 'MLB',  'country' => 'USA'],
-        ['key' => 'baseball_kbo',  'name' => 'KBO',  'country' => 'South Korea'],
-        ['key' => 'baseball_npb',  'name' => 'NPB',  'country' => 'Japan'],
-    ];
-
-    private const NFL_SPORTS = [
-        ['key' => 'americanfootball_nfl',   'name' => 'NFL',          'country' => 'USA'],
-        ['key' => 'americanfootball_ncaaf', 'name' => 'NCAA Football', 'country' => 'USA'],
-    ];
-
-    private const NHL_SPORTS = [
-        ['key' => 'icehockey_nhl',                    'name' => 'NHL',  'country' => 'USA'],
-        ['key' => 'icehockey_sweden_hockey_league',   'name' => 'SHL',  'country' => 'Sweden'],
-        ['key' => 'icehockey_liiga',                  'name' => 'Liiga','country' => 'Finland'],
     ];
 
     private const RUGBY_SPORTS = [
@@ -217,9 +186,51 @@ class ScrapeOdds extends Command
             return self::SUCCESS;
         }
 
+        if ($this->option('standings')) {
+            $this->info("\n[1/1] Fetching league standings...");
+            $this->fetchStandings();
+            $this->info("\n=== Done ===");
+            return self::SUCCESS;
+        }
+
+        if ($this->option('top-scorers')) {
+            $this->info("\n[1/1] Fetching top scorers...");
+            $this->fetchTopScorers();
+            $this->info("\n=== Done ===");
+            return self::SUCCESS;
+        }
+
+        if ($this->option('lineups')) {
+            $this->info("\n[1/1] Fetching lineups for today's fixtures...");
+            $this->fetchLineups();
+            $this->info("\n=== Done ===");
+            return self::SUCCESS;
+        }
+
+        if ($this->option('match-stats')) {
+            $this->info("\n[1/1] Fetching match statistics, events and player ratings for settled fixtures...");
+            $this->fetchMatchStats();
+            $this->info("\n=== Done ===");
+            return self::SUCCESS;
+        }
+
+        if ($this->option('top-assists')) {
+            $this->info("\n[1/1] Fetching top assist providers...");
+            $this->fetchTopAssists();
+            $this->info("\n=== Done ===");
+            return self::SUCCESS;
+        }
+
         if ($this->option('backfill-scores')) {
             $this->info("\n[1/1] Backfilling scores on settled tips...");
             $this->backfillScores();
+            $this->info("\n=== Done ===");
+            return self::SUCCESS;
+        }
+
+        if ($this->option('football-only')) {
+            $this->info("\n[1/1] Fetching football fixtures + odds...");
+            $this->fetchFootball();
             $this->info("\n=== Done ===");
             return self::SUCCESS;
         }
@@ -243,22 +254,12 @@ class ScrapeOdds extends Command
         if ($this->option('all-sports')) {
             $this->info("\n[1/2] Fetching all sports from The Odds API...");
             $this->fetchBasketball();
-            $this->fetchSport(self::TENNIS_SPORTS,  'Tennis');
-            $this->fetchSport(self::CRICKET_SPORTS, 'Cricket');
-            $this->fetchSport(self::MMA_SPORTS,     'MMA');
-            $this->fetchSport(self::BASEBALL_SPORTS,'Baseball');
-            $this->fetchSport(self::NFL_SPORTS,     'American Football');
-            $this->fetchSport(self::NHL_SPORTS,     'Hockey');
-            $this->fetchSport(self::RUGBY_SPORTS,   'Rugby');
+            $this->fetchSport(self::MMA_SPORTS,   'MMA');
+            $this->fetchSport(self::RUGBY_SPORTS, 'Rugby');
             $this->info("\n[2/2] Updating results...");
             $this->updateBasketballResults();
-            $this->updateSportResults(self::TENNIS_SPORTS,  'Tennis');
-            $this->updateSportResults(self::CRICKET_SPORTS, 'Cricket');
-            $this->updateSportResults(self::MMA_SPORTS,     'MMA');
-            $this->updateSportResults(self::BASEBALL_SPORTS,'Baseball');
-            $this->updateSportResults(self::NFL_SPORTS,     'American Football');
-            $this->updateSportResults(self::NHL_SPORTS,     'Hockey');
-            $this->updateSportResults(self::RUGBY_SPORTS,   'Rugby');
+            $this->updateSportResults(self::MMA_SPORTS,   'MMA');
+            $this->updateSportResults(self::RUGBY_SPORTS, 'Rugby');
             $this->info("\n=== Done ===");
             return self::SUCCESS;
         }
@@ -278,26 +279,16 @@ class ScrapeOdds extends Command
             } else {
                 $this->fetchBasketball();
             }
-            $this->fetchSport(self::TENNIS_SPORTS,  'Tennis');
-            $this->fetchSport(self::CRICKET_SPORTS, 'Cricket');
-            $this->fetchSport(self::MMA_SPORTS,     'MMA');
-            $this->fetchSport(self::BASEBALL_SPORTS,'Baseball');
-            $this->fetchSport(self::NFL_SPORTS,     'American Football');
-            $this->fetchSport(self::NHL_SPORTS,     'Hockey');
-            $this->fetchSport(self::RUGBY_SPORTS,   'Rugby');
+            $this->fetchSport(self::MMA_SPORTS,   'MMA');
+            $this->fetchSport(self::RUGBY_SPORTS, 'Rugby');
         }
 
         if (!$this->option('fixtures-only')) {
             $this->info("\n[3/3] Updating results...");
             $this->updateFootballResults();
             $this->updateBasketballResults();
-            $this->updateSportResults(self::TENNIS_SPORTS,  'Tennis');
-            $this->updateSportResults(self::CRICKET_SPORTS, 'Cricket');
-            $this->updateSportResults(self::MMA_SPORTS,     'MMA');
-            $this->updateSportResults(self::BASEBALL_SPORTS,'Baseball');
-            $this->updateSportResults(self::NFL_SPORTS,     'American Football');
-            $this->updateSportResults(self::NHL_SPORTS,     'Hockey');
-            $this->updateSportResults(self::RUGBY_SPORTS,   'Rugby');
+            $this->updateSportResults(self::MMA_SPORTS,   'MMA');
+            $this->updateSportResults(self::RUGBY_SPORTS, 'Rugby');
         }
 
         $this->info("\n=== Done ===");
@@ -876,22 +867,37 @@ class ScrapeOdds extends Command
                 [$pred, $predOdds] = $this->pickPrediction($markets);
                 $m1x2 = $markets['1x2'];
 
+                $homeTeamId = $fix['teams']['home']['id'] ?? null;
+                $awayTeamId = $fix['teams']['away']['id'] ?? null;
+                $leagueId   = $fix['league']['id'];
+                $month      = (int) now()->month;
+                $season     = $month >= 8 ? (int) now()->year : (int) now()->year - 1;
+
+                $h2h        = ($homeTeamId && $awayTeamId) ? $this->afH2H($homeTeamId, $awayTeamId) : null;
+                $injuries   = $fid ? $this->afInjuries($fid) : null;
+                $homeStats  = $homeTeamId ? $this->afTeamStats($homeTeamId, $leagueId, $season, $home) : null;
+                $awayStats  = $awayTeamId ? $this->afTeamStats($awayTeamId, $leagueId, $season, $away) : null;
+                $teamStats  = ($homeStats || $awayStats) ? json_encode(['home' => $homeStats, 'away' => $awayStats]) : null;
+
                 $rows[] = [
-                    'fixture_id' => $fid,
-                    'home'       => $home,
-                    'away'       => $away,
-                    'league'     => $meta['name'],
-                    'country'    => $meta['country'],
-                    'match_time' => $matchTime,
-                    'match_date' => $matchDate,
-                    'markets'    => $markets,
-                    'home_odds'  => $m1x2['home'],
-                    'draw_odds'  => $m1x2['draw'],
-                    'away_odds'  => $m1x2['away'],
-                    'prediction' => $pred,
-                    'best_odds'  => $predOdds,
-                    'confidence' => $this->calcConfidence($markets),
-                    'source'     => $source,
+                    'fixture_id'   => $fid,
+                    'home'         => $home,
+                    'away'         => $away,
+                    'league'       => $meta['name'],
+                    'country'      => $meta['country'],
+                    'match_time'   => $matchTime,
+                    'match_date'   => $matchDate,
+                    'markets'      => $markets,
+                    'home_odds'    => $m1x2['home'],
+                    'draw_odds'    => $m1x2['draw'],
+                    'away_odds'    => $m1x2['away'],
+                    'prediction'   => $pred,
+                    'best_odds'    => $predOdds,
+                    'confidence'   => $this->calcConfidence($markets),
+                    'source'       => $source,
+                    'head_to_head' => $h2h ? json_encode($h2h) : null,
+                    'injuries'     => $injuries ? json_encode($injuries) : null,
+                    'team_stats'   => $teamStats,
                 ];
             }
 
@@ -1903,17 +1909,362 @@ class ScrapeOdds extends Command
     private function tipData(string $sport, array $row, string $pred, float $odds, int $conf, int $vip, string $reasoning): array
     {
         return [
-            'sport'      => $sport,
-            'home_team'  => $row['home'],  'away_team'  => $row['away'],
-            'league'     => $row['league'], 'country'    => $row['country'],
-            'prediction' => $pred,          'confidence' => $conf,
-            'odds'       => $odds,          'home_odds'  => $row['home_odds'],
-            'draw_odds'  => $row['draw_odds'] ?? null, 'away_odds' => $row['away_odds'],
-            'match_time' => $row['match_time'], 'status' => 'pending',
-            'is_premium' => $vip,           'analyst'    => 'OddsAPI',
-            'reasoning'  => $reasoning,     'home_form'  => $row['home_form'] ?? null, 'away_form' => $row['away_form'] ?? null,
-            'created_at' => now(),          'updated_at' => now(),
+            'sport'        => $sport,
+            'home_team'    => $row['home'],     'away_team'    => $row['away'],
+            'league'       => $row['league'],   'country'      => $row['country'],
+            'prediction'   => $pred,            'confidence'   => $conf,
+            'odds'         => $odds,            'home_odds'    => $row['home_odds'],
+            'draw_odds'    => $row['draw_odds'] ?? null, 'away_odds' => $row['away_odds'],
+            'match_time'   => $row['match_time'], 'status'     => 'pending',
+            'is_premium'   => $vip,             'analyst'      => 'OddsAPI',
+            'reasoning'    => $reasoning,
+            'home_form'    => $row['home_form']    ?? null,
+            'away_form'    => $row['away_form']    ?? null,
+            'fixture_id'   => $row['fixture_id']   ?? null,
+            'head_to_head' => $row['head_to_head'] ?? null,
+            'injuries'     => $row['injuries']     ?? null,
+            'team_stats'   => $row['team_stats']   ?? null,
+            'created_at'   => now(),            'updated_at'   => now(),
         ];
+    }
+
+    // ── H2H, injuries, standings, top scorers ────────────────────────────────
+
+    private function afH2H(int $homeId, int $awayId): ?array
+    {
+        if ($this->afQuota < 3) return null;
+        $data = $this->afGet('/fixtures/headtohead', ['h2h' => "{$homeId}-{$awayId}", 'last' => 5]);
+        if (!$data || empty($data['response'])) return null;
+
+        $matches = [];
+        foreach ($data['response'] as $fix) {
+            $status = $fix['fixture']['status']['short'] ?? '';
+            if (!in_array($status, ['FT', 'AET', 'PEN'])) continue;
+            $matches[] = [
+                'date'       => substr($fix['fixture']['date'] ?? '', 0, 10),
+                'home'       => $fix['teams']['home']['name'] ?? '',
+                'away'       => $fix['teams']['away']['name'] ?? '',
+                'home_goals' => $fix['goals']['home'],
+                'away_goals' => $fix['goals']['away'],
+                'league'     => $fix['league']['name'] ?? '',
+            ];
+        }
+        return $matches ?: null;
+    }
+
+    private function afInjuries(int $fixtureId): ?array
+    {
+        if ($this->afQuota < 3) return null;
+        $data = $this->afGet('/injuries', ['fixture' => $fixtureId]);
+        if (!$data || empty($data['response'])) return null;
+
+        $list = [];
+        foreach ($data['response'] as $p) {
+            $list[] = [
+                'player' => $p['player']['name']   ?? '',
+                'team'   => $p['team']['name']      ?? '',
+                'type'   => $p['player']['type']    ?? 'Injury',
+                'reason' => $p['player']['reason']  ?? '',
+            ];
+        }
+        return $list ?: null;
+    }
+
+    private function fetchStandings(): void
+    {
+        $month  = (int) now()->month;
+        $year   = (int) now()->year;
+        $season = $month >= 8 ? $year : $year - 1;
+
+        $updated = 0;
+        foreach (self::FOOTBALL_LEAGUES as $leagueId => $meta) {
+            if ($this->afQuota < 3) { $this->warn('  Quota low — stopping'); break; }
+
+            $data = $this->afGet('/standings', ['league' => $leagueId, 'season' => $season]);
+            $standings = $data['response'][0]['league']['standings'][0] ?? null;
+            if (!$standings) {
+                // Try previous season as fallback (league may not have started yet)
+                $data = $this->afGet('/standings', ['league' => $leagueId, 'season' => $season - 1]);
+                $standings = $data['response'][0]['league']['standings'][0] ?? null;
+            }
+            if (!$standings) continue;
+
+            $table = [];
+            foreach ($standings as $row) {
+                $table[] = [
+                    'rank'   => $row['rank'],
+                    'team'   => $row['team']['name'],
+                    'played' => $row['all']['played'],
+                    'won'    => $row['all']['win'],
+                    'drawn'  => $row['all']['draw'],
+                    'lost'   => $row['all']['lose'],
+                    'gf'     => $row['all']['goals']['for'],
+                    'ga'     => $row['all']['goals']['against'],
+                    'gd'     => $row['goalsDiff'],
+                    'points' => $row['points'],
+                    'form'   => $row['form'] ?? '',
+                ];
+            }
+
+            DB::table('league_standings')->updateOrInsert(
+                ['league_id' => $leagueId, 'season' => $season],
+                ['league' => $meta['name'], 'country' => $meta['country'], 'data' => json_encode($table), 'updated_at' => now(), 'created_at' => now()]
+            );
+            $updated++;
+            $this->line("  [Standings] {$meta['name']}: " . count($table) . ' teams — quota left: ' . $this->afQuota);
+        }
+        $this->line("  Standings done — {$updated} leagues updated");
+    }
+
+    private function fetchTopScorers(): void
+    {
+        $month  = (int) now()->month;
+        $year   = (int) now()->year;
+        $season = $month >= 8 ? $year : $year - 1;
+
+        // Only major leagues for top scorers to save credits
+        $major = [39, 140, 135, 78, 61, 2, 3, 88, 94, 203, 71];
+
+        foreach ($major as $leagueId) {
+            if ($this->afQuota < 3) { $this->warn('  Quota low — stopping'); break; }
+            $meta = self::FOOTBALL_LEAGUES[$leagueId] ?? null;
+            if (!$meta) continue;
+
+            $data = $this->afGet('/players/topscorers', ['league' => $leagueId, 'season' => $season]);
+            if (!$data || empty($data['response'])) {
+                // Try previous season
+                $data = $this->afGet('/players/topscorers', ['league' => $leagueId, 'season' => $season - 1]);
+            }
+            if (!$data || empty($data['response'])) continue;
+
+            $scorers = [];
+            foreach (array_slice($data['response'], 0, 10) as $i => $row) {
+                $scorers[] = [
+                    'rank'   => $i + 1,
+                    'player' => $row['player']['name'] ?? '',
+                    'team'   => $row['statistics'][0]['team']['name'] ?? '',
+                    'goals'  => $row['statistics'][0]['goals']['total'] ?? 0,
+                    'apps'   => $row['statistics'][0]['games']['appearences'] ?? 0,
+                ];
+            }
+
+            DB::table('top_scorers')->updateOrInsert(
+                ['league_id' => $leagueId, 'season' => $season],
+                ['league' => $meta['name'], 'country' => $meta['country'], 'data' => json_encode($scorers), 'updated_at' => now(), 'created_at' => now()]
+            );
+            $this->line("  [TopScorers] {$meta['name']}: " . count($scorers) . ' players — quota left: ' . $this->afQuota);
+        }
+        $this->line('  Top scorers done');
+    }
+
+    private function afTeamStats(int $teamId, int $leagueId, int $season, string $teamName): ?array
+    {
+        if ($this->afQuota < 3) return null;
+        $data = $this->afGet('/teams/statistics', ['team' => $teamId, 'league' => $leagueId, 'season' => $season]);
+        if (!$data || empty($data['response'])) return null;
+        $r = $data['response'];
+        return [
+            'team'          => $teamName,
+            'played'        => $r['fixtures']['played']['total'] ?? 0,
+            'won'           => $r['fixtures']['wins']['total'] ?? 0,
+            'drawn'         => $r['fixtures']['draws']['total'] ?? 0,
+            'lost'          => $r['fixtures']['loses']['total'] ?? 0,
+            'goals_for'     => $r['goals']['for']['average']['total'] ?? '0',
+            'goals_against' => $r['goals']['against']['average']['total'] ?? '0',
+            'form'          => $r['form'] ?? '',
+        ];
+    }
+
+    private function fetchLineups(): void
+    {
+        $today = now()->format('Y-m-d');
+        $tips  = DB::table('betting_tips')
+            ->where('sport', 'Football')
+            ->where('status', 'pending')
+            ->whereNotNull('fixture_id')
+            ->whereNull('lineups')
+            ->whereDate('match_time', $today)
+            ->get(['id', 'fixture_id', 'home_team', 'away_team']);
+
+        if ($tips->isEmpty()) { $this->line('  No fixtures need lineups today.'); return; }
+
+        $updated = 0;
+        foreach ($tips as $tip) {
+            if ($this->afQuota < 3) { $this->warn('  Quota low — stopping'); break; }
+
+            $data = $this->afGet('/fixtures/lineups', ['fixture' => $tip->fixture_id]);
+            if (!$data || empty($data['response'])) {
+                $this->line("  [Lineups] {$tip->home_team} vs {$tip->away_team} — not yet available");
+                continue;
+            }
+
+            $lineups = [];
+            foreach ($data['response'] as $side) {
+                $isHome  = strtolower($side['team']['name'] ?? '') === strtolower($tip->home_team);
+                $key     = $isHome ? 'home' : 'away';
+                $xi      = array_map(
+                    fn($p) => ($p['player']['name'] ?? '') . ' (' . ($p['player']['pos'] ?? '') . ')',
+                    $side['startXI'] ?? []
+                );
+                $lineups[$key] = [
+                    'team'      => $side['team']['name'] ?? '',
+                    'formation' => $side['formation'] ?? '',
+                    'xi'        => $xi,
+                ];
+            }
+            if (empty($lineups)) continue;
+
+            DB::table('betting_tips')->where('id', $tip->id)->update(['lineups' => json_encode($lineups), 'updated_at' => now()]);
+            $updated++;
+            $this->line("  [Lineups] {$tip->home_team} vs {$tip->away_team} ✓");
+        }
+        $this->line("  Lineups done — {$updated} tips updated");
+    }
+
+    private function fetchMatchStats(): void
+    {
+        $tips = DB::table('betting_tips')
+            ->where('sport', 'Football')
+            ->whereIn('status', ['won', 'lost'])
+            ->whereNotNull('fixture_id')
+            ->where(function ($q) {
+                $q->whereNull('match_stats')
+                  ->orWhereNull('match_events')
+                  ->orWhereNull('player_ratings');
+            })
+            ->where('match_time', '>=', now()->subDays(3))
+            ->get(['id', 'fixture_id', 'home_team', 'away_team', 'match_stats', 'match_events', 'player_ratings']);
+
+        if ($tips->isEmpty()) { $this->line('  No settled fixtures need post-match data.'); return; }
+
+        $updated = 0;
+        foreach ($tips as $tip) {
+            if ($this->afQuota < 5) { $this->warn('  Quota low — stopping'); break; }
+
+            $updateData = ['updated_at' => now()];
+
+            // Statistics
+            if ($tip->match_stats === null) {
+                $data = $this->afGet('/fixtures/statistics', ['fixture' => $tip->fixture_id]);
+                if ($data && !empty($data['response'])) {
+                    $stats = [];
+                    foreach ($data['response'] as $side) {
+                        $isHome = strtolower($side['team']['name'] ?? '') === strtolower($tip->home_team);
+                        $key    = $isHome ? 'home' : 'away';
+                        $map    = [];
+                        foreach ($side['statistics'] ?? [] as $s) { $map[$s['type']] = $s['value']; }
+                        $stats[$key] = [
+                            'team'            => $side['team']['name'] ?? '',
+                            'possession'      => $map['Ball Possession'] ?? null,
+                            'shots'           => $map['Total Shots'] ?? null,
+                            'shots_on_target' => $map['Shots on Goal'] ?? null,
+                            'corners'         => $map['Corner Kicks'] ?? null,
+                            'fouls'           => $map['Fouls'] ?? null,
+                            'yellow_cards'    => $map['Yellow Cards'] ?? null,
+                            'red_cards'       => $map['Red Cards'] ?? null,
+                        ];
+                    }
+                    if (!empty($stats)) $updateData['match_stats'] = json_encode($stats);
+                }
+            }
+
+            // Events (goals, cards, substitutions)
+            if ($tip->match_events === null) {
+                $data = $this->afGet('/fixtures/events', ['fixture' => $tip->fixture_id]);
+                if ($data && !empty($data['response'])) {
+                    $events = [];
+                    foreach ($data['response'] as $e) {
+                        $type = $e['type'] ?? '';
+                        if (!in_array($type, ['Goal', 'Card', 'subst', 'Var'])) continue;
+                        $events[] = [
+                            'minute' => ($e['time']['elapsed'] ?? 0) + ($e['time']['extra'] ?? 0),
+                            'team'   => $e['team']['name'] ?? '',
+                            'player' => $e['player']['name'] ?? '',
+                            'assist' => $e['assist']['name'] ?? null,
+                            'type'   => $type,
+                            'detail' => $e['detail'] ?? '',
+                        ];
+                    }
+                    $updateData['match_events'] = json_encode($events);
+                }
+            }
+
+            // Player ratings
+            if ($tip->player_ratings === null) {
+                $data = $this->afGet('/fixtures/players', ['fixture' => $tip->fixture_id]);
+                if ($data && !empty($data['response'])) {
+                    $ratings = [];
+                    foreach ($data['response'] as $side) {
+                        $isHome = strtolower($side['team']['name'] ?? '') === strtolower($tip->home_team);
+                        $key    = $isHome ? 'home' : 'away';
+                        $players = [];
+                        foreach ($side['players'] ?? [] as $p) {
+                            $st     = $p['statistics'][0] ?? [];
+                            $rating = $st['games']['rating'] ?? null;
+                            if (!$rating) continue;
+                            $players[] = [
+                                'name'    => $p['player']['name'] ?? '',
+                                'pos'     => $st['games']['position'] ?? '',
+                                'rating'  => $rating,
+                                'goals'   => $st['goals']['total'] ?? 0,
+                                'assists' => $st['goals']['assists'] ?? 0,
+                                'minutes' => $st['games']['minutes'] ?? 0,
+                                'sub'     => (bool) ($st['games']['substitute'] ?? false),
+                            ];
+                        }
+                        usort($players, fn($a, $b) => floatval($b['rating']) <=> floatval($a['rating']));
+                        $ratings[$key] = ['team' => $side['team']['name'] ?? '', 'players' => $players];
+                    }
+                    if (!empty($ratings)) $updateData['player_ratings'] = json_encode($ratings);
+                }
+            }
+
+            if (count($updateData) > 1) {
+                DB::table('betting_tips')->where('id', $tip->id)->update($updateData);
+                $updated++;
+                $this->line("  [PostMatch] {$tip->home_team} vs {$tip->away_team} ✓");
+            }
+        }
+        $this->line("  Post-match data done — {$updated} tips updated");
+    }
+
+    private function fetchTopAssists(): void
+    {
+        $month  = (int) now()->month;
+        $year   = (int) now()->year;
+        $season = $month >= 8 ? $year : $year - 1;
+
+        $major = [39, 140, 135, 78, 61, 2, 3, 88, 94, 203, 71];
+
+        foreach ($major as $leagueId) {
+            if ($this->afQuota < 3) { $this->warn('  Quota low — stopping'); break; }
+            $meta = self::FOOTBALL_LEAGUES[$leagueId] ?? null;
+            if (!$meta) continue;
+
+            $data = $this->afGet('/players/topassists', ['league' => $leagueId, 'season' => $season]);
+            if (!$data || empty($data['response'])) {
+                $data = $this->afGet('/players/topassists', ['league' => $leagueId, 'season' => $season - 1]);
+            }
+            if (!$data || empty($data['response'])) continue;
+
+            $assisters = [];
+            foreach (array_slice($data['response'], 0, 10) as $i => $row) {
+                $assisters[] = [
+                    'rank'    => $i + 1,
+                    'player'  => $row['player']['name'] ?? '',
+                    'team'    => $row['statistics'][0]['team']['name'] ?? '',
+                    'assists' => $row['statistics'][0]['goals']['assists'] ?? 0,
+                    'apps'    => $row['statistics'][0]['games']['appearences'] ?? 0,
+                ];
+            }
+
+            DB::table('top_assists')->updateOrInsert(
+                ['league_id' => $leagueId, 'season' => $season],
+                ['league' => $meta['name'], 'country' => $meta['country'], 'data' => json_encode($assisters), 'updated_at' => now(), 'created_at' => now()]
+            );
+            $this->line("  [TopAssists] {$meta['name']}: " . count($assisters) . ' players — quota left: ' . $this->afQuota);
+        }
+        $this->line('  Top assists done');
     }
 
     // ── Fetch fixtures directly from The Odds API ─────────────────────────────

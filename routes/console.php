@@ -20,8 +20,11 @@ Schedule::call(function () {
 // Scrape full week of fixtures every Monday at 5:00 AM
 Schedule::command('tips:scrape', ['--week', '--fixtures-only'])->weekly()->mondays()->at('05:00');
 
-// Scrape today + tomorrow fixtures daily at 6:00 AM (catches late additions)
-Schedule::command('tips:scrape', ['--fixtures-only'])->dailyAt('06:00');
+// Scrape today + tomorrow football fixtures daily at 6:00 AM
+Schedule::command('tips:scrape', ['--football-only'])->dailyAt('06:00');
+
+// Scrape all other sports (basketball, tennis, cricket, MMA, etc.) weekly on Sunday at 6:30 AM
+Schedule::command('tips:scrape', ['--all-sports'])->weekly()->sundays()->at('06:30');
 
 // Form update disabled — saves API-Football credits
 // Schedule::command('tips:scrape', ['--update-form'])->dailyAt('06:30');
@@ -35,8 +38,25 @@ Schedule::command('tips:telegram')->dailyAt('08:05');
 // Mark expired subscriptions + send renewal/expiry emails daily at 9:00 AM
 Schedule::command('subscriptions:renew')->dailyAt('09:00');
 
-// Update won/lost results every 15 minutes — within 15 min of any match finishing
-Schedule::command('tips:scrape', ['--results-only'])->everyFifteenMinutes();
+// Update won/lost results every hour (reduced from 15 min to save Odds API credits)
+Schedule::command('tips:scrape', ['--results-only'])->hourly();
+
+// Fetch league standings daily at 10:00 AM
+Schedule::command('tips:scrape', ['--standings'])->dailyAt('10:00');
+
+// Fetch top scorers every Monday at 10:30 AM
+Schedule::command('tips:scrape', ['--top-scorers'])->weekly()->mondays()->at('10:30');
+
+// Fetch top assists every Monday at 10:45 AM
+Schedule::command('tips:scrape', ['--top-assists'])->weekly()->mondays()->at('10:45');
+
+// Fetch starting lineups at noon and 2 PM (not announced until ~2h before kick-off)
+Schedule::command('tips:scrape', ['--lineups'])->dailyAt('12:00');
+Schedule::command('tips:scrape', ['--lineups'])->dailyAt('14:00');
+Schedule::command('tips:scrape', ['--lineups'])->dailyAt('16:00');
+
+// Fetch match statistics for recently settled fixtures every 2 hours
+Schedule::command('tips:scrape', ['--match-stats'])->everyTwoHours();
 
 // Post yesterday's results summary to Telegram at 11:00 PM
 Schedule::command('tips:telegram', ['--results'])->dailyAt('23:00');

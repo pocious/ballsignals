@@ -47,6 +47,8 @@
         </div>
     </div>
 
+    <hr class="border-gray-200 dark:border-gray-700 -mt-2">
+
     {{-- League filter --}}
     @if($leagues->isNotEmpty())
     <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
@@ -81,14 +83,9 @@
     @if($tipsByDate->isEmpty())
     @php
         $allSportLinks = [
-            ['route' => route('home'),                       'name' => 'Football',         'icon' => '⚽', 'db' => 'Football'],
-            ['route' => route('sport','tennis'),             'name' => 'Tennis',           'icon' => '🎾', 'db' => 'Tennis'],
-            ['route' => route('sport','cricket'),            'name' => 'Cricket',          'icon' => '🏏', 'db' => 'Cricket'],
-            ['route' => route('sport','mma'),                'name' => 'MMA',              'icon' => '🥊', 'db' => 'MMA'],
-            ['route' => route('sport','baseball'),           'name' => 'Baseball',         'icon' => '⚾', 'db' => 'Baseball'],
-            ['route' => route('sport','american-football'),  'name' => 'NFL',              'icon' => '🏈', 'db' => 'American Football'],
-            ['route' => route('sport','hockey'),             'name' => 'Hockey',           'icon' => '🏒', 'db' => 'Hockey'],
-            ['route' => route('sport','rugby'),              'name' => 'Rugby',            'icon' => '🏉', 'db' => 'Rugby'],
+            ['route' => route('home'),           'name' => 'Football', 'icon' => '⚽', 'db' => 'Football'],
+            ['route' => route('sport', 'mma'),   'name' => 'MMA',      'icon' => '🥊', 'db' => 'MMA'],
+            ['route' => route('sport', 'rugby'), 'name' => 'Rugby',    'icon' => '🏉', 'db' => 'Rugby'],
         ];
         $availableSports = collect($allSportLinks)->filter(fn($s) =>
             \App\Models\BettingTip::where('sport', $s['db'])

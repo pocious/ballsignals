@@ -28,9 +28,9 @@ class HomeController extends Controller
             ->forLeague($selectedLeague);
 
         $sortedQuery = match ($selectedSort) {
-            'odds_asc'  => (clone $baseQuery)->orderBy('odds', 'asc'),
-            'odds_desc' => (clone $baseQuery)->orderBy('odds', 'desc'),
-            default     => (clone $baseQuery)->orderByRaw('DATE(match_time) ASC, match_time ASC'),
+            'odds_asc'  => (clone $baseQuery)->orderByRaw('DATE(match_time) ASC, CASE WHEN match_time < NOW() THEN 1 ELSE 0 END ASC, odds ASC'),
+            'odds_desc' => (clone $baseQuery)->orderByRaw('DATE(match_time) ASC, CASE WHEN match_time < NOW() THEN 1 ELSE 0 END ASC, odds DESC'),
+            default     => (clone $baseQuery)->orderByRaw('DATE(match_time) ASC, CASE WHEN match_time < NOW() THEN 1 ELSE 0 END ASC, match_time ASC'),
         };
 
         // Free tips grouped by date
@@ -46,8 +46,7 @@ class HomeController extends Controller
             ->orderByDesc('confidence')
             ->orderByDesc('odds')
             ->get()
-            ->groupBy(fn ($tip) => $tip->match_time->toDateString())
-            ->map(fn ($tips) => $tips->take(2));
+            ->groupBy(fn ($tip) => $tip->match_time->toDateString());
 
         // Whether the current visitor can see premium predictions (admin or active VIP session)
         $canSeePremium = Auth::check() && Auth::user()->role === 'admin';
@@ -121,7 +120,7 @@ class HomeController extends Controller
                 ->whereColumn('bt2.away_team', 'betting_tips.away_team')
                 ->whereColumn('bt2.match_time', 'betting_tips.match_time')
                 ->where('bt2.is_premium', 1))
-            ->orderBy('match_time', 'asc')
+            ->orderByRaw('CASE WHEN match_time < NOW() THEN 1 ELSE 0 END ASC, match_time ASC')
             ->get();
 
         try {

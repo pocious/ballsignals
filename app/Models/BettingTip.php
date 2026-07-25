@@ -31,13 +31,20 @@ class BettingTip extends Model
     protected function casts(): array
     {
         return [
-            'match_time' => 'datetime',
-            'is_premium' => 'boolean',
-            'confidence' => 'integer',
-            'odds'       => 'decimal:2',
-            'home_odds'  => 'decimal:2',
-            'draw_odds'  => 'decimal:2',
-            'away_odds'  => 'decimal:2',
+            'match_time'   => 'datetime',
+            'is_premium'   => 'boolean',
+            'confidence'   => 'integer',
+            'odds'         => 'decimal:2',
+            'home_odds'    => 'decimal:2',
+            'draw_odds'    => 'decimal:2',
+            'away_odds'    => 'decimal:2',
+            'head_to_head' => 'array',
+            'injuries'     => 'array',
+            'lineups'        => 'array',
+            'team_stats'     => 'array',
+            'match_stats'    => 'array',
+            'match_events'   => 'array',
+            'player_ratings' => 'array',
         ];
     }
 

@@ -23,8 +23,12 @@ use App\Http\Controllers\ResultsController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SubscriptionRequestController;
 use App\Http\Controllers\TipDetailController;
+use App\Http\Controllers\VipHistoryController;
 use App\Http\Controllers\TipOfTheDayController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\StandingsController;
+use App\Http\Controllers\TopScorersController;
+use App\Http\Controllers\TopAssistsController;
 use Illuminate\Support\Facades\Route;
 
 // Public
@@ -39,12 +43,16 @@ Route::get('/premium', [PremiumController::class, 'index'])->name('premium');
 Route::get('/tips/{bettingTip}', [TipDetailController::class, 'show'])->name('tips.show');
 Route::get('/tip-of-the-day', [TipOfTheDayController::class, 'index'])->name('tip-of-the-day');
 Route::get('/results', [ResultsController::class, 'index'])->name('results');
+Route::get('/vip-history', [VipHistoryController::class, 'index'])->name('vip-history');
 Route::get('/football', [FootballController::class, 'index'])->name('football');
 Route::get('/basketball', [BasketballController::class, 'index'])->name('basketball');
 Route::get('/sports/{sport}', [SportController::class, 'index'])
-    ->where('sport', 'tennis|cricket|mma|baseball|american-football|hockey|rugby')
+    ->where('sport', 'mma|rugby')
     ->name('sport');
 Route::get('/league-stats', [LeagueStatsController::class, 'index'])->name('league-stats');
+Route::get('/standings', [StandingsController::class, 'index'])->name('standings');
+Route::get('/top-scorers', [TopScorersController::class, 'index'])->name('top-scorers');
+Route::get('/top-assists', [TopAssistsController::class, 'index'])->name('top-assists');
 Route::get('/subscribe', [ContactController::class, 'index'])->name('subscribe');
 Route::post('/subscribe', [ContactController::class, 'send'])->name('subscribe.send');
 Route::get('/contact', [ContactController::class, 'showContact'])->name('contact');

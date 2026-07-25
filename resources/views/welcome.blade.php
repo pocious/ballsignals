@@ -138,32 +138,37 @@ $__siteSchema = json_encode([
 </script>
 @endif
 
-{{-- ── Football Tips CTA ── --}}
+{{-- ── CTA Cards ── --}}
 <div class="max-w-3xl mx-auto px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-white/5">
-    <a href="{{ route('football') }}"
-       class="flex items-center justify-between gap-3 w-full px-4 py-3 rounded-2xl bg-green-600 hover:bg-green-700 transition-colors group">
-        <div class="flex items-center gap-3">
+    <div class="flex flex-col sm:flex-row gap-2">
+        <a href="{{ route('football') }}"
+           class="flex items-center justify-between gap-3 flex-1 px-4 py-3 rounded-2xl bg-green-600 hover:bg-green-700 transition-colors group">
             <div>
                 <p class="text-sm font-black text-white">Football Tips</p>
                 <p class="text-[11px] text-green-100">View all upcoming football predictions</p>
             </div>
-        </div>
-        <svg class="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-        </svg>
-    </a>
+            <svg class="w-5 h-5 text-white group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </a>
+        <a href="{{ route('vip-history') }}"
+           class="flex items-center justify-between gap-3 flex-1 px-4 py-3 rounded-2xl bg-yellow-400 hover:bg-yellow-300 transition-colors group">
+            <div>
+                <p class="text-sm font-black text-black">VIP History</p>
+                <p class="text-[11px] text-yellow-800">30-day premium tips track record</p>
+            </div>
+            <svg class="w-5 h-5 text-black group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </a>
+    </div>
 </div>
 
 {{-- ── More Sports Hub ── --}}
 @php
     $sportHub = [
-        ['tennis',           '🎾', 'Tennis',           'Tennis'],
-        ['cricket',          '🏏', 'Cricket',          'Cricket'],
-        ['mma',              '🥊', 'MMA',              'MMA'],
-        ['baseball',         '⚾', 'Baseball',         'Baseball'],
-        ['american-football','🏈', 'NFL / NCAAF',      'American Football'],
-        ['hockey',           '🏒', 'NHL Hockey',       'Hockey'],
-        ['rugby',            '🏉', 'Rugby',            'Rugby'],
+        ['mma',   '🥊', 'MMA',   'MMA'],
+        ['rugby', '🏉', 'Rugby', 'Rugby'],
     ];
 @endphp
 <div class="max-w-3xl mx-auto px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-white/5">
@@ -172,6 +177,25 @@ $__siteSchema = json_encode([
         <h2 class="text-sm font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300">More Sports</h2>
     </div>
     <div class="grid grid-cols-4 gap-2">
+        @php
+            $fbCount = \App\Models\BettingTip::where('sport', 'Football')
+                ->where('match_time', '>=', today()->startOfDay())
+                ->where('match_time', '<=', today()->addDays(7)->endOfDay())
+                ->where('is_premium', false)->count();
+        @endphp
+        <a href="{{ route('football') }}"
+           class="flex flex-col items-center justify-center gap-1 py-3 rounded-xl border transition-all duration-150
+                  {{ $fbCount > 0
+                     ? 'border-orange-200 dark:border-orange-700/40 bg-orange-50/50 dark:bg-orange-900/10 hover:border-orange-400/60'
+                     : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-gray-300 dark:hover:border-gray-700' }}">
+            <span class="text-xl leading-none">⚽</span>
+            <span class="text-[10px] font-bold text-gray-700 dark:text-gray-300">Football</span>
+            @if($fbCount > 0)
+            <span class="text-[9px] font-black text-orange-500 bg-orange-500/10 px-1.5 py-px rounded-full">{{ $fbCount }} tip{{ $fbCount !== 1 ? 's' : '' }}</span>
+            @else
+            <span class="text-[9px] text-gray-400">View all</span>
+            @endif
+        </a>
         @foreach($sportHub as [$slug, $icon, $label, $db])
         @php
             $count = \App\Models\BettingTip::where('sport', $db)
@@ -346,9 +370,14 @@ $__siteSchema = json_encode([
                             {{ $tip->match_time->format('g:i A') }}
                             @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
                         </p>
-                        <span class="text-[10px] font-bold text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0">
-                            {{ $tip->prediction }}
-                        </span>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            @if($tip->odds)
+                            <span class="text-[10px] font-semibold text-gray-500 dark:text-gray-400">@ {{ number_format($tip->odds, 2) }}</span>
+                            @endif
+                            <span class="text-[10px] font-bold text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 px-1.5 py-0.5 rounded whitespace-nowrap">
+                                {{ $tip->prediction }}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 @endforeach
@@ -422,19 +451,9 @@ $__siteSchema = json_encode([
                                     @ {{ number_format($tip->odds, 2) }}
                                 </span>
                             @endif
-                            @if($canSeePremiumYesterday)
                                 <span class="text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 px-1.5 py-0.5 rounded whitespace-nowrap">
                                     {{ $tip->prediction }}
                                 </span>
-                            @else
-                                <a href="{{ route('premium') }}"
-                                   class="flex items-center gap-1 text-[10px] font-bold text-yellow-700 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-1.5 py-0.5 rounded whitespace-nowrap hover:bg-yellow-100 transition-colors">
-                                    <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                    Unlock
-                                </a>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -494,9 +513,14 @@ $__siteSchema = json_encode([
                             {{ $tip->match_time->format('g:i A') }}
                             @if($tip->league)<span class="mx-1">·</span>{{ $tip->league }}@endif
                         </p>
-                        <span class="text-[10px] font-bold text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 px-1.5 py-0.5 rounded whitespace-nowrap flex-shrink-0">
-                            {{ $tip->prediction }}
-                        </span>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            @if($tip->odds)
+                            <span class="text-[10px] font-semibold text-gray-500 dark:text-gray-400">@ {{ number_format($tip->odds, 2) }}</span>
+                            @endif
+                            <span class="text-[10px] font-bold text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 border border-orange-200 dark:border-orange-800 px-1.5 py-0.5 rounded whitespace-nowrap">
+                                {{ $tip->prediction }}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 @endforeach
@@ -647,33 +671,27 @@ $__siteSchema = json_encode([
             @endif
         </div>
 
-        {{-- VIP Accumulator — always show, fall back to next available date if no tips today --}}
+        {{-- VIP Accumulator — today's premium tips only --}}
         @php
             $accumTips = $premiumTipsByDate->get(today()->toDateString(), collect());
-            $accumDate = today();
-            if ($accumTips->isEmpty() && $premiumTipsByDate->isNotEmpty()) {
-                $accumDate = \Carbon\Carbon::parse($premiumTipsByDate->keys()->first());
-                $accumTips = $premiumTipsByDate->first();
-            }
         @endphp
         @if($accumTips->isNotEmpty())
         @php
             $combinedOdds = $accumTips->filter(fn($t) => $t->odds > 0)->reduce(fn($carry, $t) => $carry * $t->odds, 1);
             $tipCount     = $accumTips->count();
-            $isToday      = $accumDate->isToday();
         @endphp
         <div class="rounded-2xl overflow-hidden mb-3" style="background-color:#0a0f1a;border:1px solid rgba(250,204,21,0.3);">
             <div class="flex items-center justify-between px-4 py-3" style="border-bottom:1px solid rgba(250,204,21,0.2);">
                 <div>
                     <p class="text-[10px] font-bold uppercase tracking-widest mb-0.5" style="color:#facc15;">
-                        VIP Accumulator{{ !$isToday ? ' · ' . $accumDate->format('d M') : '' }}
+                        VIP Accumulator · Today
                     </p>
                     <p class="text-2xl font-black leading-none" style="color:#facc15;">
                         {{ number_format($combinedOdds, 2) }}
                         <span class="text-xs font-semibold ml-1" style="color:rgba(250,204,21,0.7);">combined odds</span>
                     </p>
                     <p class="text-[10px] mt-0.5" style="color:#6b7280;">
-                        {{ $tipCount }} tip{{ $tipCount !== 1 ? 's' : '' }} · {{ $accumDate->format('d M Y') }}
+                        {{ $tipCount }} tip{{ $tipCount !== 1 ? 's' : '' }} · {{ today()->format('d M Y') }}
                     </p>
                 </div>
                 <div class="flex items-center gap-2">

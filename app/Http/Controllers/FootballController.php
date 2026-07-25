@@ -25,9 +25,9 @@ class FootballController extends Controller
             ->forLeague($selectedLeague);
 
         $sortedQuery = match ($selectedSort) {
-            'odds_asc'  => (clone $baseQuery)->orderBy('odds', 'asc'),
-            'odds_desc' => (clone $baseQuery)->orderBy('odds', 'desc'),
-            default     => (clone $baseQuery)->orderByRaw('DATE(match_time) ASC, match_time ASC'),
+            'odds_asc'  => (clone $baseQuery)->orderByRaw('DATE(match_time) ASC, CASE WHEN match_time < NOW() THEN 1 ELSE 0 END ASC, odds ASC'),
+            'odds_desc' => (clone $baseQuery)->orderByRaw('DATE(match_time) ASC, CASE WHEN match_time < NOW() THEN 1 ELSE 0 END ASC, odds DESC'),
+            default     => (clone $baseQuery)->orderByRaw('DATE(match_time) ASC, CASE WHEN match_time < NOW() THEN 1 ELSE 0 END ASC, match_time ASC'),
         };
 
         $tipsByDate = $sortedQuery->get()

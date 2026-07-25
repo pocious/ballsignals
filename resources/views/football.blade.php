@@ -10,7 +10,7 @@
     <div class="mb-4">
         <div class="flex items-center justify-between mb-1">
             <h1 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                ⚽ <span>Football Tips</span>
+                <span>Football Tips</span>
             </h1>
             <div class="flex items-center gap-2">
                 <span class="px-2.5 py-1 rounded-full border border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400">
@@ -45,22 +45,41 @@
         </div>
     </div>
 
+    <hr class="border-gray-200 dark:border-gray-700 -mt-2">
+
     {{-- League filter --}}
     @if($leagues->isNotEmpty())
-    <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+    <div class="flex items-center gap-2">
+        {{-- "All" stays fixed --}}
         <a href="{{ route('football') }}"
            class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold transition-colors
                   {{ !$selectedLeague ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-green-600/10 hover:text-green-600' }}">
             All
         </a>
-        @foreach($leagues as $league)
-        <a href="{{ route('football', ['league' => $league]) }}"
-           class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold transition-colors
-                  {{ $selectedLeague === $league ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-green-600/10 hover:text-green-600' }}">
-            {{ $league }}
-        </a>
-        @endforeach
+        {{-- Leagues scroll --}}
+        <div class="overflow-hidden flex-1">
+            <div id="league-track" class="flex items-center gap-2 w-max py-0.5">
+                @foreach($leagues as $league)
+                <a href="{{ route('football', ['league' => $league]) }}"
+                   class="flex-shrink-0 px-3 py-1 rounded-full text-xs font-semibold transition-colors
+                          {{ $selectedLeague === $league ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-green-600/10 hover:text-green-600' }}">
+                    {{ $league }}
+                </a>
+                @endforeach
+            </div>
+        </div>
     </div>
+    <style>
+    @keyframes leagueScroll { to { transform: translateX(-50%); } }
+    #league-track { animation: leagueScroll 22s linear infinite; }
+    #league-track:hover { animation-play-state: paused; }
+    </style>
+    <script>
+    (function(){
+        var t = document.getElementById('league-track');
+        if (t) t.innerHTML += t.innerHTML;
+    })();
+    </script>
     @endif
 
     {{-- Sort bar --}}

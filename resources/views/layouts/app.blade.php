@@ -89,8 +89,10 @@
                     <div class="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center
                                 shadow-lg shadow-green-500/30 group-hover:shadow-green-500/50
                                 group-hover:scale-105 transition-all duration-200">
-                        <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.93V15h2v1.93c-1.31.09-2 .07-2 0zm4-1.07V14h-2v-2h4v1.86c-.64.37-1.32.69-2 1zm-6 0c-.68-.31-1.36-.63-2-1V12h4v2H9v1.86zM4.07 13H6v-2H4.07c.09-.69.24-1.36.46-2H6V7.14C7.06 6.43 8.24 6 9.5 6c.17 0 .34.01.5.03V9h5V6.03c.16-.02.33-.03.5-.03 1.26 0 2.44.43 3.5 1.14V9h1.47c.22.64.37 1.31.46 2H19v2h1.93c-.09.69-.24 1.36-.46 2H19v1.86c-1.06.71-2.24 1.14-3.5 1.14-.17 0-.34-.01-.5-.03V15H9v1.97c-.16.02-.33.03-.5.03-1.26 0-2.44-.43-3.5-1.14V15H3.53c-.22-.64-.37-1.31-.46-2z"/>
+                        <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6l3.5 2.5-1.3 4.1H9.8L8.5 8.5z"/>
+                            <path d="M12 6V2.5M15.5 8.5l3-1.5M13.7 12.6l2 3.4M10.3 12.6l-2 3.4M8.5 8.5L5.5 7"/>
                         </svg>
                     </div>
                     <span class="text-xl font-bold tracking-tight text-white">
@@ -106,8 +108,9 @@
                             ['Basketball',  route('basketball'), request()->routeIs('basketball')],
                             ['News',        route('news.index'), request()->routeIs('news.*')],
                             ['Blog',        route('blog.index'), request()->routeIs('blog.*')],
-                            ['Premium',     route('premium'),    request()->routeIs('premium')],
-                            ['Results',     route('results'),    request()->routeIs('results')],
+                            ['Premium',     route('premium'),      request()->routeIs('premium')],
+                            ['Results',     route('results'),      request()->routeIs('results')],
+                            ['VIP History', route('vip-history'),  request()->routeIs('vip-history')],
                         ];
                     @endphp
                     @foreach($navLinks as [$label, $href, $active])
@@ -132,13 +135,8 @@
                         <div class="absolute top-full left-0 mt-1 w-52 bg-[#0a0f1a] border border-white/10 rounded-xl shadow-xl shadow-black/40 overflow-hidden z-50
                                     opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
                             @foreach([
-                                ['tennis',           'Tennis'],
-                                ['cricket',          'Cricket'],
-                                ['mma',              'MMA'],
-                                ['baseball',         'Baseball'],
-                                ['american-football','American Football'],
-                                ['hockey',           'Hockey (NHL)'],
-                                ['rugby',            'Rugby'],
+                                ['mma',   'MMA'],
+                                ['rugby', 'Rugby'],
                             ] as [$slug, $label])
                             <a href="{{ route('sport', $slug) }}"
                                class="flex items-center gap-2.5 px-4 py-2.5 text-sm font-medium transition-colors
@@ -220,13 +218,8 @@
                 </a>
                 <a href="{{ route('basketball') }}" class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors {{ request()->routeIs('basketball') ? 'text-orange-400 bg-orange-500/10' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">Basketball</a>
                 @foreach([
-                    ['tennis',           'Tennis'],
-                    ['cricket',          'Cricket'],
-                    ['mma',              'MMA'],
-                    ['baseball',         'Baseball'],
-                    ['american-football','American Football'],
-                    ['hockey',           'Hockey (NHL)'],
-                    ['rugby',            'Rugby'],
+                    ['mma',   'MMA'],
+                    ['rugby', 'Rugby'],
                 ] as [$slug, $label])
                 <a href="{{ route('sport', $slug) }}"
                    class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors
@@ -366,6 +359,7 @@
                             ['Blog',                route('blog.index')],
                             ['Premium Tips',        route('premium')],
                             ["Yesterday's Results", route('results')],
+                            ['VIP History',         route('vip-history')],
                             ['League Stats',   route('league-stats')],
                             ['Get Daily Tips', route('subscribe')],
                         ] as [$label, $href])
