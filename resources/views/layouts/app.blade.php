@@ -89,15 +89,15 @@
                     <div class="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center
                                 shadow-lg shadow-green-500/30 group-hover:shadow-green-500/50
                                 group-hover:scale-105 transition-all duration-200">
-                        <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10.5" stroke="currentColor" stroke-width="1.6"/>
-                            <path d="M1.5 13.5 L5 13.5 L6.5 9.5 L8.5 17.5 L10.5 11 L12 14 L13.5 13.5 L22.5 13.5" stroke="currentColor" stroke-width="1.1" fill="none"/>
-                            <circle cx="16.5" cy="5" r="1.8" fill="currentColor"/>
-                            <path d="M16 6.8 L13 11.5" stroke="currentColor" stroke-width="2"/>
-                            <path d="M15 9 L11 11" stroke="currentColor" stroke-width="1.4"/>
-                            <path d="M15.5 8.5 L19 7" stroke="currentColor" stroke-width="1.4"/>
-                            <path d="M13 12 L10 16.5 L7.5 18.5" stroke="currentColor" stroke-width="1.8"/>
-                            <path d="M13.5 12.5 L16.5 16 L18 19" stroke="currentColor" stroke-width="1.8"/>
+                        <svg class="w-5 h-5 text-black" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="46" stroke="currentColor" stroke-width="6"/>
+                            <path d="M5 57 L20 57 L27 38 L37 76 L46 46 L53 60 L60 57 L95 57" stroke="currentColor" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <ellipse cx="67" cy="18" rx="9" ry="10" fill="currentColor"/>
+                            <path d="M65 27 Q61 33 57 40 Q54 46 52 52" stroke="currentColor" stroke-width="10" stroke-linecap="round" fill="none"/>
+                            <path d="M59 34 Q50 40 42 46 Q38 49 35 52" stroke="currentColor" stroke-width="7" stroke-linecap="round" fill="none"/>
+                            <path d="M62 31 Q70 26 76 21 Q80 18 83 16" stroke="currentColor" stroke-width="7" stroke-linecap="round" fill="none"/>
+                            <path d="M52 52 Q44 62 38 70 Q33 77 29 82" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none"/>
+                            <path d="M53 54 Q61 63 67 70 Q72 76 74 82" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none"/>
                         </svg>
                     </div>
                     <span class="text-xl font-bold tracking-tight text-white">
@@ -310,16 +310,16 @@
                 <div class="lg:col-span-1">
                     <a href="{{ route('home') }}" class="flex items-center gap-2.5 mb-4">
                         <div class="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30">
-                            <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10.5" stroke="currentColor" stroke-width="1.6"/>
-                                <path d="M1.5 13.5 L5 13.5 L6.5 9.5 L8.5 17.5 L10.5 11 L12 14 L13.5 13.5 L22.5 13.5" stroke="currentColor" stroke-width="1.1" fill="none"/>
-                                <circle cx="16.5" cy="5" r="1.8" fill="currentColor"/>
-                                <path d="M16 6.8 L13 11.5" stroke="currentColor" stroke-width="2"/>
-                                <path d="M15 9 L11 11" stroke="currentColor" stroke-width="1.4"/>
-                                <path d="M15.5 8.5 L19 7" stroke="currentColor" stroke-width="1.4"/>
-                                <path d="M13 12 L10 16.5 L7.5 18.5" stroke="currentColor" stroke-width="1.8"/>
-                                <path d="M13.5 12.5 L16.5 16 L18 19" stroke="currentColor" stroke-width="1.8"/>
-                            </svg>
+                                <svg class="w-5 h-5 text-black" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="50" cy="50" r="46" stroke="currentColor" stroke-width="6"/>
+                                    <path d="M5 57 L20 57 L27 38 L37 76 L46 46 L53 60 L60 57 L95 57" stroke="currentColor" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <ellipse cx="67" cy="18" rx="9" ry="10" fill="currentColor"/>
+                                    <path d="M65 27 Q61 33 57 40 Q54 46 52 52" stroke="currentColor" stroke-width="10" stroke-linecap="round" fill="none"/>
+                                    <path d="M59 34 Q50 40 42 46 Q38 49 35 52" stroke="currentColor" stroke-width="7" stroke-linecap="round" fill="none"/>
+                                    <path d="M62 31 Q70 26 76 21 Q80 18 83 16" stroke="currentColor" stroke-width="7" stroke-linecap="round" fill="none"/>
+                                    <path d="M52 52 Q44 62 38 70 Q33 77 29 82" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none"/>
+                                    <path d="M53 54 Q61 63 67 70 Q72 76 74 82" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none"/>
+                                </svg>
                         </div>
                         <span class="text-xl font-bold text-white tracking-tight">Ball<span class="text-green-400">Signals</span></span>
                     </a>
