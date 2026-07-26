@@ -89,10 +89,15 @@
                     <div class="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center
                                 shadow-lg shadow-green-500/30 group-hover:shadow-green-500/50
                                 group-hover:scale-105 transition-all duration-200">
-                        <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 6l3.5 2.5-1.3 4.1H9.8L8.5 8.5z"/>
-                            <path d="M12 6V2.5M15.5 8.5l3-1.5M13.7 12.6l2 3.4M10.3 12.6l-2 3.4M8.5 8.5L5.5 7"/>
+                        <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10.5" stroke="currentColor" stroke-width="1.6"/>
+                            <path d="M1.5 13.5 L5 13.5 L6.5 9.5 L8.5 17.5 L10.5 11 L12 14 L13.5 13.5 L22.5 13.5" stroke="currentColor" stroke-width="1.1" fill="none"/>
+                            <circle cx="16.5" cy="5" r="1.8" fill="currentColor"/>
+                            <path d="M16 6.8 L13 11.5" stroke="currentColor" stroke-width="2"/>
+                            <path d="M15 9 L11 11" stroke="currentColor" stroke-width="1.4"/>
+                            <path d="M15.5 8.5 L19 7" stroke="currentColor" stroke-width="1.4"/>
+                            <path d="M13 12 L10 16.5 L7.5 18.5" stroke="currentColor" stroke-width="1.8"/>
+                            <path d="M13.5 12.5 L16.5 16 L18 19" stroke="currentColor" stroke-width="1.8"/>
                         </svg>
                     </div>
                     <span class="text-xl font-bold tracking-tight text-white">
@@ -305,8 +310,15 @@
                 <div class="lg:col-span-1">
                     <a href="{{ route('home') }}" class="flex items-center gap-2.5 mb-4">
                         <div class="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30">
-                            <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.93V15h2v1.93c-1.31.09-2 .07-2 0zm4-1.07V14h-2v-2h4v1.86c-.64.37-1.32.69-2 1zm-6 0c-.68-.31-1.36-.63-2-1V12h4v2H9v1.86zM4.07 13H6v-2H4.07c.09-.69.24-1.36.46-2H6V7.14C7.06 6.43 8.24 6 9.5 6c.17 0 .34.01.5.03V9h5V6.03c.16-.02.33-.03.5-.03 1.26 0 2.44.43 3.5 1.14V9h1.47c.22.64.37 1.31.46 2H19v2h1.93c-.09.69-.24 1.36-.46 2H19v1.86c-1.06.71-2.24 1.14-3.5 1.14-.17 0-.34-.01-.5-.03V15H9v1.97c-.16.02-.33.03-.5.03-1.26 0-2.44-.43-3.5-1.14V15H3.53c-.22-.64-.37-1.31-.46-2z"/>
+                            <svg class="w-5 h-5 text-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10.5" stroke="currentColor" stroke-width="1.6"/>
+                                <path d="M1.5 13.5 L5 13.5 L6.5 9.5 L8.5 17.5 L10.5 11 L12 14 L13.5 13.5 L22.5 13.5" stroke="currentColor" stroke-width="1.1" fill="none"/>
+                                <circle cx="16.5" cy="5" r="1.8" fill="currentColor"/>
+                                <path d="M16 6.8 L13 11.5" stroke="currentColor" stroke-width="2"/>
+                                <path d="M15 9 L11 11" stroke="currentColor" stroke-width="1.4"/>
+                                <path d="M15.5 8.5 L19 7" stroke="currentColor" stroke-width="1.4"/>
+                                <path d="M13 12 L10 16.5 L7.5 18.5" stroke="currentColor" stroke-width="1.8"/>
+                                <path d="M13.5 12.5 L16.5 16 L18 19" stroke="currentColor" stroke-width="1.8"/>
                             </svg>
                         </div>
                         <span class="text-xl font-bold text-white tracking-tight">Ball<span class="text-green-400">Signals</span></span>
