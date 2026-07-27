@@ -17,8 +17,11 @@ Schedule::call(function () {
     );
 })->everyMinute();
 
-// Scrape full week of fixtures every Monday at 5:00 AM
+// Scrape full week of fixtures every Monday at 5:00 AM (Sofascore)
 Schedule::command('tips:scrape', ['--week', '--fixtures-only'])->weekly()->mondays()->at('05:00');
+
+// Scrape full week from Odds API every Monday at 5:30 AM (fallback when Sofascore is blocked)
+Schedule::command('tips:scrape', ['--odds-api'])->weekly()->mondays()->at('05:30');
 
 // Scrape today + tomorrow football fixtures daily at 6:00 AM
 Schedule::command('tips:scrape', ['--football-only'])->dailyAt('06:00');
